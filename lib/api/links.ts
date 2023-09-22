@@ -1,14 +1,26 @@
 import { CreateLink, Link } from "../types";
 import { redis } from "../upstash";
+import bcrypt from "bcrypt";
 
 export const createLink = async (link: CreateLink) => {
-  const { url, domain, key, expiresAt, ios, android, geo } = link;
+  const {
+    url,
+    domain,
+    key,
+    expiresAt,
+    ios,
+    android,
+    geo,
+    password: rawPassword,
+  } = link;
+
   const exat = expiresAt ? new Date(expiresAt).getTime() / 1000 : null;
+  const password = rawPassword ? await bcrypt.hash(rawPassword, 10) : null;
 
   const value = {
     url,
-    protected: link.protected ?? false,
     archived: false,
+    ...(password && { password }),
     ...(geo && { geo }),
     ...(ios && { ios }),
     ...(android && { android }),

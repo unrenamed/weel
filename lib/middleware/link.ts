@@ -25,7 +25,7 @@ export const LinkMiddleware = async (req: NextRequest, ev: NextFetchEvent) => {
   }
 
   // If link is password-protected
-  if (link.protected) {
+  if (link.password) {
     return NextResponse.rewrite(
       new URL(`/protected/${domain}/${key}`, req.url)
     );

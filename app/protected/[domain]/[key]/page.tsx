@@ -1,10 +1,9 @@
-import LinkPasswordForm from "./form";
+import { VerifyLinkPasswordForm } from "@/components/forms/verify-link-password";
 
 export const metadata = {
   title: "Password Required",
   description:
     "This link is password protected. Please enter the password to view it",
-  image: "https://dub.co/_static/password-protected.png",
   noIndex: true,
 };
 
@@ -16,7 +15,7 @@ export default function PasswordProtectedLinkPage() {
           <h3 className="text-xl font-semibold">{metadata.title}</h3>
           <p className="text-sm text-gray-500">{metadata.description}</p>
         </div>
-        <LinkPasswordForm />
+        <VerifyLinkPasswordForm />
       </div>
     </main>
   );

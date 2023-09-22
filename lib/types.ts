@@ -13,7 +13,7 @@ export type GeoObject = {
 export interface Link {
   url: string;
   archived: boolean;
-  protected?: boolean;
+  password?: string;
   expiresAt?: Date;
   ios?: string;
   android?: string;
@@ -24,7 +24,7 @@ export interface CreateLink {
   domain: string;
   key: string;
   url: string;
-  protected?: boolean;
+  password?: string;
   expiresAt?: string;
   ios?: string;
   android?: string;

@@ -11,10 +11,10 @@ export default function Home() {
             method: "POST",
             body: JSON.stringify({
               url: "https://en.wikipedia.org/wiki/Operating_system",
-              domain: "localhost:3000",
-              protected: true,
-              key: "qwerty",
-              expiresAt: "2023-09-23T19:45:30.000Z",
+              domain: window.location.host,
+              password: "qwerty",
+              key: "os",
+              expiresAt: "2023-09-24T19:45:30.000Z",
               ios: "https://en.wikipedia.org/wiki/IOS",
               android:
                 "https://en.wikipedia.org/wiki/Android_(operating_system)",
@@ -39,8 +39,8 @@ export default function Home() {
           fetch("/api/links", {
             method: "DELETE",
             body: JSON.stringify({
-              domain: "localhost:3000",
-              key: "qwerty",
+              domain: window.location.host,
+              key: "os",
             }),
             headers: {
               "Content-Type": "application/json",
