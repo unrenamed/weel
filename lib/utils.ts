@@ -22,3 +22,6 @@ export const parse = (req: NextRequest): ParsedURL => {
 
   return { domain, path, fullPath, key, route };
 };
+
+export const capitalize = (str: string) =>
+  str.charAt(0).toUpperCase() + str.slice(1);

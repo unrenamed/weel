@@ -5,6 +5,7 @@ import { parse } from "../utils";
 import { Link } from "../types";
 import { LOCALHOST_GEO_DATA, LOCALHOST_IP } from "../constants";
 import { ipAddress } from "@vercel/edge";
+import { recordClick } from "../analytics";
 
 export const LinkMiddleware = async (req: NextRequest, ev: NextFetchEvent) => {
   const { key, domain } = parse(req);
@@ -42,6 +43,8 @@ export const LinkMiddleware = async (req: NextRequest, ev: NextFetchEvent) => {
   if (link.expiresAt && new Date() > link.expiresAt) {
     return NextResponse.redirect(new URL("/", req.url));
   }
+  
+  ev.waitUntil(recordClick(req));
 
   // If link is password-protected
   if (link.password) {
