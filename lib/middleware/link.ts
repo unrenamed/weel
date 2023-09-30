@@ -1,15 +1,34 @@
 import { NextFetchEvent, NextResponse, userAgent } from "next/server";
 import type { NextRequest } from "next/server";
-import { redis } from "../upstash";
+import { linksRateLimit, redis } from "../upstash";
 import { parse } from "../utils";
 import { Link } from "../types";
-import { LOCALHOST_GEO_DATA } from "../constants";
+import { LOCALHOST_GEO_DATA, LOCALHOST_IP } from "../constants";
+import { ipAddress } from "@vercel/edge";
 
 export const LinkMiddleware = async (req: NextRequest, ev: NextFetchEvent) => {
   const { key, domain } = parse(req);
 
   if (!domain || !key) {
     return NextResponse.next();
+  }
+
+  const ip = ipAddress(req) ?? LOCALHOST_IP;
+  const { success, limit, reset, remaining } = await linksRateLimit.limit(
+    `${ip}:${domain}:${key}`
+  );
+
+  if (!success) {
+    const response = new Response(
+      `You have made too many attempts to open this link. Please try again after ${new Date(
+        reset
+      ).toString()}`,
+      { status: 429 }
+    );
+    response.headers.append("X-Rate-Limit-Limit", limit.toString());
+    response.headers.append("X-Rate-Limit-Remaining", remaining.toString());
+    response.headers.append("X-Rate-Limit-Reset", reset.toString());
+    return response;
   }
 
   const link = await redis.get<Link>(`${domain}:${key}`);
