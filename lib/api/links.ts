@@ -3,17 +3,13 @@ import { redis } from "../upstash";
 import bcrypt from "bcrypt";
 
 export const createLink = async (link: CreateLink) => {
-  const {
-    url,
-    domain,
-    key,
-    expiresAt,
-    ios,
-    android,
-    geo,
-    password: rawPassword,
-  } = link;
+  const { url, domain, key, ios, android, geo, password: rawPassword } = link;
 
+  // we are not interested in secs and millis of a key expiration time
+  const expiresAt = link.expiresAt
+    ? link.expiresAt.substring(0, 17) + "00.000Z"
+    : null;
+    
   const exat = expiresAt ? new Date(expiresAt).getTime() / 1000 : null;
   const password = rawPassword ? await bcrypt.hash(rawPassword, 10) : null;
 
