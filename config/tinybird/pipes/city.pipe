@@ -1,0 +1,89 @@
+TOKEN "user token" READ
+
+NODE filter_by_timestamp_interval
+DESCRIPTION >
+    Filters clicks by given domain, key and timestamp interval if defined
+
+SQL >
+
+    %
+    SELECT *
+    FROM link_clicks
+    WHERE
+        domain = {{ String(domain) }} AND key = {{ String(key) }}
+        {% if defined(start) and defined(end) %}
+            AND timestamp BETWEEN {{ DateTime(start) }} AND {{ DateTime(end) }}
+        {% end %}
+
+
+
+NODE count_clicks_by_city
+DESCRIPTION >
+    Groups clicks by city
+
+SQL >
+
+    %
+    SELECT count(*) as clicks, city as city
+    FROM link_clicks 
+    GROUP BY city
+
+
+
+NODE with_api_documentation
+DESCRIPTION >
+    Describes API documentation and errors for dynamic parameters
+    
+SQL >
+
+    %
+    {% if defined(start) and not defined(end) %}
+        {{
+            error(
+                'You need to provide both start and end dates to filter by datetime interval'
+            )
+        }}
+    {% end %}
+    {% if defined(end) and not defined(start) %}
+        {{
+            error(
+                'You need to provide both start and end dates to filter by datetime interval'
+            )
+        }}
+    {% end %}
+
+    WITH
+        {{
+            String(
+                domain,
+                'localhost:3000',
+                description="Link's domain",
+                required=True,
+            )
+        }},
+        {{
+            String(
+                key,
+                'os',
+                description="Link's key unique per domain",
+                required=True,
+            )
+        }},
+        {{
+            DateTime(
+                start,
+                default="2022-01-01 00:00:00",
+                description="Start date of the interval",
+                required=False,
+            )
+        }},
+        {{
+            DateTime(
+                end,
+                default="2022-01-10 00:00:00",
+                description="End date of the interval",
+                required=False,
+            )
+        }}
+    SELECT *
+    FROM count_clicks_by_city
