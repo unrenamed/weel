@@ -1,0 +1,143 @@
+DESCRIPTION >
+	Calculates timeseries data of a given link clicks over time for the given period, filling the blanks. Works great for the realtime chart
+
+
+TOKEN "user token" READ
+
+NODE empty_data_points
+DESCRIPTION >
+    Generate a timeseries between given start and end dates with granularity, so we can fill empty data points
+
+SQL >
+
+    %
+    select
+        {% if granularity == 'minute' %}
+            addMinutes(toStartOfMinute(toDateTime({{ start }})), period.unit)
+        {% elif granularity == 'hour' %}
+            addHours(toStartOfHour(toDateTime({{ start }})), period.unit)
+        {% elif granularity == 'day' %}
+            addDays(toStartOfDay(toDateTime({{ start }})), period.unit)
+        {% elif granularity == 'month' %}
+            addMonths(toStartOfMonth(toDateTime({{ start }})), period.unit)
+        {% elif granularity == 'year' %}
+            addYears(toStartOfYear(toDateTime({{ start }})), period.unit)
+        {% else %} addHours(toStartOfHour(now() - interval 1 day), period.unit)
+        {% end %} AS t,
+        0 as clicks
+    from
+        (
+            select
+                dateDiff(
+                    {{ String(granularity, 'day') }},
+                    toDateTime({{ DateTime(start, '2022-09-09 10:10:10') }}),
+                    toDateTime({{ DateTime(end, '2022-10-09 10:10:10') }})
+                ) as range_end,
+                arrayJoin(range(0, toUInt64(range_end))) as unit
+        ) as period
+
+
+
+NODE filter_by_timestamp_interval
+DESCRIPTION >
+    Filter clicks by given domain, key and timestamp interval if defined
+
+SQL >
+
+    %
+    select *
+    from link_clicks
+    where
+        domain = {{ String(domain) }}
+        and key = {{ String(key) }}
+        and timestamp between {{ DateTime(start) }} and {{ DateTime(end) }}
+
+
+
+NODE timeseries_with_granularity
+DESCRIPTION >
+    Group timeseries data with given granularity and order by time
+
+SQL >
+
+    %
+    select
+        {% if granularity == 'minute' %} toDateTime(toStartOfMinute(timestamp))
+        {% elif granularity == 'hour' %} toDateTime(toStartOfHour(timestamp))
+        {% elif granularity == 'day' %} toDateTime(toStartOfDay(timestamp))
+        {% elif granularity == 'month' %} toDateTime(toStartOfMonth(timestamp))
+        {% elif granularity == 'year' %} toDateTime(toStartOfYear(timestamp))
+        {% else %} toDateTime(toStartOfHour(timestamp))
+        {% end %} as t,
+        count(*) as clicks
+    from filter_by_timestamp_interval
+    group by t
+    order by t
+
+
+
+NODE result_data
+DESCRIPTION >
+    Join and generate timeseries data, filling the blanks
+
+SQL >
+
+    select p.t as t, tg.clicks as clicks
+    from empty_data_points as p
+    left join timeseries_with_granularity as tg on p.t = tg.t
+    order by p.t
+
+
+
+NODE endpoint
+DESCRIPTION >
+    Return pipeline result data with API documentation and errors for dynamic parameters
+
+SQL >
+
+    %
+    with
+        {{
+            String(
+                domain,
+                'localhost:3000',
+                description="A host domain of a link",
+                required=True,
+            )
+        }},
+        {{
+            String(
+                key,
+                'os',
+                description="Link's key unique per domain",
+                required=True,
+            )
+        }},
+        {{
+            DateTime(
+                start,
+                '2023-09-01 00:00:00',
+                description="Start date of the interval",
+                required=True,
+            )
+        }},
+        {{
+            DateTime(
+                end,
+                '2023-11-01 00:00:00',
+                description="End date of the interval",
+                required=True,
+            )
+        }},
+        {{
+            String(
+                granularity,
+                'hour',
+                description="Datetime interval granularity; decides what period clicks will be grouped by",
+                required=True,
+            )
+        }}
+    select *
+    from result_data
+
+

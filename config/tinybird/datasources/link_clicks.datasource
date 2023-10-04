@@ -1,3 +1,5 @@
+TOKEN "user token" APPEND
+
 
 SCHEMA >
     `bot` UInt8 `json:$.bot`,

@@ -54,7 +54,7 @@ export default function Home() {
       </button>
       <button
         onClick={() =>
-          fetch("/api/links/os/stats/timeseries?interval=7d", {
+          fetch("/api/links/os/stats/timeseries?interval=1h", {
             method: "GET",
             headers: {
               "Content-Type": "application/json",

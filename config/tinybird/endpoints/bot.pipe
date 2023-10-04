@@ -1,39 +1,41 @@
+DESCRIPTION >
+	Link clicks per bot for a given period
+
+
 TOKEN "user token" READ
 
 NODE filter_by_timestamp_interval
 DESCRIPTION >
-    Filters clicks by given domain, key and timestamp interval if defined
+    Filter clicks by given domain, key and timestamp interval if defined
 
 SQL >
 
     %
-    SELECT *
-    FROM link_clicks
-    WHERE
-        domain = {{ String(domain) }} AND key = {{ String(key) }}
+    select *
+    from link_clicks
+    where
+        domain = {{ String(domain) }} and key = {{ String(key) }}
         {% if defined(start) and defined(end) %}
-            AND timestamp BETWEEN {{ DateTime(start) }} AND {{ DateTime(end) }}
+            and timestamp between {{ DateTime(start) }} and {{ DateTime(end) }}
         {% end %}
 
 
 
-NODE count_clicks_by_os
+NODE count_clicks_by_bot
 DESCRIPTION >
-    Groups clicks by os
+    Group clicks by bot column and count a total number of clicks
 
 SQL >
 
     %
-    SELECT count(*) as clicks, os as os
-    FROM filter_by_timestamp_interval
-    GROUP BY os
+    select count(*) as clicks, bot from filter_by_timestamp_interval group by bot
 
 
 
-NODE with_api_documentation
+NODE endpoint
 DESCRIPTION >
-    Describes API documentation and errors for dynamic parameters
-    
+    Return pipeline result data with API documentation and errors for dynamic parameters
+
 SQL >
 
     %
@@ -51,13 +53,12 @@ SQL >
             )
         }}
     {% end %}
-
-    WITH
+    with
         {{
             String(
                 domain,
                 'localhost:3000',
-                description="Link's domain",
+                description="A host domain of a link",
                 required=True,
             )
         }},
@@ -85,5 +86,7 @@ SQL >
                 required=False,
             )
         }}
-    SELECT *
-    FROM count_clicks_by_os
+    select *
+    from count_clicks_by_bot
+
+

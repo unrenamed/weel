@@ -1,46 +1,40 @@
+DESCRIPTION >
+	Link clicks per country for a given period
+
+
 TOKEN "user token" READ
 
 NODE filter_by_timestamp_interval
 DESCRIPTION >
-    Filters clicks by given domain, key and timestamp interval if defined
+    Filter clicks by given domain, key and timestamp interval if defined
 
 SQL >
 
     %
-    SELECT *
-    FROM link_clicks
-    WHERE
-        domain = {{ String(domain) }} AND key = {{ String(key) }}
+    select *
+    from link_clicks
+    where
+        domain = {{ String(domain) }} and key = {{ String(key) }}
         {% if defined(start) and defined(end) %}
-            AND timestamp BETWEEN {{ DateTime(start) }} AND {{ DateTime(end) }}
+            and timestamp between {{ DateTime(start) }} and {{ DateTime(end) }}
         {% end %}
 
 
 
-NODE calculate_timeseries_with_granularity
+NODE count_clicks_by_country
 DESCRIPTION >
-    Groups and orders timeseries data by given granularity
+    Group clicks by country column and count a total number of clicks
 
 SQL >
 
     %
-    SELECT
-        {% if granularity == 'minute' %} toDateTime(toStartOfMinute(timestamp))
-        {% elif granularity == 'hour' %} toDateTime(toStartOfHour(timestamp))
-        {% elif granularity == 'day' %} toDateTime(toStartOfDay(timestamp))
-        {% elif granularity == 'month' %} toDateTime(toStartOfMonth(timestamp))
-        {% else %} toDateTime(toStartOfYear(timestamp))
-        {% end %} AS t,
-        count(*) as clicks
-    FROM filter_by_timestamp_interval
-    GROUP BY t
-    ORDER BY t
+    select count(*) as clicks, country as country from filter_by_timestamp_interval group by country
 
 
 
-NODE with_api_documentation
+NODE endpoint
 DESCRIPTION >
-    Describes API documentation and errors for dynamic parameters
+    Return pipeline result data with API documentation and errors for dynamic parameters
 
 SQL >
 
@@ -59,13 +53,12 @@ SQL >
             )
         }}
     {% end %}
-
-    WITH
+    with
         {{
             String(
                 domain,
                 'localhost:3000',
-                description="Link's domain",
+                description="A host domain of a link",
                 required=True,
             )
         }},
@@ -92,16 +85,8 @@ SQL >
                 description="End date of the interval",
                 required=False,
             )
-        }},
-        {{
-            String(
-                granularity,
-                'hour',
-                description="Datetime interval granularity; decides what period clicks will be grouped by",
-                required=False,
-            )
         }}
-    SELECT *
-    FROM calculate_timeseries_with_granularity
+    select *
+    from count_clicks_by_country
 
 
