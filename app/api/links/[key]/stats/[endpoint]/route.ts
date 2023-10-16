@@ -6,7 +6,7 @@ import {
 import { NextResponse, type NextRequest } from "next/server";
 import {
   INTERVALS,
-  LOCALHOST_HOST,
+  LINK_HOST,
   TINYBIRD_API_ENDPOINTS,
 } from "@/lib/constants";
 import { Interval } from "@/lib/types";
@@ -21,7 +21,7 @@ export async function GET(
   { params }: { params: Params }
 ) {
   const { key, endpoint } = params;
-  const domain = request.nextUrl.host || LOCALHOST_HOST;
+  const domain = LINK_HOST;
   const searchParams = request.nextUrl.searchParams;
   const interval = (searchParams.get("interval") as Interval) ?? undefined;
 

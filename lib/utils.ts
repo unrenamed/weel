@@ -1,5 +1,11 @@
-import { ParsedURL } from "./types";
+import { ParsedURL, SWRError } from "./types";
 import { NextRequest } from "next/server";
+import {
+  format,
+  differenceInMilliseconds,
+  formatDistanceToNow,
+  isThisYear,
+} from "date-fns";
 
 export const parse = (req: NextRequest): ParsedURL => {
   let domain = req.headers.get("host") as string;
@@ -25,3 +31,46 @@ export const parse = (req: NextRequest): ParsedURL => {
 
 export const capitalize = (str: string) =>
   str.charAt(0).toUpperCase() + str.slice(1);
+
+export function exclude<T>(obj: T, keys: (keyof T)[]): Partial<T> {
+  const excludedObj: Partial<T> = {};
+
+  for (const key in obj) {
+    if (!keys.includes(key as keyof T)) {
+      excludedObj[key] = obj[key];
+    }
+  }
+
+  return excludedObj;
+}
+
+export const fetcher = async (input: RequestInfo | URL, init?: RequestInit) => {
+  const res = await fetch(input, init);
+
+  // If the status code is not in the range 200-299,
+  // we still try to parse and throw it.
+  if (!res.ok) {
+    const error = new Error(
+      "An error occurred while fetching the data."
+    ) as SWRError;
+    // Attach extra info to the error object.
+    error.info = await res.json();
+    error.status = res.status;
+    throw error;
+  }
+
+  return res.json();
+};
+
+export const formatDate = (timestamp: Date) => {
+  const date = new Date(timestamp);
+  const diff = differenceInMilliseconds(Date.now(), date);
+
+  if (diff < 2 * 1000) {
+    return "just now";
+  } else if (diff < 24 * 60 * 60 * 1000) {
+    return `${formatDistanceToNow(date)} ago`;
+  } else {
+    return format(date, `MMM d ${isThisYear(date) ? "" : "y"}`);
+  }
+};

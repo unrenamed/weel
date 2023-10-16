@@ -1,6 +1,7 @@
-import { CreateLink, Link } from "../types";
+import { CreateLink, FindLinksParams, Link } from "../types";
 import { redis } from "../upstash";
 import bcrypt from "bcrypt";
+import prisma from "@/lib/prisma";
 
 export const createLink = async (link: CreateLink) => {
   const { url, domain, key, ios, android, geo, password: rawPassword } = link;
@@ -9,9 +10,18 @@ export const createLink = async (link: CreateLink) => {
   const expiresAt = link.expiresAt
     ? link.expiresAt.substring(0, 17) + "00.000Z"
     : null;
-    
+
   const exat = expiresAt ? new Date(expiresAt).getTime() / 1000 : null;
   const password = rawPassword ? await bcrypt.hash(rawPassword, 10) : null;
+
+  const addLinkToDB = prisma.link.create({
+    data: {
+      ...link,
+      geo: geo,
+      password,
+      expiresAt,
+    },
+  });
 
   const value = {
     url,
@@ -28,9 +38,38 @@ export const createLink = async (link: CreateLink) => {
     ...(exat && ({ exat } as any)), // expiration timestamp, in seconds
   };
 
-  return await redis.set<Link>(`${domain}:${key}`, value, opts);
+  const addLinkToRedis = redis.set<Link>(`${domain}:${key}`, value, opts);
+
+  const [dbLink, _] = await Promise.all([addLinkToDB, addLinkToRedis]);
+  return dbLink;
 };
 
 export const deleteLink = async (domain: string, key: string) => {
-  return await redis.del(`${domain}:${key}`);
+  const deleteFromDB = prisma.link.delete({
+    where: { domain_key: { domain, key } },
+  });
+  const deleteFromRedis = redis.del(`${domain}:${key}`);
+  await Promise.all([deleteFromDB, deleteFromRedis]);
+};
+
+export const findLinks = async ({
+  domain,
+  showArchived,
+  sort = "createdAt",
+  page,
+  perPage = 10,
+}: FindLinksParams) => {
+  return await prisma.link.findMany({
+    where: {
+      ...(domain && { domain }),
+      archived: showArchived ? undefined : false,
+    },
+    orderBy: {
+      [sort]: "desc",
+    },
+    take: perPage,
+    ...(page && {
+      skip: (page - 1) * perPage,
+    }),
+  });
 };

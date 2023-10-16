@@ -68,3 +68,16 @@ export interface TinybirdError {
   error: string;
   documentation?: string;
 }
+
+export interface FindLinksParams {
+  domain?: string;
+  sort?: string;
+  page?: number;
+  perPage?: number;
+  showArchived?: boolean;
+}
+
+export interface SWRError extends Error {
+  status: number;
+  info: string;
+}
