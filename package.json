@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "db:migrate": "dotenv -e .env.local -- npx prisma db push",
-    "db:studio": "dotenv -e .env.studio -- npx prisma studio"
+    "db:studio": "dotenv -e .env.studio -- npx prisma studio",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.1",
