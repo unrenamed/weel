@@ -2,7 +2,11 @@ import { type NextFetchEvent, type NextRequest } from "next/server";
 import { AppMiddleware, LinkMiddleware } from "./lib/middleware";
 import { parse } from "./lib/utils";
 
-const APP_HOSTNAMES = new Set(["localhost", "localhost:3000"]);
+const APP_HOSTNAMES = new Set([
+  "localhost",
+  "localhost:3000",
+  "weel-unrenamed.vercel.app",
+]);
 
 export const config = {
   matcher: [
