@@ -13,6 +13,7 @@ import {
   TinybirdError,
   TinybirdPipe,
 } from "./types";
+import prisma from "@/lib/prisma";
 
 const intervalData: IntervalData = {
   "1h": {
@@ -87,9 +88,25 @@ export const recordClick = async (req: NextRequest) => {
       cpu_architecture: ua.cpu?.architecture ?? "Unknown",
       bot: ua.isBot,
       referer: referer ?? "(direct)",
+      referer_url: referer ?? "(direct)",
     }),
     headers: {
       Authorization: `Bearer ${process.env.TINYBIRD_API_TOKEN}`,
+    },
+  });
+
+  await prisma.link.update({
+    where: {
+      domain_key: {
+        domain,
+        key,
+      },
+    },
+    data: {
+      totalClicks: {
+        increment: 1,
+      },
+      lastClicked: new Date(),
     },
   });
 };
