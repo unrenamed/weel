@@ -1,0 +1,42 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextIndex"]
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model Link {
+  id        String    @id @default(cuid())
+  domain    String
+  key       String
+  url       String    @db.LongText
+  archived  Boolean   @default(false)
+  expiresAt DateTime?
+  password  String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  // Text information
+  title       String?
+  description String? @db.VarChar(280)
+
+  // Device targeting
+  ios     String? @db.LongText // custom link for iOS devices
+  android String? @db.LongText // custom link for Android devices
+  geo     Json?   @db.Json // custom link for specific countries
+
+  // Stats
+  totalClicks Int       @default(0)
+  lastClicked DateTime?
+
+  @@unique([domain, key])
+  @@index(domain)
+  @@index(createdAt(sort: Desc))
+  @@index(totalClicks(sort: Desc))
+  @@index(lastClicked)
+  @@fulltext([key, url])
+}
