@@ -52,6 +52,8 @@ module.exports = {
         "accordion-up": "accordion-up 300ms cubic-bezier(0.87, 0, 0.13, 1)",
         // Custom wiggle animation
         wiggle: "wiggle 0.75s infinite",
+        // Link card skeleton
+        "move-up": "move-up 0.75s linear",
       },
       keyframes: {
         // Modal
@@ -134,6 +136,11 @@ module.exports = {
           "45%": { transform: "translateX(-6px) rotate(-2.4deg)" },
           "60%": { transform: "translateX(2px) rotate(1.6deg)" },
           "75%": { transform: "translateX(-1px) rotate(-0.8deg)" },
+        },
+        // Link card skeleton
+        "move-up": {
+          "0%": { transform: "translateY(50px)", opacity: 0 },
+          "100%": { transform: "translateY(0)", opacity: 1 },
         },
       },
       colors: {
