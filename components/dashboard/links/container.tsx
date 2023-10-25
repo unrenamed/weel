@@ -5,6 +5,7 @@ import LinkSkeleton from "./skeleton";
 import LinkCard from "./card";
 import LinkSort from "./sort";
 import { useCallback, useRef } from "react";
+import LinksFilters from "./filters";
 
 export default function LinksContainer() {
   const { links, isReachingEnd, isLoadingMore, setSize, size } = useLinks();
@@ -27,66 +28,76 @@ export default function LinksContainer() {
     [isLoadingMore, isReachingEnd, size, setSize]
   );
 
-  if (links?.length === 0) {
-    return (
-      <div>
-        <div className="my-5 flex h-10 w-full justify-end">
-          <LinkSort />
-        </div>
-        <ul className="space-y-3">
-          {[...Array(5)].map((_, i) => (
-            <li key={i}>
-              <LinkSkeleton />
-            </li>
-          ))}
-        </ul>
-      </div>
-    );
-  }
+  const renderCardsPlaceholder = () => (
+    <ul className="space-y-3">
+      {[...Array(5)].map((_, i) => (
+        <li key={i}>
+          <LinkSkeleton />
+        </li>
+      ))}
+    </ul>
+  );
 
-  if (links) {
+  const renderCardsAnimatedPlaceholder = () => (
+    <ul className="space-y-3">
+      {[...Array(5)].map((_, i) => (
+        <li
+          key={i}
+          className="animate-move-up"
+          style={{
+            animationDelay: `${i * 50}ms`,
+            animationFillMode: "backwards",
+          }}
+        >
+          <LinkSkeleton />
+        </li>
+      ))}
+    </ul>
+  );
+
+  const renderLinksList = () => (
+    <ul className="space-y-3">
+      {links.map((link, i) => {
+        const isLastElement = links.length === i + 1;
+        return isLastElement ? (
+          <li key={link.id} ref={lastLinkElementRef}>
+            <LinkCard link={link} />
+          </li>
+        ) : (
+          <li key={link.id}>
+            <LinkCard link={link} />
+          </li>
+        );
+      })}
+    </ul>
+  );
+
+  const renderNoLinksFound = () => <div>No links found</div>;
+
+  const renderItems = () => {
+    if (links?.length === 0) {
+      return isLoadingMore ? renderCardsPlaceholder() : renderNoLinksFound();
+    }
+
     return (
       <>
-        <div className="my-5 flex h-10 w-full justify-end">
-          <LinkSort />
-        </div>
-        <ul className="space-y-3">
-          {links.map((link, i) => {
-            const isLastElement = links.length === i + 1;
-            return isLastElement ? (
-              <li key={link.id} ref={lastLinkElementRef}>
-                <LinkCard link={link} />
-              </li>
-            ) : (
-              <li key={link.id}>
-                <LinkCard link={link} />
-              </li>
-            );
-          })}
-        </ul>
-        {isLoadingMore && (
-          <div className="mt-3 relative">
-            <div className="w-full h-full absolute z-10 bg-gradient-to-t from-white/90" />
-            <ul className="space-y-3">
-              {[...Array(5)].map((_, i) => (
-                <li
-                  key={i}
-                  className="animate-move-up"
-                  style={{
-                    animationDelay: `${i * 50}ms`,
-                    animationFillMode: "backwards",
-                  }}
-                >
-                  <LinkSkeleton />
-                </li>
-              ))}
-            </ul>
-          </div>
+        {links?.length > 0 && renderLinksList()}
+        {links?.length > 0 && isLoadingMore && (
+          <div className="mt-3">{renderCardsAnimatedPlaceholder()}</div>
         )}
-        <div className="w-full h-10 bottom-0 sticky z-10 bg-gradient-to-t from-white/80" />
       </>
     );
-  }
+  };
 
-  return null;
+  return (
+    <div>
+      <div className="my-5 flex h-10 w-full justify-end">
+        <LinkSort />
+      </div>
+      <div className="flex justify-between space-x-6">
+        <LinksFilters />
+        <div className="grow">{renderItems()}</div>
+      </div>
+    </div>
+  );
 }

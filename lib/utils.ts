@@ -74,3 +74,12 @@ export const formatDate = (timestamp: Date) => {
     return format(date, `MMM d ${isThisYear(date) ? "" : "y"}`);
   }
 };
+
+export const getApexDomain = (url: string) => {
+  try {
+    // replace any custom scheme (e.g. notion://) with https://
+    return new URL(url.replace(/^[a-zA-Z]+:\/\//, "https://")).hostname;
+  } catch (e) {
+    return "";
+  }
+};
