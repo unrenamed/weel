@@ -5,6 +5,7 @@ declare global {
       UPSTASH_REDIS_REST_TOKEN: string;
       TINYBIRD_API_TOKEN: string;
       DATABASE_URL: string;
+      DASHBOARD_HOSTNAMES: string;
     }
   }
 }

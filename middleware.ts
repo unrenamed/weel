@@ -2,11 +2,7 @@ import { type NextFetchEvent, type NextRequest } from "next/server";
 import { AppMiddleware, LinkMiddleware } from "./lib/middleware";
 import { parse } from "./lib/utils";
 
-const APP_HOSTNAMES = new Set([
-  "localhost",
-  "localhost:3000",
-  "weel-unrenamed.vercel.app",
-]);
+const DASHBOARD_HOSTNAMES = new Set(process.env.DASHBOARD_HOSTNAMES.split(","));
 
 export const config = {
   matcher: [
@@ -26,7 +22,7 @@ export const config = {
 export function middleware(req: NextRequest, ev: NextFetchEvent) {
   const { domain } = parse(req);
 
-  if (APP_HOSTNAMES.has(domain)) {
+  if (DASHBOARD_HOSTNAMES.has(domain)) {
     return AppMiddleware(req, ev);
   }
 
