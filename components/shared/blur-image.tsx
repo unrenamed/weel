@@ -8,7 +8,7 @@ type Props = ImageProps & {
 type LoaderType = "default" | "fallback";
 
 export default function BlurImage(props: Props) {
-  const { className: _, ...imageProps } = props;
+  const { className: _c, fallbackLoader: _f, ...imageProps } = props;
 
   const [isLoading, setLoading] = useState(true);
   const [loaderType, setLoaderType] = useState<LoaderType>("default");
