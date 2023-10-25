@@ -5,8 +5,8 @@ import { useForm } from "react-hook-form";
 import { FormData, linkPasswordSchema } from "./schema";
 import { useParams, useRouter } from "next/navigation";
 import { verifyPassword } from "./actions";
-import AlertCircleFill from "@/ui/icons/alert-circle-fill";
-import LoadingSpinner from "@/ui/icons/loading-spinner";
+import AlertCircleFill from "@/components/icons/alert-circle-fill";
+import LoadingSpinner from "@/components/icons/loading-spinner";
 
 export function VerifyLinkPasswordForm() {
   const { domain, key } = useParams() as {
