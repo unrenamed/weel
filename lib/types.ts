@@ -75,6 +75,7 @@ export interface FindLinksParams {
   page?: number;
   perPage?: number;
   showArchived?: boolean;
+  search?: string;
 }
 
 export interface SWRError extends Error {

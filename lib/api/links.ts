@@ -55,6 +55,7 @@ export const deleteLink = async (domain: string, key: string) => {
 export const findLinks = async ({
   domain,
   showArchived,
+  search,
   sort = "createdAt",
   page,
   perPage = 10,
@@ -62,6 +63,16 @@ export const findLinks = async ({
   return await prisma.link.findMany({
     where: {
       ...(domain && { domain }),
+      ...(search && {
+        OR: [
+          {
+            key: { contains: search },
+          },
+          {
+            url: { contains: search },
+          },
+        ],
+      }),
       archived: showArchived ? undefined : false,
     },
     orderBy: {

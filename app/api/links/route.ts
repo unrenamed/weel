@@ -10,10 +10,12 @@ export async function GET(request: NextRequest) {
   const page = searchParams.get("page");
   const perPage = searchParams.get("per_page");
   const showArchived = searchParams.get("show_archived");
+  const search = searchParams.get("search");
 
   const links = await findLinks({
     ...(domain && { domain }),
     ...(sort && { sort }),
+    ...(search && { search }),
     ...(page && { page: parseInt(page) }),
     ...(perPage && { perPage: parseInt(perPage) }),
     ...(showArchived && { showArchived: showArchived === "true" }),
