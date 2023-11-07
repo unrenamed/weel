@@ -1,6 +1,7 @@
 import Tick from "@/components/icons/tick";
 import DropdownMenu from "@/components/shared/dropdown";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
+import { ArrowDown10 } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 
@@ -60,7 +61,8 @@ export default function LinkSort() {
         </div>
       }
     >
-      <button className="flex justify-between items-center rounded-md shadow transition-all active:scale-95 px-3 py-2.5 w-48 space-x-2 bg-white hover:shadow-md">
+      <button className="flex items-center rounded-md shadow transition-all active:scale-95 px-3 py-2.5 w-48 space-x-2 bg-white hover:shadow-md">
+        <ArrowDown10 className="h-4 w-4" strokeWidth={1.5} />
         <p className="text-sm">Sort by</p>
       </button>
     </DropdownMenu>
