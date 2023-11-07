@@ -19,7 +19,7 @@ function getKey(searchParams: URLSearchParams) {
 export const useLinks = () => {
   const searchParams = useSearchParams();
 
-  const { data, error, isLoading, isValidating, size, setSize } =
+  const { data, error, isLoading, isValidating, size, setSize, mutate } =
     useSWRInfinite<Link[]>(getKey(new URLSearchParams(searchParams)), fetcher);
 
   const links: Link[] = data ? ([] as Link[]).concat(...data) : [];
@@ -38,5 +38,6 @@ export const useLinks = () => {
     isRefreshing,
     size,
     setSize,
+    mutate,
   };
 };

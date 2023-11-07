@@ -8,7 +8,15 @@ import { useCallback, useRef } from "react";
 import LinksFilters from "./filters";
 
 export default function LinksContainer() {
-  const { links, isReachingEnd, isLoadingMore, setSize, size } = useLinks();
+  const {
+    links,
+    isReachingEnd,
+    isLoadingMore,
+    setSize,
+    size,
+    mutate,
+    isRefreshing,
+  } = useLinks();
 
   const observer = useRef<IntersectionObserver>();
   const lastLinkElementRef = useCallback(
@@ -61,11 +69,11 @@ export default function LinksContainer() {
         const isLastElement = links.length === i + 1;
         return isLastElement ? (
           <li key={link.id} ref={lastLinkElementRef}>
-            <LinkCard link={link} />
+            <LinkCard link={link} revalidate={() => mutate()} />
           </li>
         ) : (
           <li key={link.id}>
-            <LinkCard link={link} />
+            <LinkCard link={link} revalidate={() => mutate()} />
           </li>
         );
       })}
@@ -79,10 +87,14 @@ export default function LinksContainer() {
       return isLoadingMore ? renderCardsPlaceholder() : renderNoLinksFound();
     }
 
+    if (isRefreshing) {
+      return renderCardsPlaceholder();
+    }
+
     return (
       <>
-        {links?.length > 0 && renderLinksList()}
-        {links?.length > 0 && isLoadingMore && (
+        {renderLinksList()}
+        {isLoadingMore && (
           <div className="mt-3">{renderCardsAnimatedPlaceholder()}</div>
         )}
       </>
