@@ -5,11 +5,19 @@ type Props = {
   children: ReactNode;
   content: ReactNode | string;
   align?: "start" | "end" | "center";
+  isOpen: boolean;
+  onOpenChange: (isOpen: boolean) => void;
 };
 
-export default function Popover({ children, content, align }: Props) {
+export default function Popover({
+  children,
+  content,
+  align,
+  isOpen,
+  onOpenChange,
+}: Props) {
   return (
-    <PopoverPrimitive.Root>
+    <PopoverPrimitive.Root open={isOpen} onOpenChange={onOpenChange}>
       <PopoverPrimitive.Trigger asChild>{children}</PopoverPrimitive.Trigger>
       <PopoverPrimitive.Portal>
         <PopoverPrimitive.Content
