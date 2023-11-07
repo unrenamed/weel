@@ -73,7 +73,7 @@ const IncludeArchivedSwitch = () => {
       </label>
       <SwitchPrimitive.Root
         className="rounded-full relative outline-none cursor-pointer w-8 h-4 data-[state=unchecked]:bg-gray-200 data-[state=checked]:bg-yellow-400 focus-visible:ring focus-visible:ring-yellow-400 focus-visible:ring-opacity-75 transition-colors duration-200 ease-in-out border-2 border-transparent"
-        defaultChecked={searchParams.get("include_archived") === "true"}
+        defaultChecked={searchParams.get("show_archived") === "true"}
         onCheckedChange={setQueryParams}
       >
         <SwitchPrimitive.Thumb className="block w-3 h-3 bg-white rounded-full transition-transform duration-200 will-change-transform data-[state=checked]:translate-x-4" />
