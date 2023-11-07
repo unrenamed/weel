@@ -1,7 +1,6 @@
-import Tick from "@/components/icons/tick";
 import DropdownMenu from "@/components/shared/dropdown";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
-import { ArrowDown10 } from "lucide-react";
+import { ArrowDown10, Check } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 
@@ -54,7 +53,7 @@ export default function LinkSort() {
             >
               <button onClick={() => changeSort(o.key)}>
                 <p className="text-sm">{o.displayText}</p>
-                {selectedSort.key === o.key && <Tick className="h-4 w-4" />}
+                {selectedSort.key === o.key && <Check className="h-4 w-4" />}
               </button>
             </DropdownMenuPrimitive.Item>
           ))}

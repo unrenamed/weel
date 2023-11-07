@@ -1,6 +1,6 @@
 export default function LinkSkeleton() {
   return (
-    <div className="flex justify-between items-center rounded-lg border-2 border-gray-50 bg-white p-3 shadow transition-all hover:shadow-md sm:p-4">
+    <div className="flex justify-between items-center rounded-lg bg-white p-3 shadow transition-all hover:shadow-md sm:p-4">
       <div className="flex items-center ">
         <div className="h-10 w-10 animate-pulse rounded-full bg-gray-200" />
         <div className="ml-3">

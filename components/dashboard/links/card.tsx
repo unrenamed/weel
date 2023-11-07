@@ -14,11 +14,14 @@ import {
   ArchiveIcon,
   ArchiveRestore,
   BarChart,
+  Check,
+  Copy,
   Edit3,
   QrCode,
   Trash2,
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import { toast } from "sonner";
 
 const imageLoader = ({ src, width }: { src: string; width: number }) => {
   return `https://api.faviconkit.com/${src}/${width}`;
@@ -111,7 +114,7 @@ export default function LinkCard({
           />
         )}
         <div>
-          <div className="flex items-center">
+          <div className="flex items-center space-x-2">
             <a
               href={href}
               target="_blank"
@@ -122,6 +125,7 @@ export default function LinkCard({
             >
               {domainKey}
             </a>
+            <CopyToClipboard value={domainKey} />
           </div>
           <div className="flex items-center space-x-2">
             <p className="text-sm text-gray-500 whitespace-nowrap">
@@ -225,5 +229,33 @@ export default function LinkCard({
         </Popover>
       </div>
     </div>
+  );
+}
+
+function CopyToClipboard({ value }: { value: string }) {
+  const [copied, setCopied] = useState(false);
+  return (
+    <button
+      className="h-6 w-6 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-700 hover:scale-110 transition-all duration-75 active:scale-90"
+      onClick={() => {
+        toast.promise(
+          navigator.clipboard
+            .writeText(value)
+            .then(() => setCopied(true))
+            .then(() => setTimeout(() => setCopied(false), 3000)),
+          {
+            loading: "Copying link to clipboard...",
+            success: "Copied link to clipboard!",
+            error: "Failed to copy",
+          }
+        );
+      }}
+    >
+      {copied ? (
+        <Check className="h-3 w-3 m-auto" strokeWidth={1.5} />
+      ) : (
+        <Copy className="h-3 w-3 m-auto" strokeWidth={1.5} />
+      )}
+    </button>
   );
 }
