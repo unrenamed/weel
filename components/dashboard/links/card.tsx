@@ -24,8 +24,9 @@ import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 const imageLoader = ({ src, width }: { src: string; width: number }) => {
-  return `https://api.faviconkit.com/${src}/${width}`;
+  return `https://payable-red-ostrich.faviconkit.com/${src}/${width}`;
 };
+
 const fallbackImageLoader = ({
   src,
   width: _,
@@ -237,7 +238,8 @@ function CopyToClipboard({ value }: { value: string }) {
   return (
     <button
       className="h-6 w-6 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-700 hover:scale-110 transition-all duration-75 active:scale-90"
-      onClick={() => {
+      onClick={(event) => {
+        event.stopPropagation();
         toast.promise(
           navigator.clipboard
             .writeText(value)
