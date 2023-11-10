@@ -8,8 +8,6 @@ export const LOCALHOST_GEO_DATA = {
 
 export const LOCALHOST_IP = "127.0.0.1";
 
-export const LINK_HOST = "link.localhost:3000";
-
 export const TINYBIRD_API_ENDPOINTS = [
   "timeseries",
   "clicks",

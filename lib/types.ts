@@ -33,6 +33,8 @@ export interface CreateLink {
   geo?: GeoObject;
 }
 
+export interface EditLink extends CreateLink {}
+
 export interface DeleteLink {
   domain: string;
   key: string;

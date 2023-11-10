@@ -4,8 +4,10 @@ import {
   useDeleteLinkModal,
   useLinkQrModal,
 } from "@/components/modals";
+import { useCreateEditLinkModal } from "@/components/modals/create-edit-link-modal";
 import BlurImage from "@/components/shared/blur-image";
 import Popover from "@/components/shared/popover";
+import { classNames } from "@/components/utils";
 import { formatDate, capitalize, getApexDomain } from "@/lib/utils";
 import { Link } from "@prisma/client";
 import * as Separator from "@radix-ui/react-separator";
@@ -47,15 +49,21 @@ export default function LinkCard({
   const [isActionsMenuOpen, setIsActionsMenuOpen] = useState(false);
   const closeActionsMenu = () => setIsActionsMenuOpen(false);
 
-  const { show: showArchiveModal, Modal: ArchiveModal } = useArchiveLinkModal(
+  const { show: showArchiveModal, Modal: ArchiveModal } = useArchiveLinkModal({
     link,
-    revalidate
-  );
-  const { show: showDeleteModal, Modal: DeleteModal } = useDeleteLinkModal(
+    onSubmit: () => revalidate(),
+  });
+  const { show: showDeleteModal, Modal: DeleteModal } = useDeleteLinkModal({
     link,
-    revalidate
-  );
-  const { show: showLinkQrModal, Modal: LinkQrModal } = useLinkQrModal(link);
+    onSubmit: () => revalidate(),
+  });
+  const { show: showLinkQrModal, Modal: LinkQrModal } = useLinkQrModal({
+    link,
+  });
+  const { show: showEditModal, Modal: EditModal } = useCreateEditLinkModal({
+    link,
+    onSubmit: () => revalidate(),
+  });
 
   const domainKey = `${link.domain}/${link.key}`;
   const href = `https://${domainKey}`;
@@ -73,6 +81,7 @@ export default function LinkCard({
 
       switch (event.key) {
         case "e":
+          showEditModal();
           break;
         case "q":
           showLinkQrModal();
@@ -85,7 +94,13 @@ export default function LinkCard({
           break;
       }
     },
-    [showArchiveModal, showDeleteModal, showLinkQrModal, isActionsMenuOpen]
+    [
+      showArchiveModal,
+      showDeleteModal,
+      showLinkQrModal,
+      showEditModal,
+      isActionsMenuOpen,
+    ]
   );
 
   useEffect(() => {
@@ -98,6 +113,7 @@ export default function LinkCard({
       <ArchiveModal />
       <DeleteModal />
       <LinkQrModal />
+      <EditModal />
       <div className="flex gap-3 items-center">
         {link.archived ? (
           <div className="h-8 w-8 rounded-full sm:h-10 sm:w-10 bg-gray-200 flex items-center justify-center">
@@ -115,20 +131,21 @@ export default function LinkCard({
           />
         )}
         <div>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 max-w-fit">
             <a
               href={href}
               target="_blank"
               rel="noreferrer"
-              className={`${
+              className={classNames(
+                "w-full truncate font-semibold text-sm sm:text-base max-w-[140px] sm:max-w-[300px] md:max-w-[360px] xl:max-w-[400px]",
                 link.archived ? "text-gray-500" : "text-blue-800"
-              } font-semibold`}
+              )}
             >
               {domainKey}
             </a>
             <CopyToClipboard value={domainKey} />
           </div>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 max-w-[140px] sm:max-w-[300px] md:max-w-[360px] xl:max-w-[400px]">
             <p className="text-sm text-gray-500 whitespace-nowrap">
               {capitalize(formatDate(link.createdAt))}
             </p>
@@ -137,7 +154,7 @@ export default function LinkCard({
               href={link.url}
               target="_blank"
               rel="noreferrer"
-              className="truncate md:max-w-[450px] sm:max-w-[300px] max-w-[150px] hover:underline font-medium text-gray-700 text-sm"
+              className="xs:block hidden truncate text-sm font-medium text-gray-700 underline-offset-2 hover:underline"
             >
               {link.url}
             </a>
@@ -162,7 +179,13 @@ export default function LinkCard({
           onOpenChange={setIsActionsMenuOpen}
           content={
             <div className="flex flex-col items-center p-2 sm:w-48">
-              <button className="w-full flex justify-between items-center p-2 rounded-md hover:bg-gray-100  transition-all duration-75">
+              <button
+                className="w-full flex justify-between items-center p-2 rounded-md hover:bg-gray-100  transition-all duration-75"
+                onClick={() => {
+                  closeActionsMenu();
+                  showEditModal();
+                }}
+              >
                 <div className="flex items-center space-x-2 text-gray-500 text-sm font-medium">
                   <Edit3 strokeWidth={1.5} className="h-4 w-4" />
                   <span>Edit</span>

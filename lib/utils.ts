@@ -32,6 +32,9 @@ export const parse = (req: NextRequest): ParsedURL => {
 export const capitalize = (str: string) =>
   str.charAt(0).toUpperCase() + str.slice(1);
 
+export const uncapitalize = (str: string) =>
+  str.charAt(0).toLowerCase() + str.slice(1);
+
 export function exclude<T>(obj: T, keys: (keyof T)[]): Partial<T> {
   const excludedObj: Partial<T> = {};
 
@@ -82,4 +85,12 @@ export const getApexDomain = (url: string) => {
   } catch (e) {
     return "";
   }
+};
+
+export const getDateTimeLocal = (d: Date | string): string => {
+  const date = new Date(d);
+  if (isNaN(date.getTime())) return "";
+  const timePart = date.toLocaleTimeString().split(":").slice(0, 2).join(":");
+  const datePart = date.toISOString().split("T")[0];
+  return `${datePart}T${timePart}`;
 };

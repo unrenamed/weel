@@ -2,7 +2,7 @@ import MagnifyingGlassIcon from "@/components/icons/magnifying-glass";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import * as SwitchPrimitive from "@radix-ui/react-switch";
+import Switch from "@/components/shared/switch";
 
 export default function LinksFilters() {
   return (
@@ -71,13 +71,10 @@ const IncludeArchivedSwitch = () => {
       <label className="text-sm text-gray-800 leading-none font-medium">
         Include archived
       </label>
-      <SwitchPrimitive.Root
-        className="rounded-full relative outline-none cursor-pointer w-8 h-4 data-[state=unchecked]:bg-gray-200 data-[state=checked]:bg-yellow-400 focus-visible:ring focus-visible:ring-yellow-400 focus-visible:ring-opacity-75 transition-colors duration-200 ease-in-out border-2 border-transparent"
-        defaultChecked={searchParams.get("show_archived") === "true"}
+      <Switch
         onCheckedChange={setQueryParams}
-      >
-        <SwitchPrimitive.Thumb className="block w-3 h-3 bg-white rounded-full transition-transform duration-200 will-change-transform data-[state=checked]:translate-x-4" />
-      </SwitchPrimitive.Root>
+        defaultChecked={searchParams.get("show_archived") === "true"}
+      />
     </div>
   );
 };

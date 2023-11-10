@@ -82,13 +82,23 @@ function ArchiveLinkModalContent({ link, hideModal, onSubmit }: Props) {
   );
 }
 
-export const useArchiveLinkModal = (link: Link, onSubmit: () => void) => {
+export const useArchiveLinkModal = ({
+  link,
+  onSubmit,
+}: {
+  link: Link;
+  onSubmit: () => void;
+}) => {
   const { show, hide, isOpen, Modal: ArchiveModal } = useModal();
 
   const Modal = useCallback(() => {
     return (
       <ArchiveModal>
-        <ArchiveLinkModalContent link={link} hideModal={hide} onSubmit={onSubmit} />
+        <ArchiveLinkModalContent
+          link={link}
+          hideModal={hide}
+          onSubmit={onSubmit}
+        />
       </ArchiveModal>
     );
   }, [ArchiveModal, link, hide, onSubmit]);

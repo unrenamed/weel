@@ -6,6 +6,7 @@ declare global {
       TINYBIRD_API_TOKEN: string;
       DATABASE_URL: string;
       DASHBOARD_HOSTNAMES: string;
+      APP_LINK_DOMAIN: string;
     }
   }
 }

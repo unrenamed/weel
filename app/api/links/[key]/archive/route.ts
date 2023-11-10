@@ -1,6 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
-import { LINK_HOST } from "@/lib/constants";
 
 type Params = {
   key: string;
@@ -16,7 +15,7 @@ export async function PUT(
 ) {
   const { key } = params;
   const { archived } = (await request.json()) as Body;
-  const domain = LINK_HOST; // TODO: fix after u introduce custom domains
+  const domain = process.env.APP_LINK_DOMAIN; // TODO: fix after u introduce custom domains
 
   const link = await prisma.link.update({
     where: { domain_key: { domain, key } },

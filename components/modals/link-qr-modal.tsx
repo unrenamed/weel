@@ -171,7 +171,7 @@ function ExportDropdown({
   );
 }
 
-export const useLinkQrModal = (link: Link) => {
+export const useLinkQrModal = ({ link }: { link: Link }) => {
   const { show, hide, isOpen, Modal: LinkQrModal } = useModal();
 
   const Modal = useCallback(() => {

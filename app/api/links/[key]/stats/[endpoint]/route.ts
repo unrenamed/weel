@@ -4,11 +4,7 @@ import {
   isValidInterval,
 } from "@/lib/analytics";
 import { NextResponse, type NextRequest } from "next/server";
-import {
-  INTERVALS,
-  LINK_HOST,
-  TINYBIRD_API_ENDPOINTS,
-} from "@/lib/constants";
+import { INTERVALS, TINYBIRD_API_ENDPOINTS } from "@/lib/constants";
 import { Interval } from "@/lib/types";
 
 type Params = {
@@ -21,7 +17,7 @@ export async function GET(
   { params }: { params: Params }
 ) {
   const { key, endpoint } = params;
-  const domain = LINK_HOST;
+  const domain = process.env.APP_LINK_DOMAIN;
   const searchParams = request.nextUrl.searchParams;
   const interval = (searchParams.get("interval") as Interval) ?? undefined;
 

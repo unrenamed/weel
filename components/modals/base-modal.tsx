@@ -1,16 +1,27 @@
 import * as Dialog from "@radix-ui/react-dialog";
-import { Dispatch, ReactNode, SetStateAction, memo, useState } from "react";
+import {
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  memo,
+  useCallback,
+  useMemo,
+  useState,
+} from "react";
+import { classNames } from "../utils";
 
 type Props = {
   isOpen: boolean;
   children: ReactNode;
   setIsOpen?: Dispatch<SetStateAction<boolean>>;
+  contentClassName?: string;
 };
 
 const BaseModal = memo(function BaseModal({
   children,
   isOpen,
   setIsOpen,
+  contentClassName,
 }: Props) {
   const closeModal = () => {
     if (setIsOpen) {
@@ -35,7 +46,10 @@ const BaseModal = memo(function BaseModal({
         <Dialog.Content
           onOpenAutoFocus={(e) => e.preventDefault()}
           onCloseAutoFocus={(e) => e.preventDefault()}
-          className="animate-scale-in fixed inset-0 z-40 m-auto max-h-fit w-full max-w-md overflow-hidden border border-gray-200 bg-white p-0 shadow-xl md:rounded-xl"
+          className={classNames(
+            `animate-scale-in fixed inset-0 z-40 m-auto max-h-fit w-full max-w-md overflow-hidden border border-gray-200 bg-white p-0 shadow-xl md:rounded-xl`,
+            contentClassName
+          )}
         >
           {children}
         </Dialog.Content>
@@ -47,18 +61,34 @@ const BaseModal = memo(function BaseModal({
 export const useModal = () => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const show = () => setIsOpen(true);
-  const hide = () => setIsOpen(false);
+  const show = useCallback(() => setIsOpen(true), []);
+  const hide = useCallback(() => setIsOpen(false), []);
 
-  const Modal = ({ children }: { children: ReactNode }) => (
-    <>
-      {isOpen && (
-        <BaseModal isOpen={isOpen} setIsOpen={setIsOpen}>
-          {children}
-        </BaseModal>
-      )}
-    </>
+  const Modal = useCallback(
+    ({
+      children,
+      contentClassName,
+    }: {
+      children: ReactNode;
+      contentClassName?: string;
+    }) => (
+      <>
+        {isOpen && (
+          <BaseModal
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            contentClassName={contentClassName}
+          >
+            {children}
+          </BaseModal>
+        )}
+      </>
+    ),
+    [isOpen]
   );
 
-  return { show, hide, isOpen, Modal };
+  return useMemo(
+    () => ({ show, hide, isOpen, Modal }),
+    [show, hide, isOpen, Modal]
+  );
 };

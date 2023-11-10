@@ -46,8 +46,8 @@ function DeleteLinkModalContent({ link, hideModal, onSubmit }: Props) {
     <div className="p-4 flex flex-col space-y-2">
       <h3 className="text-lg font-medium">Delete {domainKey}</h3>
       <p className="text-sm text-gray-500">
-        Warning: Deleting this link will permanently remove all of its stats. This action
-        cannot be undone.
+        Warning: Deleting this link will permanently remove all of its stats.
+        This action cannot be undone.
       </p>
       <div className="flex flex-col space-y-2">
         <p className="text-sm">
@@ -71,7 +71,13 @@ function DeleteLinkModalContent({ link, hideModal, onSubmit }: Props) {
   );
 }
 
-export const useDeleteLinkModal = (link: Link, onSubmit: () => void) => {
+export const useDeleteLinkModal = ({
+  link,
+  onSubmit,
+}: {
+  link: Link;
+  onSubmit: () => void;
+}) => {
   const { show, hide, isOpen, Modal: DeleteModal } = useModal();
 
   const Modal = useCallback(() => {
