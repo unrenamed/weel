@@ -20,7 +20,9 @@ export const useLinks = () => {
   const searchParams = useSearchParams();
 
   const { data, error, isLoading, isValidating, size, setSize, mutate } =
-    useSWRInfinite<Link[]>(getKey(new URLSearchParams(searchParams)), fetcher);
+    useSWRInfinite<Link[]>(getKey(new URLSearchParams(searchParams)), fetcher, {
+      revalidateOnFocus: false,
+    });
 
   const links: Link[] = data ? ([] as Link[]).concat(...data) : [];
   const isLoadingMore =
