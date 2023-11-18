@@ -19,6 +19,7 @@ import {
   Check,
   Copy,
   Edit3,
+  PlusSquare,
   QrCode,
   Trash2,
 } from "lucide-react";
@@ -42,11 +43,18 @@ const fallbackImageLoader = ({
 type LinkCardProps = {
   link: Link;
   onArchive: () => void;
-  onDelete: (id: string) => void;
+  onDelete: () => void;
   onEdit: () => void;
+  onDuplicate: () => void;
 };
 
-function LinkCard({ link, onArchive, onDelete, onEdit }: LinkCardProps) {
+function LinkCard({
+  link,
+  onArchive,
+  onDelete,
+  onEdit,
+  onDuplicate,
+}: LinkCardProps) {
   const [isActionsMenuOpen, setIsActionsMenuOpen] = useState(false);
   const closeActionsMenu = () => setIsActionsMenuOpen(false);
 
@@ -59,12 +67,18 @@ function LinkCard({ link, onArchive, onDelete, onEdit }: LinkCardProps) {
   });
   const { show: showDeleteModal, Modal: DeleteModal } = useDeleteLinkModal({
     link,
-    onSubmit: () => onDelete(link.id),
+    onSubmit: onDelete,
   });
   const { show: showEditModal, Modal: EditModal } = useCreateEditLinkModal({
     link,
+    mode: "edit",
     onSubmit: onEdit,
   });
+  const { show: showDuplicateModal, Modal: DuplicateModal } =
+    useCreateEditLinkModal({
+      link: { ...link, key: `${link.key}-copy` },
+      onSubmit: onDuplicate,
+    });
 
   const domainKey = `${link.domain}/${link.key}`;
   const href = `https://${domainKey}`;
@@ -73,7 +87,7 @@ function LinkCard({ link, onArchive, onDelete, onEdit }: LinkCardProps) {
   const onKeyDown = useCallback(
     (event: Event) => {
       if (!(event instanceof KeyboardEvent)) return;
-      if (!["q", "d", "e", "a"].includes(event.key)) return;
+      if (!["q", "d", "e", "a", "x"].includes(event.key)) return;
       if (!isActionsMenuOpen) return;
 
       event.preventDefault();
@@ -84,13 +98,16 @@ function LinkCard({ link, onArchive, onDelete, onEdit }: LinkCardProps) {
         case "e":
           showEditModal();
           break;
+        case "d":
+          showDuplicateModal();
+          break;
         case "q":
           showLinkQrModal();
           break;
         case "a":
           showArchiveModal();
           break;
-        case "d":
+        case "x":
           showDeleteModal();
           break;
       }
@@ -100,6 +117,7 @@ function LinkCard({ link, onArchive, onDelete, onEdit }: LinkCardProps) {
       showDeleteModal,
       showLinkQrModal,
       showEditModal,
+      showDuplicateModal,
       isActionsMenuOpen,
     ]
   );
@@ -115,6 +133,7 @@ function LinkCard({ link, onArchive, onDelete, onEdit }: LinkCardProps) {
       <DeleteModal />
       <LinkQrModal />
       <EditModal />
+      <DuplicateModal />
       <div className="flex gap-3 items-center">
         {link.archived ? (
           <div className="h-8 w-8 rounded-full sm:h-10 sm:w-10 bg-gray-200 flex items-center justify-center">
@@ -199,6 +218,21 @@ function LinkCard({ link, onArchive, onDelete, onEdit }: LinkCardProps) {
                 className="w-full flex justify-between items-center p-2 rounded-md hover:bg-gray-100  transition-all duration-75"
                 onClick={() => {
                   closeActionsMenu();
+                  showDuplicateModal();
+                }}
+              >
+                <div className="flex items-center space-x-2 text-gray-500 text-sm font-medium">
+                  <PlusSquare strokeWidth={1.5} className="h-4 w-4" />
+                  <span>Duplicate</span>
+                </div>
+                <kbd className="text-gray-500 bg-gray-100 transition-all duration-75 px-1 py-0.5 rounded text-xs">
+                  D
+                </kbd>
+              </button>
+              <button
+                className="w-full flex justify-between items-center p-2 rounded-md hover:bg-gray-100  transition-all duration-75"
+                onClick={() => {
+                  closeActionsMenu();
                   showLinkQrModal();
                 }}
               >
@@ -242,7 +276,7 @@ function LinkCard({ link, onArchive, onDelete, onEdit }: LinkCardProps) {
                   <span>Delete...</span>
                 </div>
                 <kbd className="text-red-600 bg-red-100 transition-all duration-75 px-1 py-0.5 rounded text-xs">
-                  D
+                  X
                 </kbd>
               </button>
             </div>

@@ -10,12 +10,18 @@ import { classNames } from "../utils";
 
 type Props = {
   link?: Link;
+  mode?: "create" | "edit";
   hideModal: () => void;
   onSubmit: () => void;
 };
 
-function CreateEditLinkModalContent({ link, hideModal, onSubmit }: Props) {
-  const isEditMode = !!link;
+function CreateEditLinkModalContent({
+  link,
+  hideModal,
+  onSubmit,
+  mode = "create",
+}: Props) {
+  const isEditMode = mode === "edit";
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [isSubmitAtBottom, setIsSubmitAtBottom] = useState(true);
@@ -52,7 +58,7 @@ function CreateEditLinkModalContent({ link, hideModal, onSubmit }: Props) {
         : undefined,
     };
 
-    const apiUrl = isEditMode ? `/api/links/${link.key}` : "/api/links";
+    const apiUrl = isEditMode ? `/api/links/${link?.key}` : "/api/links";
     const method = isEditMode ? "PATCH" : "POST";
 
     const response = await fetch(apiUrl, {
@@ -103,6 +109,7 @@ function CreateEditLinkModalContent({ link, hideModal, onSubmit }: Props) {
         </div>
         <CreateEditLinkForm
           link={link}
+          mode={mode}
           onSectionOpen={handleContainerScroll}
           onFormHeightIncrease={scrollToBottom}
           onSave={sendAPIRequest}
@@ -137,8 +144,10 @@ function CreateEditLinkModalContent({ link, hideModal, onSubmit }: Props) {
 export const useCreateEditLinkModal = ({
   link,
   onSubmit,
+  mode,
 }: {
   link?: Link;
+  mode?: "create" | "edit";
   onSubmit: () => void;
 }) => {
   const { show, hide, isOpen, Modal: CreateEditModal } = useModal();
@@ -148,12 +157,13 @@ export const useCreateEditLinkModal = ({
       <CreateEditModal contentClassName="max-w-xl">
         <CreateEditLinkModalContent
           link={link}
+          mode={mode}
           hideModal={hide}
           onSubmit={onSubmit}
         />
       </CreateEditModal>
     );
-  }, [CreateEditModal, link, hide, onSubmit]);
+  }, [CreateEditModal, link, mode, hide, onSubmit]);
 
   return {
     show,

@@ -20,6 +20,7 @@ type Props = {
   onSectionOpen: () => void;
   onFormHeightIncrease: () => void;
   onSave: (data: FormData) => Promise<void>;
+  mode: "create" | "edit";
   link?: Link;
 };
 
@@ -30,8 +31,9 @@ type SwitchStatuses = {
 };
 
 export function CreateEditLinkForm(props: Props) {
-  const { children, onSectionOpen, onFormHeightIncrease, onSave, link } = props;
-  const isEditMode = !!link;
+  const { children, onSectionOpen, onFormHeightIncrease, onSave, link, mode } =
+    props;
+  const isEditMode = mode === "edit";
 
   const {
     handleSubmit,

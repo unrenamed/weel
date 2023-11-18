@@ -65,6 +65,7 @@ export default function LinksContainer() {
                   onArchive={mutateLinks}
                   onDelete={mutateLinks}
                   onEdit={mutateLinks}
+                  onDuplicate={mutateLinks}
                 />
               </li>
             ) : (
@@ -74,6 +75,7 @@ export default function LinksContainer() {
                   onArchive={mutateLinks}
                   onDelete={mutateLinks}
                   onEdit={mutateLinks}
+                  onDuplicate={mutateLinks}
                 />
               </li>
             );
