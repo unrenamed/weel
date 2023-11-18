@@ -1,11 +1,4 @@
-import {
-  UIEvent,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { UIEvent, useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "@prisma/client";
 import { useModal } from "./base-modal";
 import { CreateEditLinkForm } from "../forms/create-edit-link";
@@ -162,13 +155,10 @@ export const useCreateEditLinkModal = ({
     );
   }, [CreateEditModal, link, hide, onSubmit]);
 
-  return useMemo(
-    () => ({
-      show,
-      hide,
-      isOpen,
-      Modal,
-    }),
-    [show, hide, isOpen, Modal]
-  );
+  return {
+    show,
+    hide,
+    isOpen,
+    Modal,
+  };
 };

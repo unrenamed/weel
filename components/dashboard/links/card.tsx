@@ -39,30 +39,31 @@ const fallbackImageLoader = ({
   return `https://avatar.vercel.sh/${src}`;
 };
 
-export default function LinkCard({
-  link,
-  revalidate,
-}: {
+type LinkCardProps = {
   link: Link;
-  revalidate: () => void;
-}) {
+  onArchive: () => void;
+  onDelete: (id: string) => void;
+  onEdit: () => void;
+};
+
+function LinkCard({ link, onArchive, onDelete, onEdit }: LinkCardProps) {
   const [isActionsMenuOpen, setIsActionsMenuOpen] = useState(false);
   const closeActionsMenu = () => setIsActionsMenuOpen(false);
 
-  const { show: showArchiveModal, Modal: ArchiveModal } = useArchiveLinkModal({
-    link,
-    onSubmit: () => revalidate(),
-  });
-  const { show: showDeleteModal, Modal: DeleteModal } = useDeleteLinkModal({
-    link,
-    onSubmit: () => revalidate(),
-  });
   const { show: showLinkQrModal, Modal: LinkQrModal } = useLinkQrModal({
     link,
   });
+  const { show: showArchiveModal, Modal: ArchiveModal } = useArchiveLinkModal({
+    link,
+    onSubmit: onArchive,
+  });
+  const { show: showDeleteModal, Modal: DeleteModal } = useDeleteLinkModal({
+    link,
+    onSubmit: () => onDelete(link.id),
+  });
   const { show: showEditModal, Modal: EditModal } = useCreateEditLinkModal({
     link,
-    onSubmit: () => revalidate(),
+    onSubmit: onEdit,
   });
 
   const domainKey = `${link.domain}/${link.key}`;
@@ -284,3 +285,39 @@ function CopyToClipboard({ value }: { value: string }) {
     </button>
   );
 }
+
+// function areEqual(prevProps: LinkCardProps, nextProps: LinkCardProps) {
+//   let areGeoDataEqual = prevProps.link === null && nextProps.link === null;
+//   if (
+//     prevProps.link.geo &&
+//     typeof prevProps.link.geo === "object" &&
+//     nextProps.link.geo &&
+//     typeof nextProps.link.geo === "object"
+//   ) {
+//     const prevGeo = prevProps.link.geo as Prisma.JsonObject;
+//     const nextGeo = prevProps.link.geo as Prisma.JsonObject;
+//     areGeoDataEqual = Object.entries(prevGeo).every(
+//       ([country, url]) => url === nextGeo[country]
+//     );
+//   }
+
+//   return (
+//     prevProps.link.id === nextProps.link.id &&
+//     prevProps.link.domain === nextProps.link.domain &&
+//     prevProps.link.key === nextProps.link.key &&
+//     prevProps.link.url === nextProps.link.url &&
+//     prevProps.link.archived === nextProps.link.archived &&
+//     prevProps.link.expiresAt === nextProps.link.expiresAt &&
+//     prevProps.link.createdAt === nextProps.link.createdAt &&
+//     prevProps.link.updatedAt === nextProps.link.updatedAt &&
+//     prevProps.link.title === nextProps.link.title &&
+//     prevProps.link.description === nextProps.link.description &&
+//     prevProps.link.ios === nextProps.link.ios &&
+//     prevProps.link.android === nextProps.link.android &&
+//     prevProps.link.totalClicks === nextProps.link.totalClicks &&
+//     prevProps.link.lastClicked === nextProps.link.lastClicked &&
+//     areGeoDataEqual
+//   );
+// }
+
+export default LinkCard;

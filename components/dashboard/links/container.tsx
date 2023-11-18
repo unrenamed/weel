@@ -18,10 +18,12 @@ export default function LinksContainer() {
     isRefreshing,
   } = useLinks();
 
+  const mutateLinks = useCallback(() => {
+    mutate();
+  }, [mutate]);
+
   const { show, Modal: CreateEditLinkModal } = useCreateEditLinkModal({
-    onSubmit: () => {
-      mutate();
-    },
+    onSubmit: mutateLinks,
   });
 
   const observer = useRef<IntersectionObserver>();
@@ -58,11 +60,21 @@ export default function LinksContainer() {
             const isLastElement = links.length === i + 1;
             return isLastElement ? (
               <li key={link.id} ref={lastLinkElementRef}>
-                <LinkCard link={link} revalidate={() => mutate()} />
+                <LinkCard
+                  link={link}
+                  onArchive={mutateLinks}
+                  onDelete={mutateLinks}
+                  onEdit={mutateLinks}
+                />
               </li>
             ) : (
               <li key={link.id}>
-                <LinkCard link={link} revalidate={() => mutate()} />
+                <LinkCard
+                  link={link}
+                  onArchive={mutateLinks}
+                  onDelete={mutateLinks}
+                  onEdit={mutateLinks}
+                />
               </li>
             );
           })}
