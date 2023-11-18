@@ -2,7 +2,7 @@ import { usePrevious } from "@/lib/hooks/use-previous";
 import { useForm } from "react-hook-form";
 import { FormData, createEditLinkSchema } from "./schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useCallback, useEffect, useState } from "react";
 import { Separator } from "@radix-ui/themes";
 import { AndroidTargetingSection } from "./android-section";
 import { IOSTargetingSection } from "./ios-section";
@@ -12,8 +12,10 @@ import { GeoTargetingSection } from "./geo-section";
 import { Link } from "@prisma/client";
 import { getDateTimeLocal } from "@/lib/utils";
 import FormTextInput from "@/components/shared/form-text-input";
+import { Dices, Loader } from "lucide-react";
+import { useDebounce } from "use-debounce";
 
-const LINK_DOMAINS = ["link.localhost:3000"];
+const LINK_DOMAINS = ["link.localhost:3000", "chatg.pt", "dub.sh"];
 
 type Props = {
   children: ReactNode;
@@ -42,6 +44,9 @@ export function CreateEditLinkForm(props: Props) {
     watch,
     resetField,
     formState: { errors },
+    setValue,
+    setError,
+    clearErrors,
   } = useForm<FormData>({
     resolver: zodResolver(createEditLinkSchema),
     defaultValues: {
@@ -65,9 +70,43 @@ export function CreateEditLinkForm(props: Props) {
     geo: !!link?.geo,
   });
 
+  const [loadingRandomKey, setLoadingRandomKey] = useState(false);
+
+  const domain = watch("domain");
+  const key = watch("key");
+  const [debouncedKey] = useDebounce(key, 400);
   const geoData = watch("geo");
   const geoLocationsNum = geoData?.length ?? 0;
   const prevGeoLocationsNum = usePrevious(geoLocationsNum);
+
+  const generateKey = useCallback(async () => {
+    setLoadingRandomKey(true);
+    const response = await fetch(`/api/links/rand?domain=${domain}`);
+    if (response.ok) {
+      setValue("key", await response.json());
+    }
+    setLoadingRandomKey(false);
+  }, [domain, setValue]);
+
+  useEffect(() => {
+    if (debouncedKey?.length) {
+      fetch(`/api/links/exists?domain=${domain}&key=${debouncedKey}`).then(
+        async (res) => {
+          if (!res.ok) return;
+          const exists = await res.json();
+          if (exists) {
+            setError(
+              "key",
+              { message: "Key already exists in this domain" },
+              { shouldFocus: true }
+            );
+          } else {
+            clearErrors("key");
+          }
+        }
+      );
+    }
+  }, [domain, debouncedKey, setError, clearErrors]);
 
   useEffect(() => {
     if (prevGeoLocationsNum && geoLocationsNum > prevGeoLocationsNum) {
@@ -97,14 +136,34 @@ export function CreateEditLinkForm(props: Props) {
             )}
           </div>
           <div className="flex flex-col space-y-2">
-            <label className="text-sm font-medium text-gray-900" htmlFor="key">
-              Short link
-            </label>
+            <div className="flex justify-between items-center">
+              <label
+                className="text-sm font-medium text-gray-900"
+                htmlFor="key"
+              >
+                Short link
+              </label>
+              {!isEditMode && (
+                <button
+                  className="flex items-center space-x-2 text-sm text-gray-500 transition-all duration-75 hover:text-black active:scale-95"
+                  onClick={() => !loadingRandomKey && generateKey()}
+                  disabled={loadingRandomKey}
+                  type="button"
+                >
+                  {loadingRandomKey ? (
+                    <Loader className="h-4 w-4 animate-spin-slow" />
+                  ) : (
+                    <Dices className="h-4 w-4" />
+                  )}
+                  <p>{loadingRandomKey ? "Generating" : "Randomize"}</p>
+                </button>
+              )}
+            </div>
             <div className="flex w-full">
               <select
                 {...register("domain")}
                 id="domain"
-                className="flex w-48 items-center justify-center rounded-l-md border-gray-300 bg-gray-50 pl-3 pr-7 text-center text-sm text-gray-500 focus:border-gray-300 focus:outline-none focus:ring-0 border border-r-0"
+                className="flex w-48 items-center justify-center rounded-l-md border-gray-300 bg-gray-50 pl-3 pr-7 text-sm text-gray-500 focus:border-gray-300 focus:outline-none focus:ring-0 border border-r-0"
                 disabled={isEditMode}
                 defaultValue={LINK_DOMAINS[0]}
               >
@@ -125,7 +184,7 @@ export function CreateEditLinkForm(props: Props) {
                 />
               </div>
             </div>
-            {errors?.url?.message && (
+            {errors?.key?.message && (
               <p className="text-red-500 text-xs">{errors?.key?.message}</p>
             )}
           </div>

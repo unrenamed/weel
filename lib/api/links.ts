@@ -2,6 +2,7 @@ import { CreateLink, EditLink, FindLinksParams, Link } from "../types";
 import { redis } from "../upstash";
 import bcrypt from "bcrypt";
 import prisma from "@/lib/prisma";
+import { nanoid } from "../utils";
 
 export const createLink = async (link: CreateLink) => {
   const { url, domain, key, ios, android, geo, password: rawPassword } = link;
@@ -131,5 +132,19 @@ export const findLinks = async ({
     ...(page && {
       skip: (page - 1) * perPage,
     }),
+  });
+};
+
+export const generateRandomKey = async (domain: string): Promise<string> => {
+  const key = nanoid(7);
+  const link = await prisma.link.findUnique({
+    where: { domain_key: { domain, key } },
+  });
+  return link ? generateRandomKey(domain) : key;
+};
+
+export const findLink = async (domain: string, key: string) => {
+  return await prisma.link.findUnique({
+    where: { domain_key: { domain, key } },
   });
 };

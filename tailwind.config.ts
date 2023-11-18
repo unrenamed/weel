@@ -54,6 +54,8 @@ module.exports = {
         wiggle: "wiggle 0.75s infinite",
         // Link card skeleton
         "move-up": "move-up 0.75s linear",
+        // Spin slow
+        "spin-slow": "spin 2s linear infinite",
       },
       keyframes: {
         // Modal

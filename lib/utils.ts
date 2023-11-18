@@ -6,6 +6,7 @@ import {
   formatDistanceToNow,
   isThisYear,
 } from "date-fns";
+import { customAlphabet } from "nanoid";
 
 export const parse = (req: NextRequest): ParsedURL => {
   let domain = req.headers.get("host") as string;
@@ -94,3 +95,10 @@ export const getDateTimeLocal = (d: Date | string): string => {
   const datePart = date.toISOString().split("T")[0];
   return `${datePart}T${timePart}`;
 };
+
+export const nanoid = (size?: number) =>
+  customAlphabet(
+    // Numbers and english alphabet without lookalikes: 1, l, I, 0, O, o, u, v, 5, S, s, 2, Z.
+    "346789ABCDEFGHJKLMNPQRTUVWXYabcdefghijkmnpqrtwxyz",
+    size
+  )();

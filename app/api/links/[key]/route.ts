@@ -1,6 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-import prisma from "@/lib/prisma";
-import { deleteLink, editLink } from "@/lib/api/links";
+import { deleteLink, editLink, findLink } from "@/lib/api/links";
 import { EditLink } from "@/lib/types";
 
 type Params = {
@@ -11,10 +10,7 @@ export async function GET(_: NextRequest, { params }: { params: Params }) {
   const { key } = params;
   const domain = process.env.APP_LINK_DOMAIN; // TODO: fix after u introduce custom domains
 
-  const link = await prisma.link.findUnique({
-    where: { domain_key: { domain, key } },
-  });
-
+  const link = await findLink(domain, key);
   if (!link) {
     return NextResponse.json({ error: "Link is not found" }, { status: 404 });
   }
