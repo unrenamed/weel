@@ -39,7 +39,7 @@ export function IOSTargetingSection({
         >
           <FormTextInput
             {...formProps}
-            id="android"
+            id="ios"
             placeholder="https://apps.apple.com/us/app/x/id333903271"
             isError={!!error}
           />

@@ -28,7 +28,7 @@ export default function BlurImage(props: Props) {
             ? "scale-110 blur-sm grayscale"
             : "scale-100 blur-0 grayscale-0"
         } ${props.className}`}
-        onLoadingComplete={() => setLoading(false)}
+        onLoad={() => setLoading(false)}
         onError={() => setLoaderType("fallback")}
       />
     </div>
