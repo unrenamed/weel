@@ -6,15 +6,15 @@ export const createEditLinkSchema = z.object({
   url: z
     .string()
     .trim()
-    .nonempty("Please enter a destination URL to continue")
+    .min(1, "Please enter a destination URL to continue")
     .url(
       "Please enter a valid URL. Make sure it starts with 'http://' or 'https://' and includes a valid domain (e.g., www.example.com)"
     ),
-  domain: z.string().trim().nonempty(),
+  domain: z.string().trim().min(1),
   key: z
     .string()
     .trim()
-    .nonempty("Please enter a name for your short link to continue.")
+    .min(1, "Please enter a name for your short link to continue.")
     .regex(/[a-zA-Z0-9\-/]+/, 'Only numbers, letters, "-" and "/" are allowed'),
   password: z
     .string()
@@ -39,7 +39,7 @@ export const createEditLinkSchema = z.object({
   geo: z
     .array(
       z.object({
-        country: z.string().nonempty("Select any country from the dropdown"),
+        country: z.string().min(1, "Select any country from the dropdown"),
         url: z.string().trim().url("Enter a valid URL"),
       })
     )
@@ -47,7 +47,7 @@ export const createEditLinkSchema = z.object({
     .optional(),
   expiresAt: z
     .string()
-    .nonempty("Please enter a date and time")
+    .min(1, "Please enter a date and time")
     .pipe(
       z.coerce.date().min(new Date(), {
         message: `Please enter a date and time later than ${format(

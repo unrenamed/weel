@@ -137,9 +137,7 @@ export const findLinks = async ({
 
 export const generateRandomKey = async (domain: string): Promise<string> => {
   const key = nanoid(7);
-  const link = await prisma.link.findUnique({
-    where: { domain_key: { domain, key } },
-  });
+  const link = await findLink(domain, key);
   return link ? generateRandomKey(domain) : key;
 };
 

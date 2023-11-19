@@ -1,4 +1,3 @@
-import { usePrevious } from "@/lib/hooks/use-previous";
 import { useForm } from "react-hook-form";
 import { FormData, createEditLinkSchema } from "./schema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,7 +12,8 @@ import { Link } from "@prisma/client";
 import { getDateTimeLocal } from "@/lib/utils";
 import FormTextInput from "@/components/shared/form-text-input";
 import { Dices, Loader } from "lucide-react";
-import { useDebounce } from "use-debounce";
+import { useRefinement } from "@/hooks/use-refinement";
+import { usePrevious } from "@/hooks/use-previous";
 
 const LINK_DOMAINS = ["link.localhost:3000", "chatg.pt", "dub.sh"];
 
@@ -35,7 +35,12 @@ type SwitchStatuses = {
 export function CreateEditLinkForm(props: Props) {
   const { children, onSectionOpen, onFormHeightIncrease, onSave, link, mode } =
     props;
+
   const isEditMode = mode === "edit";
+
+  const uniqueKey = useRefinement(checkKeyToBeUnique, {
+    debounce: 400,
+  });
 
   const {
     handleSubmit,
@@ -45,10 +50,22 @@ export function CreateEditLinkForm(props: Props) {
     resetField,
     formState: { errors },
     setValue,
-    setError,
     clearErrors,
   } = useForm<FormData>({
-    resolver: zodResolver(createEditLinkSchema),
+    resolver: zodResolver(
+      createEditLinkSchema.refine(
+        ({ domain, key }) => {
+          if (domain.length < 1 || key.length < 1) {
+            return true;
+          }
+          return uniqueKey({ domain, key });
+        },
+        {
+          path: ["key"],
+          message: "Key already exists in this domain",
+        }
+      )
+    ),
     defaultValues: {
       ...link,
       password: link?.password ?? undefined,
@@ -73,40 +90,16 @@ export function CreateEditLinkForm(props: Props) {
   const [loadingRandomKey, setLoadingRandomKey] = useState(false);
 
   const domain = watch("domain");
-  const key = watch("key");
-  const [debouncedKey] = useDebounce(key, 400);
   const geoData = watch("geo");
   const geoLocationsNum = geoData?.length ?? 0;
   const prevGeoLocationsNum = usePrevious(geoLocationsNum);
 
   const generateKey = useCallback(async () => {
     setLoadingRandomKey(true);
-    const response = await fetch(`/api/links/rand?domain=${domain}`);
-    if (response.ok) {
-      setValue("key", await response.json());
-    }
+    const newKey = await generateRandomKey(domain);
+    newKey && setValue("key", newKey);
     setLoadingRandomKey(false);
   }, [domain, setValue]);
-
-  useEffect(() => {
-    if (debouncedKey?.length) {
-      fetch(`/api/links/exists?domain=${domain}&key=${debouncedKey}`).then(
-        async (res) => {
-          if (!res.ok) return;
-          const exists = await res.json();
-          if (exists) {
-            setError(
-              "key",
-              { message: "Key already exists in this domain" },
-              { shouldFocus: true }
-            );
-          } else {
-            clearErrors("key");
-          }
-        }
-      );
-    }
-  }, [domain, debouncedKey, setError, clearErrors]);
 
   useEffect(() => {
     if (prevGeoLocationsNum && geoLocationsNum > prevGeoLocationsNum) {
@@ -146,7 +139,13 @@ export function CreateEditLinkForm(props: Props) {
               {!isEditMode && (
                 <button
                   className="flex items-center space-x-2 text-sm text-gray-500 transition-all duration-75 hover:text-black active:scale-95"
-                  onClick={() => !loadingRandomKey && generateKey()}
+                  onClick={() => {
+                    if (!loadingRandomKey) {
+                      clearErrors("key");
+                      uniqueKey.invalidate();
+                      generateKey();
+                    }
+                  }}
                   disabled={loadingRandomKey}
                   type="button"
                 >
@@ -161,7 +160,7 @@ export function CreateEditLinkForm(props: Props) {
             </div>
             <div className="flex w-full">
               <select
-                {...register("domain")}
+                {...register("domain", { onChange: uniqueKey.invalidate })}
                 id="domain"
                 className="flex w-48 items-center justify-center rounded-l-md border-gray-300 bg-gray-50 pl-3 pr-7 text-sm text-gray-500 focus:border-gray-300 focus:outline-none focus:ring-0 border border-r-0"
                 disabled={isEditMode}
@@ -175,7 +174,7 @@ export function CreateEditLinkForm(props: Props) {
               </select>
               <div className="w-full">
                 <FormTextInput
-                  {...register("key")}
+                  {...register("key", { onChange: uniqueKey.invalidate })}
                   id="key"
                   placeholder="github"
                   className="rounded-none rounded-r-md"
@@ -185,7 +184,7 @@ export function CreateEditLinkForm(props: Props) {
               </div>
             </div>
             {errors?.key?.message && (
-              <p className="text-red-500 text-xs">{errors?.key?.message}</p>
+              <p className="text-red-500 text-xs">{errors.key.message}</p>
             )}
           </div>
         </div>
@@ -269,3 +268,28 @@ export function CreateEditLinkForm(props: Props) {
     </form>
   );
 }
+
+const checkKeyToBeUnique = async (
+  { domain, key }: { domain: string; key: string },
+  { signal }: { signal?: AbortSignal } = {}
+) => {
+  const response = await fetch(
+    `/api/links/exists?domain=${domain}&key=${key}`,
+    {
+      signal,
+    }
+  );
+  if (!response.ok) {
+    return true;
+  }
+  const exists = (await response.json()) as boolean;
+  return !exists;
+};
+
+const generateRandomKey = async (domain: string) => {
+  const response = await fetch(`/api/links/rand?domain=${domain}`);
+  if (!response.ok) {
+    return null;
+  }
+  return (await response.json()) as string;
+};
