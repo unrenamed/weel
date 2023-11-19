@@ -1,8 +1,7 @@
 import { UseFormRegisterReturn } from "react-hook-form";
 import { InputHTMLAttributes, forwardRef, useState } from "react";
 import { classNames } from "../utils";
-import AlertCircleFill from "../icons/alert-circle-fill";
-import { Eye, EyeOff } from "lucide-react";
+import { AlertCircle, Eye, EyeOff } from "lucide-react";
 
 type InputProps = InputHTMLAttributes<HTMLInputElement>;
 type FormProps = UseFormRegisterReturn;
@@ -41,8 +40,8 @@ const FormPasswordInput = forwardRef<HTMLInputElement, Props>(
         {passwordVisibilityEnabled && (
           <button
             className={classNames(
-              "absolute inset-y-0 flex items-center pr-3",
-              isError ? "right-10" : "right-0"
+              "absolute inset-y-0 flex items-center",
+              isError ? "right-10" : "right-3"
             )}
             onClick={(e) => {
               e.preventDefault();
@@ -58,10 +57,7 @@ const FormPasswordInput = forwardRef<HTMLInputElement, Props>(
         )}
         {isError && (
           <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-            <AlertCircleFill
-              className="h-5 w-5 text-red-400"
-              aria-hidden="true"
-            />
+            <AlertCircle className="h-5 w-5 text-red-400" aria-hidden="true" />
           </div>
         )}
       </div>

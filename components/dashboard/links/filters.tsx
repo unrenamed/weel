@@ -1,8 +1,8 @@
-import MagnifyingGlassIcon from "@/components/icons/magnifying-glass";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import Switch from "@/components/shared/switch";
+import { Search } from "lucide-react";
 
 export default function LinksFilters() {
   return (
@@ -38,7 +38,7 @@ const SearchField = () => {
   return (
     <div className="relative">
       <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-        <MagnifyingGlassIcon className="h-4 w-4 text-gray-500" />
+        <Search className="h-4 w-4 text-gray-500" />
       </div>
       <input
         type="text"

@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import { Link } from "@prisma/client";
 import { useModal } from "./base-modal";
 import { toast } from "sonner";
-import LoadingSpinner from "../icons/loading-spinner";
+import LoadingSpinner from "../shared/loading-spinner";
 
 type Props = {
   link: Link;

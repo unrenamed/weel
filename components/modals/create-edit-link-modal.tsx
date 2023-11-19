@@ -2,7 +2,7 @@ import { UIEvent, useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "@prisma/client";
 import { useModal } from "./base-modal";
 import { CreateEditLinkForm } from "../forms/create-edit-link";
-import LoadingSpinner from "../icons/loading-spinner";
+import LoadingSpinner from "../shared/loading-spinner";
 import { FormData } from "../forms/create-edit-link/schema";
 import { toast } from "sonner";
 import { CreateLink } from "@/lib/types";

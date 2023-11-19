@@ -17,6 +17,12 @@ import { usePrevious } from "@/hooks/use-previous";
 
 const LINK_DOMAINS = ["link.localhost:3000", "chatg.pt", "dub.sh"];
 
+type Switch = "password" | "ios" | "android" | "geo" | "expiresAt";
+
+type SwitchStatuses = {
+  [key in Switch]: boolean;
+};
+
 type Props = {
   children: ReactNode;
   onSectionOpen: () => void;
@@ -24,12 +30,6 @@ type Props = {
   onSave: (data: FormData) => Promise<void>;
   mode: "create" | "edit";
   link?: Link;
-};
-
-type Switch = "password" | "ios" | "android" | "geo" | "expiresAt";
-
-type SwitchStatuses = {
-  [key in Switch]: boolean;
 };
 
 export function CreateEditLinkForm(props: Props) {

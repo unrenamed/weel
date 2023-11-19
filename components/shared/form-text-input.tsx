@@ -1,7 +1,7 @@
 import { UseFormRegisterReturn } from "react-hook-form";
 import { classNames } from "../utils";
 import { InputHTMLAttributes, forwardRef } from "react";
-import AlertCircleFill from "../icons/alert-circle-fill";
+import { AlertCircle } from "lucide-react";
 
 type InputProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type">;
 type FormProps = UseFormRegisterReturn;
@@ -34,10 +34,7 @@ const FormTextInput = forwardRef<HTMLInputElement, Props>(
         />
         {isError && (
           <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-            <AlertCircleFill
-              className="h-5 w-5 text-red-400"
-              aria-hidden="true"
-            />
+            <AlertCircle className="h-5 w-5 text-red-400" aria-hidden="true" />
           </div>
         )}
       </div>

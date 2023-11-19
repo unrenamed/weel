@@ -105,7 +105,6 @@ function createRefinement<T>(ctxRef: MutableRefObject<RefinementContext<T>>) {
   };
 
   refine.invalidate = () => {
-    console.log("Invalidate");
     // Cancel any ongoing refinement
     abort();
     // Reset the result

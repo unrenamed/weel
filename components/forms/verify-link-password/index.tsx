@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { FormData, linkPasswordSchema } from "./schema";
 import { useParams, useRouter } from "next/navigation";
 import { verifyPassword } from "./actions";
-import LoadingSpinner from "@/components/icons/loading-spinner";
+import LoadingSpinner from "@/components/shared/loading-spinner";
 import FormPasswordInput from "@/components/shared/form-password-input";
 
 export function VerifyLinkPasswordForm() {
