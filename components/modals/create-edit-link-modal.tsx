@@ -25,7 +25,7 @@ function CreateEditLinkModalContent({
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [isSubmitAtBottom, setIsSubmitAtBottom] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const updateSubmitButtonPosition = (elem: HTMLDivElement) => {
     const { scrollTop, scrollHeight, clientHeight } = elem;
@@ -44,18 +44,19 @@ function CreateEditLinkModalContent({
   }, []);
 
   const sendAPIRequest = async (rawData: FormData) => {
-    setIsSubmitting(true);
+    setIsLoading(true);
 
     const payload: CreateLink = {
       ...rawData,
-      expiresAt: rawData.expiresAt
+      expiresAt: rawData?.expiresAt
         ? new Date(rawData.expiresAt).toISOString()
         : undefined,
-      geo: rawData.geo
-        ? Object.fromEntries(
-            rawData.geo.map(({ country, url }) => [country, url])
-          )
-        : undefined,
+      geo:
+        rawData?.geo && rawData.geo.length > 0
+          ? Object.fromEntries(
+              rawData.geo.map(({ country, url }) => [country, url])
+            )
+          : undefined,
     };
 
     const apiUrl = isEditMode ? `/api/links/${link?.key}` : "/api/links";
@@ -82,11 +83,11 @@ function CreateEditLinkModalContent({
       // Call the callback
       onSubmit();
     } else {
-      const error = await response.text();
+      const { error } = (await response.json()) as { error: string };
       toast.error(error.length ? error : response.statusText);
     }
 
-    setIsSubmitting(false);
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -113,29 +114,35 @@ function CreateEditLinkModalContent({
           onSectionOpen={handleContainerScroll}
           onFormHeightIncrease={scrollToBottom}
           onSave={sendAPIRequest}
-        >
-          <div
-            className={`${
-              isSubmitAtBottom
-                ? ""
-                : "bg-gray-50 md:shadow-[0_-20px_30px_-10px_rgba(0,0,0,0.1)]"
-            } z-10 px-4 py-8 transition-all md:sticky md:bottom-0 md:px-16 m-0`}
-          >
-            <button
-              className={classNames(
-                "py-2 w-full flex shadow items-center justify-center rounded-md border px-8 focus:outline-none duration-75 transition-all  text-sm font-medium",
-                isSubmitting
-                  ? "cursor-not-allowed border-gray-200 bg-gray-100 text-gray-400"
-                  : "border-black bg-black text-white hover:bg-white hover:text-black hover:shadow-md active:scale-95"
-              )}
-              type="submit"
-              disabled={isSubmitting}
-            >
-              {isSubmitting && <LoadingSpinner />}
-              <p className="ml-2">{isEditMode ? "Edit Link" : "Create Link"}</p>
-            </button>
-          </div>
-        </CreateEditLinkForm>
+          submitButton={({ isSubmitting }) => {
+            const loading = isLoading || isSubmitting;
+            return (
+              <div
+                className={`${
+                  isSubmitAtBottom
+                    ? ""
+                    : "bg-gray-50 md:shadow-[0_-20px_30px_-10px_rgba(0,0,0,0.1)]"
+                } z-10 px-4 py-8 transition-all md:sticky md:bottom-0 md:px-16 m-0`}
+              >
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className={classNames(
+                    "py-2 w-full flex shadow items-center justify-center rounded-md border px-8 focus:outline-none duration-75 transition-all  text-sm font-medium",
+                    loading
+                      ? "cursor-not-allowed border-gray-200 bg-gray-100 text-gray-400"
+                      : "border-black bg-black text-white hover:bg-white hover:text-black hover:shadow-md active:scale-95"
+                  )}
+                >
+                  {loading && <LoadingSpinner />}
+                  <p className="ml-2">
+                    {isEditMode ? "Edit Link" : "Create Link"}
+                  </p>
+                </button>
+              </div>
+            );
+          }}
+        ></CreateEditLinkForm>
       </div>
     </div>
   );

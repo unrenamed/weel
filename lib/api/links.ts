@@ -3,14 +3,31 @@ import { redis } from "../upstash";
 import bcrypt from "bcrypt";
 import prisma from "@/lib/prisma";
 import { nanoid } from "../utils";
+import { isBefore } from "date-fns";
+import {
+  DuplicateKeyError,
+  InvalidExpirationTimeError,
+  LinkNotFoundError,
+} from "../error";
 
 export const createLink = async (link: CreateLink) => {
   const { url, domain, key, ios, android, geo, password: rawPassword } = link;
+
+  const exists = await findLink(domain, key);
+  if (exists) {
+    throw new DuplicateKeyError("Key already exists in this domain");
+  }
 
   // we are not interested in secs and millis of a key expiration time
   const expiresAt = link.expiresAt
     ? link.expiresAt.substring(0, 17) + "00.000Z"
     : null;
+
+  if (expiresAt && isBefore(new Date(expiresAt), new Date())) {
+    throw new InvalidExpirationTimeError(
+      "Expiration time must be in the future"
+    );
+  }
 
   const exat = expiresAt ? new Date(expiresAt).getTime() / 1000 : null;
   const password = rawPassword ? await bcrypt.hash(rawPassword, 10) : null;
@@ -50,36 +67,58 @@ export const editLink = async (
   domain: string,
   newData: EditLink
 ) => {
-  const { url, ios, android, geo } = newData;
+  const {
+    url,
+    ios,
+    android,
+    geo,
+    password,
+    domain: newDomain,
+    key: newKey,
+  } = newData;
+
+  const exists = await findLink(newDomain, newKey);
+  if (exists) {
+    throw new DuplicateKeyError("Key already exists in this domain");
+  }
+
   // we are not interested in secs and millis of a key expiration time
   const expiresAt = newData.expiresAt
     ? newData.expiresAt.substring(0, 17) + "00.000Z"
     : null;
-  const exat = expiresAt ? new Date(expiresAt).getTime() / 1000 : null;
+
+  if (expiresAt && isBefore(new Date(expiresAt), new Date())) {
+    throw new InvalidExpirationTimeError(
+      "Expiration time must be in the future"
+    );
+  }
 
   const updatedLink = await prisma.link.update({
     where: { domain_key: { domain, key } },
     data: {
       ...newData,
-      geo: geo,
+      key: newKey,
+      domain: newDomain,
+      geo,
       expiresAt,
     },
   });
 
   if (!updatedLink) {
-    return null;
+    throw new LinkNotFoundError("Link is not found");
   }
 
   const value = {
     url,
     archived: false,
-    ...(updatedLink.password && { password: updatedLink.password }),
+    ...(password && { password }),
     ...(geo && { geo }),
     ...(ios && { ios }),
     ...(android && { android }),
     ...(expiresAt && { expiresAt: new Date(expiresAt) }),
   };
 
+  const exat = expiresAt ? new Date(expiresAt).getTime() / 1000 : null;
   const opts = {
     nx: true, // only create if the key does not yet exist
     ...(exat && ({ exat } as any)), // expiration timestamp, in seconds

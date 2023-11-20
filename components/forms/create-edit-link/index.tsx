@@ -14,6 +14,7 @@ import FormTextInput from "@/components/shared/form-text-input";
 import { Dices, Loader } from "lucide-react";
 import { useRefinement } from "@/hooks/use-refinement";
 import { usePrevious } from "@/hooks/use-previous";
+import { classNames } from "@/components/utils";
 
 const LINK_DOMAINS = ["link.localhost:3000", "chatg.pt", "dub.sh"];
 
@@ -24,7 +25,7 @@ type SwitchStatuses = {
 };
 
 type Props = {
-  children: ReactNode;
+  submitButton: ({ isSubmitting }: { isSubmitting: boolean }) => ReactNode;
   onSectionOpen: () => void;
   onFormHeightIncrease: () => void;
   onSave: (data: FormData) => Promise<void>;
@@ -33,8 +34,14 @@ type Props = {
 };
 
 export function CreateEditLinkForm(props: Props) {
-  const { children, onSectionOpen, onFormHeightIncrease, onSave, link, mode } =
-    props;
+  const {
+    onSectionOpen,
+    onFormHeightIncrease,
+    onSave,
+    link,
+    mode,
+    submitButton,
+  } = props;
 
   const isEditMode = mode === "edit";
 
@@ -48,14 +55,14 @@ export function CreateEditLinkForm(props: Props) {
     control,
     watch,
     resetField,
-    formState: { errors },
+    formState: { errors, isValidating, isSubmitting },
     setValue,
     clearErrors,
   } = useForm<FormData>({
     resolver: zodResolver(
       createEditLinkSchema.refine(
         ({ domain, key }) => {
-          if (domain.length < 1 || key.length < 1) {
+          if (domain.length < 1 || key.length < 1 || isEditMode) {
             return true;
           }
           return uniqueKey({ domain, key });
@@ -72,10 +79,12 @@ export function CreateEditLinkForm(props: Props) {
       ios: link?.ios ?? undefined,
       android: link?.android ?? undefined,
       expiresAt: link?.expiresAt ? getDateTimeLocal(link.expiresAt) : undefined,
-      geo: Object.entries(link?.geo ?? {}).map(([country, url]) => ({
-        country,
-        url,
-      })),
+      geo: link?.geo
+        ? Object.entries(link.geo).map(([country, url]) => ({
+            country,
+            url,
+          }))
+        : undefined,
     },
   });
 
@@ -172,7 +181,7 @@ export function CreateEditLinkForm(props: Props) {
                   </option>
                 ))}
               </select>
-              <div className="w-full">
+              <div className="w-full relative">
                 <FormTextInput
                   {...register("key", { onChange: uniqueKey.invalidate })}
                   id="key"
@@ -181,6 +190,16 @@ export function CreateEditLinkForm(props: Props) {
                   isError={!!errors?.key?.message}
                   disabled={isEditMode}
                 />
+                {isValidating && (
+                  <span
+                    className={classNames(
+                      "absolute inset-y-center text-gray-500",
+                      !!errors?.key?.message ? "right-10" : "right-3"
+                    )}
+                  >
+                    <Loader className="h-4 w-4 animate-spin-slow" />
+                  </span>
+                )}
               </div>
             </div>
             {errors?.key?.message && (
@@ -194,20 +213,24 @@ export function CreateEditLinkForm(props: Props) {
           <Separator className="bg-gray-300 h-px" size="4" />
         </div>
         <div className="flex flex-col space-y-4 px-4 md:px-16 pb-4">
-          <PasswordSection
-            formProps={register("password")}
-            error={errors?.password?.message}
-            isOpen={switchStatuses.password}
-            onOpen={() => {
-              setSwtichStatuses({ ...switchStatuses, password: true });
-              onSectionOpen();
-            }}
-            onClose={() => {
-              setSwtichStatuses({ ...switchStatuses, password: false });
-              resetField("password");
-            }}
-          />
-          <Separator className="bg-gray-300 h-px" size="4" />
+          {!isEditMode && (
+            <>
+              <PasswordSection
+                formProps={register("password")}
+                error={errors?.password?.message}
+                isOpen={switchStatuses.password}
+                onOpen={() => {
+                  setSwtichStatuses({ ...switchStatuses, password: true });
+                  onSectionOpen();
+                }}
+                onClose={() => {
+                  setSwtichStatuses({ ...switchStatuses, password: false });
+                  resetField("password");
+                }}
+              />
+              <Separator className="bg-gray-300 h-px" size="4" />
+            </>
+          )}
           <ExpirationDateSection
             formProps={register("expiresAt")}
             error={errors?.expiresAt?.message}
@@ -264,7 +287,7 @@ export function CreateEditLinkForm(props: Props) {
           />
         </div>
       </div>
-      {children}
+      {submitButton({ isSubmitting })}
     </form>
   );
 }
