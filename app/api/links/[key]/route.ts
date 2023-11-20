@@ -1,16 +1,24 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { deleteLink, editLink, findLink } from "@/lib/api/links";
 import { EditLink } from "@/lib/types";
-import { BaseError } from "@/lib/error/base-error";
 import { exclude } from "@/lib/utils";
+import { withErrorHandler } from "@/lib/error";
 
 type Params = {
   key: string;
 };
 
-export async function GET(_: NextRequest, { params }: { params: Params }) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Params }
+) {
   const { key } = params;
-  const domain = process.env.APP_LINK_DOMAIN; // TODO: fix after u introduce custom domains
+  const searchParams = request.nextUrl.searchParams;
+
+  const domain = searchParams.get("domain");
+  if (!domain) {
+    return NextResponse.json({ error: "Domain is missing" }, { status: 400 });
+  }
 
   const link = await findLink(domain, key);
   if (!link) {
@@ -20,33 +28,37 @@ export async function GET(_: NextRequest, { params }: { params: Params }) {
   return NextResponse.json(link);
 }
 
-export async function DELETE(_: NextRequest, { params }: { params: Params }) {
-  const { key } = params;
-  const domain = process.env.APP_LINK_DOMAIN; // TODO: fix after u introduce custom domains
-  await deleteLink(domain, key);
-  return NextResponse.json({ message: "Link deleted" });
-}
-
-export async function PATCH(
+export async function DELETE(
   request: NextRequest,
   { params }: { params: Params }
 ) {
   const { key } = params;
-  const domain = process.env.APP_LINK_DOMAIN; // TODO: fix after u introduce custom domains
-  const newData = (await request.json()) as EditLink;
+  const searchParams = request.nextUrl.searchParams;
 
-  try {
+  const domain = searchParams.get("domain");
+  if (!domain) {
+    return NextResponse.json({ error: "Domain is missing" }, { status: 400 });
+  }
+
+  await deleteLink(domain, key);
+  return NextResponse.json({ message: "Link deleted" });
+}
+
+export const PATCH = withErrorHandler(
+  async (request: NextRequest, { params }: { params: Params }) => {
+    const { key } = params;
+    const searchParams = request.nextUrl.searchParams;
+
+    const domain = searchParams.get("domain");
+    if (!domain) {
+      return NextResponse.json({ error: "Domain is missing" }, { status: 400 });
+    }
+    
+    const newData = (await request.json()) as EditLink;
     const updatedLink = await editLink(key, domain, newData);
     return NextResponse.json(
       { message: "Link edited", data: exclude(updatedLink, ["password"]) },
       { status: 200 }
     );
-  } catch (err) {
-    if (err instanceof BaseError) {
-      return NextResponse.json(
-        { error: err.message },
-        { status: err.statusCode }
-      );
-    }
   }
-}
+);

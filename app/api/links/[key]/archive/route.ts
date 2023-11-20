@@ -14,9 +14,15 @@ export async function PUT(
   { params }: { params: Params }
 ) {
   const { key } = params;
-  const { archived } = (await request.json()) as Body;
-  const domain = process.env.APP_LINK_DOMAIN; // TODO: fix after u introduce custom domains
+  const searchParams = request.nextUrl.searchParams;
+  
+  const domain = searchParams.get("domain");
+  if (!domain) {
+    return NextResponse.json({ error: "Domain is missing" }, { status: 400 });
+  }
 
+  const { archived } = (await request.json()) as Body;
+  
   const link = await prisma.link.update({
     where: { domain_key: { domain, key } },
     data: { archived },

@@ -1,5 +1,5 @@
 import { createLink, findLinks } from "@/lib/api/links";
-import { BaseError } from "@/lib/error/base-error";
+import { withErrorHandler } from "@/lib/error";
 import { CreateLink } from "@/lib/types";
 import { exclude } from "@/lib/utils";
 import { type NextRequest, NextResponse } from "next/server";
@@ -26,17 +26,8 @@ export async function GET(request: NextRequest) {
   return NextResponse.json(linksWithoutPassword);
 }
 
-export async function POST(request: NextRequest) {
+export const POST = withErrorHandler(async (request: NextRequest) => {
   const linkDetails = (await request.json()) as CreateLink;
-  try {
-    const link = await createLink(linkDetails);
-    return NextResponse.json(exclude(link, ["password"]), { status: 201 });
-  } catch (err) {
-    if (err instanceof BaseError) {
-      return NextResponse.json(
-        { error: err.message },
-        { status: err.statusCode }
-      );
-    }
-  }
-}
+  const link = await createLink(linkDetails);
+  return NextResponse.json(exclude(link, ["password"]), { status: 201 });
+});
