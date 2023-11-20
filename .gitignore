@@ -38,3 +38,6 @@ next-env.d.ts
 # tinybird
 config/tinybird/.tinyb
 config/tinybird/.tinyenv
+
+# logs
+/logs

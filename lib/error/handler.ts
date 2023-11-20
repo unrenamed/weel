@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { BaseError } from "./base-error";
+import logger from "../winston";
 
 export function withErrorHandler(fn: Function) {
   return async function (request: NextRequest, ...args: any) {
@@ -15,7 +16,12 @@ export function withErrorHandler(fn: Function) {
       }
 
       // Log the error to a logging system
-      console.error({ error, requestBody: request, location: fn.name });
+      if (error instanceof Error) {
+        logger.error(error.message, {
+          requestBody: request,
+          location: fn.name,
+        });
+      }
 
       // Respond with a generic 500 Internal Server Error
       return NextResponse.json(
