@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import HttpStatusCode from "../http-status-code";
+import HttpStatusCode from "../constants/http-status-code";
 import { BaseError } from "./base-error";
 
 export function withErrorHandler(fn: Function) {

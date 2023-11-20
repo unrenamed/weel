@@ -6,7 +6,7 @@ import {
   useFieldArray,
 } from "react-hook-form";
 import { FormData } from "./schema";
-import { COUNTRIES } from "@/lib/countries";
+import { COUNTRIES } from "@/lib/constants/countries";
 import { uncapitalize } from "@/lib/utils";
 import { Trash2 } from "lucide-react";
 import Switch from "@/components/shared/switch";
