@@ -11,7 +11,9 @@ type Props = {
 };
 
 const deleteLink = (link: Link) => {
-  return fetch(`/api/links/${link.key}`, { method: "DELETE" });
+  return fetch(`/api/links/${link.key}?domain=${link.domain}`, {
+    method: "DELETE",
+  });
 };
 
 function DeleteLinkModalContent({ link, hideModal, onSubmit }: Props) {
@@ -51,11 +53,11 @@ function DeleteLinkModalContent({ link, hideModal, onSubmit }: Props) {
       </p>
       <div className="flex flex-col space-y-2">
         <p className="text-sm">
-          To verify, type <span className="font-medium">{domainKey}</span> below
+          To verify, type <span className="font-bold">{domainKey}</span> below
         </p>
         <input
           id="password"
-          className={`block w-full rounded-md focus:outline-none sm:text-sm`}
+          className="block w-full rounded-md focus:outline-none sm:text-sm"
           onChange={verifyInput}
         />
         <LoadingButton

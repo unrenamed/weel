@@ -184,7 +184,7 @@ function LinkCard({
       <div className="flex items-center space-x-2">
         <a
           onClick={(e) => e.stopPropagation()}
-          href={`/links/${encodeURIComponent(link.key)}`}
+          href={`/analytics?domain=${link.domain}&key=${link.key}`}
           className="flex items-center space-x-1 rounded-md bg-gray-100 px-2 py-0.5 transition-all duration-75 hover:scale-105 active:scale-100 text-gray-500"
         >
           <BarChart strokeWidth={1.5} className="h-4 w-4" />

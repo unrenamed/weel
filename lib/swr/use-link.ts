@@ -1,13 +1,15 @@
 import useSWR from "swr";
 import { fetcher } from "../utils";
 import { Link } from "@prisma/client";
-import { useParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 export const useLink = () => {
-  const { key } = useParams() as {key: string };
+  const searchParams = useSearchParams();
+  const key = searchParams.get("key");
+  const domain = searchParams.get("domain");
 
   const { data, error, isLoading, isValidating } = useSWR<Link>(
-    key && `/api/links/${encodeURIComponent(key)}`,
+    key && `/api/links/${key}?domain=${domain}`,
     fetcher,
     {
       dedupingInterval: 5000,

@@ -21,7 +21,7 @@ function CreateEditLinkModalContent({
   onSubmit,
   mode = "create",
 }: Props) {
-  const isEditMode = mode === "edit";
+  const isEditMode = mode === "edit" && !!link;
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [isSubmitAtBottom, setIsSubmitAtBottom] = useState(true);
@@ -59,7 +59,10 @@ function CreateEditLinkModalContent({
           : undefined,
     };
 
-    const apiUrl = isEditMode ? `/api/links/${link?.key}` : "/api/links";
+    const apiUrl = isEditMode
+      ? `/api/links/${link.key}?domain=${link.domain}`
+      : "/api/links";
+
     const method = isEditMode ? "PATCH" : "POST";
 
     const response = await fetch(apiUrl, {
