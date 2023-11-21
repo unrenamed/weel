@@ -4,7 +4,7 @@ import { CreateLink } from "@/lib/types";
 import { exclude } from "@/lib/utils";
 import { type NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
+export const GET = withErrorHandler(async (request: NextRequest) => {
   const searchParams = request.nextUrl.searchParams;
   const domain = searchParams.get("domain");
   const sort = searchParams.get("sort");
@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
 
   const linksWithoutPassword = links.map((link) => exclude(link, ["password"]));
   return NextResponse.json(linksWithoutPassword);
-}
+});
 
 export const POST = withErrorHandler(async (request: NextRequest) => {
   const linkDetails = (await request.json()) as CreateLink;

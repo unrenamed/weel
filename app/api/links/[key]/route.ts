@@ -8,41 +8,38 @@ type Params = {
   key: string;
 };
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Params }
-) {
-  const { key } = params;
-  const searchParams = request.nextUrl.searchParams;
+export const GET = withErrorHandler(
+  async (request: NextRequest, { params }: { params: Params }) => {
+    const { key } = params;
+    const searchParams = request.nextUrl.searchParams;
 
-  const domain = searchParams.get("domain");
-  if (!domain) {
-    return NextResponse.json({ error: "Domain is missing" }, { status: 400 });
+    const domain = searchParams.get("domain");
+    if (!domain) {
+      return NextResponse.json({ error: "Domain is missing" }, { status: 400 });
+    }
+    const link = await findLink(domain, key);
+    if (!link) {
+      return NextResponse.json({ error: "Link is not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(link);
   }
+);
 
-  const link = await findLink(domain, key);
-  if (!link) {
-    return NextResponse.json({ error: "Link is not found" }, { status: 404 });
+export const DELETE = withErrorHandler(
+  async (request: NextRequest, { params }: { params: Params }) => {
+    const { key } = params;
+    const searchParams = request.nextUrl.searchParams;
+
+    const domain = searchParams.get("domain");
+    if (!domain) {
+      return NextResponse.json({ error: "Domain is missing" }, { status: 400 });
+    }
+
+    await deleteLink(domain, key);
+    return NextResponse.json({ message: "Link deleted" });
   }
-
-  return NextResponse.json(link);
-}
-
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Params }
-) {
-  const { key } = params;
-  const searchParams = request.nextUrl.searchParams;
-
-  const domain = searchParams.get("domain");
-  if (!domain) {
-    return NextResponse.json({ error: "Domain is missing" }, { status: 400 });
-  }
-
-  await deleteLink(domain, key);
-  return NextResponse.json({ message: "Link deleted" });
-}
+);
 
 export const PATCH = withErrorHandler(
   async (request: NextRequest, { params }: { params: Params }) => {
@@ -53,7 +50,7 @@ export const PATCH = withErrorHandler(
     if (!domain) {
       return NextResponse.json({ error: "Domain is missing" }, { status: 400 });
     }
-    
+
     const newData = (await request.json()) as EditLink;
     const updatedLink = await editLink(key, domain, newData);
     return NextResponse.json(

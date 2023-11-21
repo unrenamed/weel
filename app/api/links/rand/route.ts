@@ -1,7 +1,8 @@
 import { generateRandomKey } from "@/lib/api/links";
+import { withErrorHandler } from "@/lib/error";
 import { type NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
+export const GET = withErrorHandler(async (request: NextRequest) => {
   const searchParams = request.nextUrl.searchParams;
   const domain = searchParams.get("domain");
   if (!domain) {
@@ -9,4 +10,4 @@ export async function GET(request: NextRequest) {
   }
   const key = await generateRandomKey(domain);
   return NextResponse.json(key);
-}
+});
