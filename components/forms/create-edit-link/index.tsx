@@ -75,6 +75,7 @@ export function CreateEditLinkForm(props: Props) {
     ),
     defaultValues: {
       ...link,
+      domain: link?.domain || LINK_DOMAINS[0],
       password: link?.password ?? undefined,
       ios: link?.ios ?? undefined,
       android: link?.android ?? undefined,
@@ -173,7 +174,6 @@ export function CreateEditLinkForm(props: Props) {
                 id="domain"
                 className="flex w-48 items-center justify-center rounded-l-md border-gray-300 bg-gray-50 pl-3 pr-7 text-sm text-gray-500 focus:border-gray-300 focus:outline-none focus:ring-0 border border-r-0"
                 disabled={isEditMode}
-                defaultValue={LINK_DOMAINS[0]}
               >
                 {LINK_DOMAINS.map((domain) => (
                   <option key={domain} value={domain}>
