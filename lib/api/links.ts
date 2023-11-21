@@ -13,7 +13,7 @@ import {
 export const createLink = async (link: CreateLink) => {
   const { url, domain, key, ios, android, geo, password: rawPassword } = link;
 
-  const exists = await findLink(domain, key);
+  const exists = await findLinkByDomainKey(domain, key);
   if (exists) {
     throw new DuplicateKeyError("Key already exists in this domain");
   }
@@ -32,15 +32,6 @@ export const createLink = async (link: CreateLink) => {
   const exat = expiresAt ? new Date(expiresAt).getTime() / 1000 : null;
   const password = rawPassword ? await bcrypt.hash(rawPassword, 10) : null;
 
-  const addLinkToDB = prisma.link.create({
-    data: {
-      ...link,
-      geo: geo,
-      password,
-      expiresAt,
-    },
-  });
-
   const value = {
     url,
     archived: false,
@@ -58,28 +49,41 @@ export const createLink = async (link: CreateLink) => {
 
   const addLinkToRedis = redis.set<Link>(`${domain}:${key}`, value, opts);
 
+  const addLinkToDB = prisma.link.create({
+    data: {
+      url,
+      key,
+      ios,
+      geo,
+      domain,
+      android,
+      password,
+      expiresAt,
+    },
+  });
+
   const [dbLink, _] = await Promise.all([addLinkToDB, addLinkToRedis]);
   return dbLink;
 };
 
-export const editLink = async (
-  key: string,
-  domain: string,
-  newData: EditLink
-) => {
-  const {
-    url,
-    ios,
-    android,
-    geo,
-    password,
-    domain: newDomain,
-    key: newKey,
-  } = newData;
+export const editLink = async (id: string, newData: EditLink) => {
+  const { url, ios, android, geo, password, domain, key } = newData;
 
-  const exists = await findLink(newDomain, newKey);
-  if (exists) {
-    throw new DuplicateKeyError("Key already exists in this domain");
+  const link = await findLinkById(id);
+  if (!link) {
+    throw new LinkNotFoundError("Link is not found");
+  }
+
+  const oldDomain = link.domain;
+  const oldKey = link.key;
+  const domainChanged = oldDomain !== domain;
+  const keyChanged = oldKey !== key;
+
+  if (domainChanged || keyChanged) {
+    const otherExists = await findLinkByDomainKey(domain, key);
+    if (otherExists) {
+      throw new DuplicateKeyError("Key already exists in this domain");
+    }
   }
 
   // we are not interested in secs and millis of a key expiration time
@@ -93,22 +97,7 @@ export const editLink = async (
     );
   }
 
-  const updatedLink = await prisma.link.update({
-    where: { domain_key: { domain, key } },
-    data: {
-      ...newData,
-      key: newKey,
-      domain: newDomain,
-      geo,
-      expiresAt,
-    },
-  });
-
-  if (!updatedLink) {
-    throw new LinkNotFoundError("Link is not found");
-  }
-
-  const value = {
+  const redisValue = {
     url,
     archived: false,
     ...(password && { password }),
@@ -124,11 +113,28 @@ export const editLink = async (
     ...(exat && ({ exat } as any)), // expiration timestamp, in seconds
   };
 
-  await redis.set<Link>(
-    `${updatedLink.domain}:${updatedLink.key}`,
-    value,
-    opts
-  );
+  const [updatedLink, _] = await Promise.all([
+    // update link in SQL DB
+    prisma.link.update({
+      where: { id },
+      data: {
+        url,
+        key,
+        ios,
+        geo,
+        domain,
+        android,
+        password,
+        expiresAt,
+      },
+    }),
+    // upsert link in Redis DB
+    redis.set<Link>(`${domain}:${key}`, redisValue, opts),
+    // delete old Redis record if domain or key changed
+    ...(domainChanged || keyChanged
+      ? [redis.del(`${oldDomain}:${oldKey}`)]
+      : []),
+  ]);
 
   return updatedLink;
 };
@@ -176,12 +182,18 @@ export const findLinks = async ({
 
 export const generateRandomKey = async (domain: string): Promise<string> => {
   const key = nanoid(7);
-  const link = await findLink(domain, key);
+  const link = await findLinkByDomainKey(domain, key);
   return link ? generateRandomKey(domain) : key;
 };
 
-export const findLink = async (domain: string, key: string) => {
+export const findLinkByDomainKey = async (domain: string, key: string) => {
   return await prisma.link.findUnique({
     where: { domain_key: { domain, key } },
+  });
+};
+
+export const findLinkById = async (id: string) => {
+  return await prisma.link.findUnique({
+    where: { id },
   });
 };

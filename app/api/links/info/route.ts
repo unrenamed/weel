@@ -1,6 +1,7 @@
+import { NextResponse, type NextRequest } from "next/server";
+import { LinkNotFoundError, withErrorHandler } from "@/lib/error";
 import { findLinkByDomainKey } from "@/lib/api/links";
-import { withErrorHandler } from "@/lib/error";
-import { type NextRequest, NextResponse } from "next/server";
+import { exclude } from "@/lib/utils";
 
 export const GET = withErrorHandler(async (request: NextRequest) => {
   const searchParams = request.nextUrl.searchParams;
@@ -15,5 +16,8 @@ export const GET = withErrorHandler(async (request: NextRequest) => {
   }
 
   const link = await findLinkByDomainKey(domain, key);
-  return NextResponse.json(!!link);
+  if (!link) {
+    throw new LinkNotFoundError("Link is not found");
+  }
+  return NextResponse.json(exclude(link, ["password"]));
 });

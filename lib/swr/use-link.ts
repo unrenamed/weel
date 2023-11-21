@@ -9,7 +9,7 @@ export const useLink = () => {
   const domain = searchParams.get("domain");
 
   const { data, error, isLoading, isValidating } = useSWR<Link>(
-    key && `/api/links/${key}?domain=${domain}`,
+    key && `/api/links/info?domain=${domain}&key=${key}`,
     fetcher,
     {
       dedupingInterval: 5000,

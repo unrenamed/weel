@@ -12,7 +12,7 @@ type Props = {
 };
 
 const sendArchiveRequest = (link: Link, archived: boolean) => {
-  return fetch(`/api/links/${link.key}/archive?domain=${link.domain}`, {
+  return fetch(`/api/links/${link.id}/archive`, {
     method: "PUT",
     body: JSON.stringify({
       archived,

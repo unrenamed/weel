@@ -11,7 +11,7 @@ type Props = {
 };
 
 const deleteLink = (link: Link) => {
-  return fetch(`/api/links/${link.key}?domain=${link.domain}`, {
+  return fetch(`/api/links/${link.id}`, {
     method: "DELETE",
   });
 };

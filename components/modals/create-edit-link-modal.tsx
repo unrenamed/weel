@@ -59,11 +59,8 @@ function CreateEditLinkModalContent({
           : undefined,
     };
 
-    const apiUrl = isEditMode
-      ? `/api/links/${link.key}?domain=${link.domain}`
-      : "/api/links";
-
-    const method = isEditMode ? "PATCH" : "POST";
+    const apiUrl = isEditMode ? `/api/links/${link.id}` : "/api/links";
+    const method = isEditMode ? "PUT" : "POST";
 
     const response = await fetch(apiUrl, {
       method,
@@ -79,7 +76,7 @@ function CreateEditLinkModalContent({
       toast.promise(navigator.clipboard.writeText(domainKey), {
         loading: "Copying link to clipboard...",
         success: "Copied link to clipboard!",
-        error: "Failed to copy",
+        error: "Failed to copy link.",
       });
       // Close the modal
       hideModal();
