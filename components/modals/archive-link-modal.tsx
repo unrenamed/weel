@@ -11,8 +11,8 @@ type Props = {
   onSubmit: () => void;
 };
 
-const sendApiRequest = (link: Link, archived: boolean) => {
-  return fetch(`/api/links/${link.key}/archive`, {
+const sendArchiveRequest = (link: Link, archived: boolean) => {
+  return fetch(`/api/links/${link.key}/archive?domain=${link.domain}`, {
     method: "PUT",
     body: JSON.stringify({
       archived,
@@ -29,9 +29,9 @@ function ArchiveLinkModalContent({ link, hideModal, onSubmit }: Props) {
   const domainKey = `${link.domain}/${link.key}`;
   const archive = !link.archived;
 
-  const makeApiRequest = async () => {
+  const handleArchiveRequest = async () => {
     setIsLoading(true);
-    const response = await sendApiRequest(link, archive);
+    const response = await sendArchiveRequest(link, archive);
     setIsLoading(false);
 
     if (response.status !== 200) {
@@ -43,15 +43,24 @@ function ArchiveLinkModalContent({ link, hideModal, onSubmit }: Props) {
         {
           action: {
             label: "Undo",
-            onClick: () => {
-              sendApiRequest(link, !archive);
-            },
+            onClick: undoAction,
           },
         }
       );
     }
 
     hideModal();
+  };
+
+  const undoAction = () => {
+    toast.promise(sendArchiveRequest(link, !archive), {
+      loading: "Undo in progress...",
+      error: "Failed to roll back changes. An error occurred.",
+      success: () => {
+        onSubmit();
+        return "Undo successful! Changes reverted.";
+      },
+    });
   };
 
   return (
@@ -74,7 +83,7 @@ function ArchiveLinkModalContent({ link, hideModal, onSubmit }: Props) {
         <LoadingButton
           text={`Yes, ${archive ? "archive" : "unarchive"}`}
           loading={isLoading}
-          onClick={makeApiRequest}
+          onClick={handleArchiveRequest}
           className="h-10"
         />
       </div>
