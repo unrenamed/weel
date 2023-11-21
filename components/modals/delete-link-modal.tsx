@@ -2,7 +2,7 @@ import { ChangeEvent, useCallback, useState } from "react";
 import { Link } from "@prisma/client";
 import { useModal } from "./base-modal";
 import { toast } from "sonner";
-import LoadingSpinner from "../shared/loading-spinner";
+import { LoadingButton } from "../shared/loading-button";
 
 type Props = {
   link: Link;
@@ -58,14 +58,14 @@ function DeleteLinkModalContent({ link, hideModal, onSubmit }: Props) {
           className={`block w-full rounded-md focus:outline-none sm:text-sm`}
           onChange={verifyInput}
         />
-        <button
-          className="flex h-10 items-center justify-center space-x-2 rounded-md border px-4 text-sm transition-all focus:outline-none border-red-600 bg-red-600 text-white hover:bg-white hover:text-red-600 font-medium disabled:bg-red-300 disabled:cursor-not-allowed disabled:hover:text-white disabled:border-red-300"
-          onClick={makeApiRequest}
+        <LoadingButton
+          text="Confirm delete"
+          variant="error"
+          loading={isLoading}
           disabled={isDisabled}
-        >
-          {isLoading && <LoadingSpinner />}
-          Confirm delete
-        </button>
+          onClick={makeApiRequest}
+          className="h-10"
+        />
       </div>
     </div>
   );

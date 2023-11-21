@@ -4,8 +4,8 @@ import { useForm } from "react-hook-form";
 import { FormData, linkPasswordSchema } from "./schema";
 import { useParams, useRouter } from "next/navigation";
 import { verifyPassword } from "./actions";
-import LoadingSpinner from "@/components/shared/loading-spinner";
 import FormPasswordInput from "@/components/shared/form-password-input";
+import { LoadingButton } from "@/components/shared/loading-button";
 
 export function VerifyLinkPasswordForm() {
   const { domain, key } = useParams() as {
@@ -58,18 +58,12 @@ export function VerifyLinkPasswordForm() {
           <p className="text-xs text-red-500">{errors.password?.message}</p>
         )}
       </div>
-
-      <button
-        className={`flex h-10 w-full items-center justify-center space-x-2 rounded-md border px-4 text-sm font-medium transition-all focus:outline-none ${
-          isSubmitDisabled
-            ? "cursor-not-allowed border-gray-200 bg-gray-100 text-gray-400"
-            : "border-black bg-black text-white hover:bg-white hover:text-black hover:shadow-md active:scale-95"
-        }`}
+      <LoadingButton
+        text="Authenticate"
+        loading={isSubmitting}
         disabled={isSubmitDisabled}
-      >
-        {isSubmitting && <LoadingSpinner />}
-        <p className="ml-2">Authenticate</p>
-      </button>
+        className="w-full h-10"
+      />
     </form>
   );
 }

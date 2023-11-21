@@ -12,6 +12,7 @@ import { Trash2 } from "lucide-react";
 import Switch from "@/components/shared/switch";
 import { AnimatePresence, motion } from "framer-motion";
 import FormTextInput from "@/components/shared/form-text-input";
+import { Button } from "@/components/shared/button";
 
 export function GeoTargetingSection({
   control,
@@ -78,13 +79,13 @@ export function GeoTargetingSection({
             ))}
           </AnimatePresence>
           <p className="text-xs text-red-500">{errors?.geo?.root?.message}</p>
-          <button
+          <Button
             type="button"
-            className="flex items-center justify-center mt-2 rounded-md border border-gray-200 bg-white p-1 text-sm text-gray-400 transition-all duration-75 hover:border-gray-400 hover:text-gray-500 active:bg-gray-50"
+            text="Add location"
+            variant="secondary"
+            className="mt-2 p-1"
             onClick={() => append({ country: "", url: "" })}
-          >
-            <p>Add location</p>
-          </button>
+          />
         </motion.div>
       )}
     </div>

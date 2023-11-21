@@ -6,6 +6,7 @@ import LinkSort from "./sort";
 import { HTMLProps, useCallback, useEffect, useRef } from "react";
 import LinksFilters from "./filters";
 import { useCreateEditLinkModal } from "@/components/modals/create-edit-link-modal";
+import { KeyboardActionButton } from "@/components/shared/keyboard-action-button";
 
 export default function LinksContainer() {
   const {
@@ -133,15 +134,12 @@ function CreateLinkButton({ onClick }: { onClick: () => void }) {
   }, [onKeyDown]);
 
   return (
-    <button
-      className="h-10 w-full xs:w-40 group flex shadow items-center justify-between space-x-4 rounded-md border px-4 text-sm focus:outline-none border-black bg-black text-white hover:bg-white hover:text-black font-medium duration-75 transition-all hover:shadow-md active:scale-95"
+    <KeyboardActionButton
+      text="Create link"
+      kbd="C"
       onClick={onClick}
-    >
-      <span>Create link</span>
-      <kbd className="bg-zinc-700 text-gray-400 group-hover:bg-gray-100 group-hover:text-gray-500 transition-all duration-75 px-2 py-0.5 rounded text-xs">
-        C
-      </kbd>
-    </button>
+      className="h-10 w-full xs:w-40"
+    />
   );
 }
 

@@ -2,7 +2,8 @@ import { useCallback, useState } from "react";
 import { Link } from "@prisma/client";
 import { useModal } from "./base-modal";
 import { toast } from "sonner";
-import LoadingSpinner from "../shared/loading-spinner";
+import { LoadingButton } from "../shared/loading-button";
+import { Button } from "../shared/button";
 
 type Props = {
   link: Link;
@@ -64,19 +65,18 @@ function ArchiveLinkModalContent({ link, hideModal, onSubmit }: Props) {
           : "Archived links will still work - they just won't show up on your main dashboard."}
       </p>
       <div className="flex justify-end space-x-4">
-        <button
-          className="flex h-10 items-center justify-center space-x-2 rounded-md border px-4 text-sm transition-all focus:outline-none bg-gray-100 text-black hover:bg-white font-medium"
+        <Button
+          text="No"
+          variant="secondary"
           onClick={hideModal}
-        >
-          No
-        </button>
-        <button
-          className="flex h-10 items-center justify-center space-x-2 rounded-md border px-4 text-sm transition-all focus:outline-none border-black bg-black text-white hover:bg-white hover:text-black font-medium"
+          className="h-10"
+        />
+        <LoadingButton
+          text={`Yes, ${archive ? "archive" : "unarchive"}`}
+          loading={isLoading}
           onClick={makeApiRequest}
-        >
-          {isLoading && <LoadingSpinner />}
-          Yes, {archive ? "archive" : "unarchive"}
-        </button>
+          className="h-10"
+        />
       </div>
     </div>
   );

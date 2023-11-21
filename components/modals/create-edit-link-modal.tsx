@@ -2,10 +2,10 @@ import { UIEvent, useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "@prisma/client";
 import { useModal } from "./base-modal";
 import { CreateEditLinkForm } from "../forms/create-edit-link";
-import LoadingSpinner from "../shared/loading-spinner";
 import { FormData } from "../forms/create-edit-link/schema";
 import { toast } from "sonner";
 import { CreateLink } from "@/lib/types";
+import { LoadingButton } from "../shared/loading-button";
 import { classNames } from "../utils";
 
 type Props = {
@@ -118,27 +118,20 @@ function CreateEditLinkModalContent({
             const loading = isLoading || isSubmitting;
             return (
               <div
-                className={`${
-                  isSubmitAtBottom
-                    ? ""
-                    : "bg-gray-50 md:shadow-[0_-20px_30px_-10px_rgba(0,0,0,0.1)]"
-                } z-10 px-4 py-8 transition-all md:sticky md:bottom-0 md:px-16 m-0`}
+                className={classNames(
+                  "z-10 px-4 py-8 transition-all md:sticky md:bottom-0 md:px-16 m-0",
+                  {
+                    "bg-gray-50 md:shadow-[0_-20px_30px_-10px_rgba(0,0,0,0.1)]":
+                      !isSubmitAtBottom,
+                  }
+                )}
               >
-                <button
-                  type="submit"
+                <LoadingButton
+                  text={isEditMode ? "Edit Link" : "Create Link"}
+                  loading={loading}
                   disabled={loading}
-                  className={classNames(
-                    "py-2 w-full flex shadow items-center justify-center rounded-md border px-8 focus:outline-none duration-75 transition-all  text-sm font-medium",
-                    loading
-                      ? "cursor-not-allowed border-gray-200 bg-gray-100 text-gray-400"
-                      : "border-black bg-black text-white hover:bg-white hover:text-black hover:shadow-md active:scale-95"
-                  )}
-                >
-                  {loading && <LoadingSpinner />}
-                  <p className="ml-2">
-                    {isEditMode ? "Edit Link" : "Create Link"}
-                  </p>
-                </button>
+                  className="w-full py-2 px-8"
+                />
               </div>
             );
           }}

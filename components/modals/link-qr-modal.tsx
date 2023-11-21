@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { ReactNode, useCallback, useRef, useState } from "react";
 import { Link } from "@prisma/client";
 import { useModal } from "./base-modal";
 import {
@@ -11,6 +11,7 @@ import {
 import { Clipboard, ClipboardCheck, Download, ImageIcon } from "lucide-react";
 import { toast } from "sonner";
 import Popover from "../shared/popover";
+import { ButtonWithIcon } from "../shared/button-with-icon";
 
 function LinkQrModalContent({ link }: { link: Link }) {
   const linkAppURL = `https://${link.domain}/${link.key}`;
@@ -30,7 +31,7 @@ function LinkQrModalContent({ link }: { link: Link }) {
   };
 
   return (
-    <div className="p-4 flex flex-col items-center space-y-3">
+    <div className="p-4 flex flex-col items-center space-y-5">
       <h3 className="text-lg font-medium">Download QR code</h3>
       <div className="flex rounded-md border-2 border-gray-200 bg-white p-3">
         <QRCodeSVG
@@ -78,7 +79,16 @@ function CopyToClipboardButton({ qrData }: { qrData: QRProps }) {
   };
 
   return (
-    <button
+    <ButtonWithIcon
+      text={isCopied ? "Copied" : "Copy"}
+      icon={
+        isCopied ? (
+          <ClipboardCheck strokeWidth={1.5} className="h-4 w-4" />
+        ) : (
+          <Clipboard strokeWidth={1.5} className="h-4 w-4" />
+        )
+      }
+      className="w-32 px-5 py-1.5 font-normal"
       onClick={async () => {
         if (isCopied) return;
         toast.promise(copyQRCode(), {
@@ -87,22 +97,29 @@ function CopyToClipboardButton({ qrData }: { qrData: QRProps }) {
           error: "Failed to copy",
         });
       }}
-      className="w-full flex items-center justify-center gap-2 rounded-md border border-black bg-black px-5 py-1.5 text-sm text-white transition-all hover:bg-white hover:text-black"
-    >
-      {isCopied ? (
-        <>
-          <ClipboardCheck className="h-4 w-4" />
-          <p>Copied</p>
-        </>
-      ) : (
-        <>
-          <Clipboard className="h-4 w-4" />
-          <p>Copy</p>
-        </>
-      )}
-    </button>
+    />
   );
 }
+
+const exportOptions = [
+  {
+    text: "SVG",
+    fileExtension: "svg",
+    getImage: (qrData: QRProps) => buildQRCodeSVG(qrData),
+  },
+  {
+    text: "PNG",
+    fileExtension: "png",
+    getImage: async (qrData: QRProps) =>
+      getPathToQRCodeImage(qrData, "image/png"),
+  },
+  {
+    text: "JPEG",
+    fileExtension: "jpg",
+    getImage: async (qrData: QRProps) =>
+      getPathToQRCodeImage(qrData, "image/jpeg"),
+  },
+];
 
 function ExportDropdown({
   exportFileName,
@@ -130,44 +147,47 @@ function ExportDropdown({
         }}
         content={
           <div className="flex flex-col p-2 sm:w-36 text-gray-500 text-sm font-medium pointer-events-auto">
-            <button
-              onClick={() => download(buildQRCodeSVG(qrData), "svg")}
-              className="p-2 flex items-center rounded-md transition-all duration-75 hover:bg-gray-100"
-            >
-              <ImageIcon className="h-4 w-4 mr-2" strokeWidth={1.5} />
-              SVG
-            </button>
-            <button
-              onClick={async () =>
-                download(await getPathToQRCodeImage(qrData, "image/png"), "png")
-              }
-              className="p-2 flex items-center rounded-md transition-all duration-75 hover:bg-gray-100"
-            >
-              <ImageIcon className="h-4 w-4 mr-2" strokeWidth={1.5} />
-              PNG
-            </button>
-            <button
-              onClick={async () =>
-                download(
-                  await getPathToQRCodeImage(qrData, "image/jpeg"),
-                  "jpg"
-                )
-              }
-              className="p-2 flex items-center rounded-md transition-all duration-75 hover:bg-gray-100"
-            >
-              <ImageIcon className="h-4 w-4 mr-2" strokeWidth={1.5} />
-              JPEG
-            </button>
+            {exportOptions.map(({ text, fileExtension, getImage }) => (
+              <ExportOption
+                key={text}
+                text={text}
+                icon={<ImageIcon className="h-4 w-4 mr-2" strokeWidth={1.5} />}
+                onClick={async () =>
+                  download(await getImage(qrData), fileExtension)
+                }
+              />
+            ))}
           </div>
         }
       >
-        <button className="w-full flex items-center justify-center gap-2 rounded-md border border-black bg-black px-5 py-1.5 text-sm text-white transition-all hover:bg-white hover:text-black">
-          <Download className="h-4 w-4" />
-          Export
-        </button>
+        <ButtonWithIcon
+          text="Export"
+          icon={<Download className="h-4 w-4" />}
+          className="w-32 px-5 py-1.5 font-normal"
+        />
       </Popover>
       <a ref={downloadAnchorRef} className="hidden" />
     </div>
+  );
+}
+
+function ExportOption({
+  text,
+  icon,
+  onClick,
+}: {
+  text: string;
+  icon: ReactNode;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className="p-2 flex items-center rounded-md transition-all duration-75 hover:bg-gray-100"
+    >
+      {icon}
+      {text}
+    </button>
   );
 }
 

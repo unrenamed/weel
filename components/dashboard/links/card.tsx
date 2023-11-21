@@ -23,7 +23,7 @@ import {
   QrCode,
   Trash2,
 } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { ReactNode, useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 const imageLoader = ({ src, width }: { src: string; width: number }) => {
@@ -199,86 +199,59 @@ function LinkCard({
           onOpenChange={setIsActionsMenuOpen}
           content={
             <div className="flex flex-col items-center p-2 sm:w-48">
-              <button
-                className="w-full flex justify-between items-center p-2 rounded-md hover:bg-gray-100  transition-all duration-75"
+              <PopoverItem
+                text="Edit"
+                kbd="E"
+                icon={<Edit3 strokeWidth={1.5} className="h-4 w-4" />}
                 onClick={() => {
                   closeActionsMenu();
                   showEditModal();
                 }}
-              >
-                <div className="flex items-center space-x-2 text-gray-500 text-sm font-medium">
-                  <Edit3 strokeWidth={1.5} className="h-4 w-4" />
-                  <span>Edit</span>
-                </div>
-                <kbd className="text-gray-500 bg-gray-100 transition-all duration-75 px-1 py-0.5 rounded text-xs">
-                  E
-                </kbd>
-              </button>
-              <button
-                className="w-full flex justify-between items-center p-2 rounded-md hover:bg-gray-100  transition-all duration-75"
+              />
+              <PopoverItem
+                text="Duplicate"
+                kbd="D"
+                icon={<PlusSquare strokeWidth={1.5} className="h-4 w-4" />}
                 onClick={() => {
                   closeActionsMenu();
                   showDuplicateModal();
                 }}
-              >
-                <div className="flex items-center space-x-2 text-gray-500 text-sm font-medium">
-                  <PlusSquare strokeWidth={1.5} className="h-4 w-4" />
-                  <span>Duplicate</span>
-                </div>
-                <kbd className="text-gray-500 bg-gray-100 transition-all duration-75 px-1 py-0.5 rounded text-xs">
-                  D
-                </kbd>
-              </button>
-              <button
-                className="w-full flex justify-between items-center p-2 rounded-md hover:bg-gray-100  transition-all duration-75"
+              />
+              <PopoverItem
+                text="QR Code"
+                kbd="Q"
+                icon={<QrCode strokeWidth={1.5} className="h-4 w-4" />}
                 onClick={() => {
                   closeActionsMenu();
                   showLinkQrModal();
                 }}
-              >
-                <div className="flex items-center space-x-2 text-gray-500 text-sm font-medium ">
-                  <QrCode strokeWidth={1.5} className="h-4 w-4" />
-                  <span>QR Code</span>
-                </div>
-                <kbd className="text-gray-500 bg-gray-100 transition-all duration-75 px-1 py-0.5 rounded text-xs">
-                  Q
-                </kbd>
-              </button>
+              />
               <Separator.Root className="bg-gray-200 h-px w-full px-2 my-2" />
-              <button
-                className="w-full flex justify-between items-center p-2 rounded-md hover:bg-gray-100  transition-all duration-75"
+              <PopoverItem
+                text={`${link.archived ? "Unarchive" : "Archive"}...`}
+                kbd="A"
+                icon={
+                  link.archived ? (
+                    <ArchiveRestore strokeWidth={1.5} className="h-4 w-4" />
+                  ) : (
+                    <Archive strokeWidth={1.5} className="h-4 w-4" />
+                  )
+                }
                 onClick={() => {
                   closeActionsMenu();
                   showArchiveModal();
                 }}
-              >
-                <div className="flex items-center space-x-2 text-gray-500 text-sm font-medium ">
-                  {link.archived ? (
-                    <ArchiveRestore strokeWidth={1.5} className="h-4 w-4" />
-                  ) : (
-                    <Archive strokeWidth={1.5} className="h-4 w-4" />
-                  )}
-                  <span>{link.archived ? "Unarchive" : "Archive"}...</span>
-                </div>
-                <kbd className="text-gray-500 bg-gray-100 transition-all duration-75 px-1 py-0.5 rounded text-xs">
-                  A
-                </kbd>
-              </button>
-              <button
-                className="w-full flex justify-between items-center p-2 rounded-md hover:bg-gray-100  transition-all duration-75"
+              />
+              <PopoverItem
+                variant="danger"
+                text="Delete..."
+                kbd="X"
+                icon={<Trash2 strokeWidth={1.5} className="h-4 w-4" />}
                 onClick={() => {
                   closeActionsMenu();
                   showDeleteModal();
                 }}
-              >
-                <div className="flex items-center space-x-2 text-red-600 text-sm font-medium ">
-                  <Trash2 strokeWidth={1.5} className="h-4 w-4" />
-                  <span>Delete...</span>
-                </div>
-                <kbd className="text-red-600 bg-red-100 transition-all duration-75 px-1 py-0.5 rounded text-xs">
-                  X
-                </kbd>
-              </button>
+              />
             </div>
           }
         >
@@ -288,6 +261,54 @@ function LinkCard({
         </Popover>
       </div>
     </div>
+  );
+}
+
+function PopoverItem({
+  text,
+  icon,
+  kbd,
+  variant = "normal",
+  onClick,
+}: {
+  text: string;
+  icon: ReactNode;
+  kbd: string;
+  onClick: () => void;
+  variant?: "danger" | "normal";
+}) {
+  const variantColors = {
+    normal: {
+      button: "text-gray-500 hover:bg-gray-100",
+      kbd: "text-gray-500 bg-gray-100 group-hover:bg-gray-200",
+    },
+    danger: {
+      button: "text-red-500 hover:bg-red-500 hover:text-white",
+      kbd: "bg-red-100 text-red-400 group-hover:bg-red-400 group-hover:text-white",
+    },
+  };
+
+  return (
+    <button
+      className={classNames(
+        "group w-full flex justify-between items-center p-2 rounded-md transition-all duration-75",
+        variantColors[variant].button
+      )}
+      onClick={onClick}
+    >
+      <div className="flex items-center space-x-2 text-sm font-medium">
+        {icon}
+        <p>{text}</p>
+      </div>
+      <kbd
+        className={classNames(
+          "transition-all duration-75 px-2 py-0.5 rounded text-xs font-light",
+          variantColors[variant].kbd
+        )}
+      >
+        {kbd}
+      </kbd>
+    </button>
   );
 }
 
