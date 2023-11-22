@@ -1,8 +1,6 @@
 import HttpStatusCode from "../constants/http-status-code";
 import { BaseError } from "./base-error";
 
-export * from "./handler";
-
 export class DuplicateKeyError extends BaseError {
   constructor(message: string) {
     super({

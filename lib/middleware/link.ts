@@ -2,7 +2,7 @@ import { NextFetchEvent, NextResponse, userAgent } from "next/server";
 import type { NextRequest } from "next/server";
 import { linksRateLimit, redis } from "../upstash";
 import { parse } from "../utils";
-import { Link } from "../types";
+import { RedisLink } from "../types";
 import { LOCALHOST_GEO_DATA, LOCALHOST_IP } from "../constants";
 import { ipAddress } from "@vercel/edge";
 import { recordClick } from "../analytics";
@@ -32,7 +32,7 @@ export const LinkMiddleware = async (req: NextRequest, ev: NextFetchEvent) => {
     return response;
   }
 
-  const link = await redis.get<Link>(`${domain}:${key}`);
+  const link = await redis.get<RedisLink>(`${domain}:${key}`);
 
   // When link is not found or archived
   if (!link || link.archived) {
@@ -43,7 +43,7 @@ export const LinkMiddleware = async (req: NextRequest, ev: NextFetchEvent) => {
   if (link.expiresAt && new Date() > link.expiresAt) {
     return NextResponse.redirect(new URL("/", req.url));
   }
-  
+
   ev.waitUntil(recordClick(req));
 
   // If link is password-protected

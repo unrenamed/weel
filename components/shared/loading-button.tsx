@@ -8,12 +8,16 @@ export type LoadingButtonProps = {
 } & ButtonProps;
 
 export const LoadingButton = forwardRef<HTMLButtonElement, LoadingButtonProps>(
-  function LoadingButton({ loading = false, className, ...props }, ref) {
+  function LoadingButton(
+    { loading = false, className, disabled, ...props },
+    ref
+  ) {
     return (
       <Button
         {...props}
         ref={ref}
         className={classNames("space-x-2", className)}
+        disabled={loading || disabled}
       >
         {loading && <LoadingSpinner />}
         <p>{props.text}</p>

@@ -1,10 +1,11 @@
 import { createLink, findLinks } from "@/lib/api/links";
-import { withErrorHandler } from "@/lib/error";
 import { CreateLink } from "@/lib/types";
-import { exclude } from "@/lib/utils";
+import { exclude, pipe } from "@/lib/utils";
 import { type NextRequest, NextResponse } from "next/server";
+import { createLinkSchema } from "../../../lib/schemas/create-link";
+import { withError, withSchema } from "../../../lib/handlers";
 
-export const GET = withErrorHandler(async (request: NextRequest) => {
+export const GET = withError(async (request: NextRequest) => {
   const searchParams = request.nextUrl.searchParams;
   const domain = searchParams.get("domain");
   const sort = searchParams.get("sort");
@@ -26,8 +27,10 @@ export const GET = withErrorHandler(async (request: NextRequest) => {
   return NextResponse.json(linksWithoutPassword);
 });
 
-export const POST = withErrorHandler(async (request: NextRequest) => {
-  const linkDetails = (await request.json()) as CreateLink;
+export const POST = pipe(
+  withSchema(createLinkSchema),
+  withError
+)(async (_, linkDetails: CreateLink) => {
   const link = await createLink(linkDetails);
   return NextResponse.json(exclude(link, ["password"]), { status: 201 });
 });

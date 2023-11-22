@@ -89,6 +89,18 @@ export function CreateEditLinkForm(props: Props) {
     },
   });
 
+  const onSubmit = (data: FormData) => {
+    onSave({
+      ...data,
+      // optional field must be excluded from the submit payload if its section is closed
+      ios: switchStatuses.ios ? data.ios : undefined,
+      android: switchStatuses.android ? data.android : undefined,
+      password: switchStatuses.password ? data.password : undefined,
+      expiresAt: switchStatuses.expiresAt ? data.expiresAt : undefined,
+      geo: switchStatuses.geo ? data.geo : undefined,
+    });
+  };
+
   const [switchStatuses, setSwtichStatuses] = useState<SwitchStatuses>({
     android: !!link?.android,
     ios: !!link?.ios,
@@ -120,7 +132,7 @@ export function CreateEditLinkForm(props: Props) {
   return (
     <form
       className="flex flex-col bg-gray-50 pt-6"
-      onSubmit={handleSubmit(onSave)}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <div className="space-y-8">
         <div className="flex flex-col space-y-4 px-4 md:px-16">

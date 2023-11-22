@@ -1,4 +1,4 @@
-import { CreateLink, EditLink, FindLinksParams, Link } from "../types";
+import { CreateLink, EditLink, FindLinksParams, RedisLink } from "../types";
 import { redis } from "../upstash";
 import bcrypt from "bcrypt";
 import prisma from "@/lib/prisma";
@@ -9,6 +9,7 @@ import {
   InvalidExpirationTimeError,
   LinkNotFoundError,
 } from "../error";
+import { Link } from "@prisma/client";
 
 export const createLink = async (link: CreateLink) => {
   const { url, domain, key, ios, android, geo, password: rawPassword } = link;
@@ -47,18 +48,18 @@ export const createLink = async (link: CreateLink) => {
     ...(exat && ({ exat } as any)), // expiration timestamp, in seconds
   };
 
-  const addLinkToRedis = redis.set<Link>(`${domain}:${key}`, value, opts);
+  const addLinkToRedis = redis.set<RedisLink>(`${domain}:${key}`, value, opts);
 
   const addLinkToDB = prisma.link.create({
     data: {
       url,
       key,
       ios,
-      geo,
       domain,
       android,
       password,
       expiresAt,
+      ...(geo && { geo }),
     },
   });
 
@@ -67,7 +68,7 @@ export const createLink = async (link: CreateLink) => {
 };
 
 export const editLink = async (id: string, newData: EditLink) => {
-  const { url, ios, android, geo, password, domain, key } = newData;
+  const { url, ios, android, geo, domain, key } = newData;
 
   const link = await findLinkById(id);
   if (!link) {
@@ -99,17 +100,16 @@ export const editLink = async (id: string, newData: EditLink) => {
 
   const redisValue = {
     url,
-    archived: false,
-    ...(password && { password }),
+    archived: link.archived,
     ...(geo && { geo }),
     ...(ios && { ios }),
     ...(android && { android }),
     ...(expiresAt && { expiresAt: new Date(expiresAt) }),
+    ...(link.password && { password: link.password }),
   };
 
   const exat = expiresAt ? new Date(expiresAt).getTime() / 1000 : null;
   const opts = {
-    nx: true, // only create if the key does not yet exist
     ...(exat && ({ exat } as any)), // expiration timestamp, in seconds
   };
 
@@ -121,15 +121,14 @@ export const editLink = async (id: string, newData: EditLink) => {
         url,
         key,
         ios,
-        geo,
         domain,
         android,
-        password,
         expiresAt,
+        ...(geo && { geo }),
       },
     }),
-    // upsert link in Redis DB
-    redis.set<Link>(`${domain}:${key}`, redisValue, opts),
+    // upsert new link in Redis DB
+    redis.set<RedisLink>(`${domain}:${key}`, redisValue, opts),
     // delete old Redis record if domain or key changed
     ...(domainChanged || keyChanged
       ? [redis.del(`${oldDomain}:${oldKey}`)]
@@ -196,4 +195,22 @@ export const findLinkById = async (id: string) => {
   return await prisma.link.findUnique({
     where: { id },
   });
+};
+
+export const setArchiveStatus = async (
+  { id, domain, key }: Link,
+  archived: boolean
+) => {
+  const prevValue = await redis.get<RedisLink>(`${domain}:${key}`);
+  await Promise.all([
+    prisma.link.update({ where: { id }, data: { archived } }),
+    ...(prevValue
+      ? [
+          redis.set<RedisLink>(`${domain}:${key}`, {
+            ...prevValue,
+            archived,
+          }),
+        ]
+      : []),
+  ]);
 };

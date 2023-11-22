@@ -12,7 +12,7 @@ export type GeoObject = {
   [country: string]: string;
 };
 
-export interface Link {
+export interface RedisLink {
   url: string;
   archived: boolean;
   password?: string;
@@ -22,18 +22,19 @@ export interface Link {
   geo?: GeoObject;
 }
 
-export interface CreateLink {
-  domain: string;
+export interface CreateEditLink {
   key: string;
+  domain: string;
   url: string;
-  password?: string;
-  expiresAt?: string;
-  ios?: string;
-  android?: string;
-  geo?: GeoObject;
+  password: string | null;
+  expiresAt: string | null;
+  ios: string | null;
+  android: string | null;
+  geo: GeoObject | null;
 }
 
-export interface EditLink extends CreateLink {}
+export interface CreateLink extends CreateEditLink {}
+export interface EditLink extends CreateEditLink {}
 
 export interface DeleteLink {
   domain: string;

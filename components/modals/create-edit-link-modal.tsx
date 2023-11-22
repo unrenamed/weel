@@ -4,7 +4,7 @@ import { useModal } from "./base-modal";
 import { CreateEditLinkForm } from "../forms/create-edit-link";
 import { FormData } from "../forms/create-edit-link/schema";
 import { toast } from "sonner";
-import { CreateLink } from "@/lib/types";
+import { CreateEditLink } from "@/lib/types";
 import { LoadingButton } from "../shared/loading-button";
 import { classNames } from "../utils";
 
@@ -46,17 +46,20 @@ function CreateEditLinkModalContent({
   const sendAPIRequest = async (rawData: FormData) => {
     setIsLoading(true);
 
-    const payload: CreateLink = {
+    const payload: CreateEditLink = {
       ...rawData,
-      expiresAt: rawData?.expiresAt
+      ios: rawData.ios || null,
+      android: rawData.android || null,
+      password: rawData.password || null,
+      expiresAt: rawData.expiresAt
         ? new Date(rawData.expiresAt).toISOString()
-        : undefined,
+        : null,
       geo:
-        rawData?.geo && rawData.geo.length > 0
+        rawData.geo && rawData.geo.length > 0
           ? Object.fromEntries(
               rawData.geo.map(({ country, url }) => [country, url])
             )
-          : undefined,
+          : null,
     };
 
     const apiUrl = isEditMode ? `/api/links/${link.id}` : "/api/links";
@@ -129,7 +132,6 @@ function CreateEditLinkModalContent({
                 <LoadingButton
                   text={isEditMode ? "Edit Link" : "Create Link"}
                   loading={loading}
-                  disabled={loading}
                   className="w-full py-2 px-8"
                 />
               </div>

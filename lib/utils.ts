@@ -102,3 +102,8 @@ export const nanoid = (size?: number) =>
     "346789ABCDEFGHJKLMNPQRTUVWXYabcdefghijkmnpqrtwxyz",
     size
   )();
+
+export const pipe =
+  <T>(...fns: Array<(arg: T) => T>) =>
+  (value: T) =>
+    fns.reduce((acc, fn) => fn(acc), value);

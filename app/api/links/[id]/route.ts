@@ -1,14 +1,16 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { deleteLink, editLink, findLinkById } from "@/lib/api/links";
 import { EditLink } from "@/lib/types";
-import { exclude } from "@/lib/utils";
-import { LinkNotFoundError, withErrorHandler } from "@/lib/error";
+import { exclude, pipe } from "@/lib/utils";
+import { LinkNotFoundError } from "@/lib/error";
+import { withError, withSchema } from "../../../../lib/handlers";
+import { editLinkSchema } from "../../../../lib/schemas";
 
 type Params = {
   id: string;
 };
 
-export const GET = withErrorHandler(
+export const GET = withError(
   async (_: NextRequest, { params }: { params: Params }) => {
     const { id } = params;
     const link = await findLinkById(id);
@@ -19,7 +21,7 @@ export const GET = withErrorHandler(
   }
 );
 
-export const DELETE = withErrorHandler(
+export const DELETE = withError(
   async (_: NextRequest, { params }: { params: Params }) => {
     const { id } = params;
     const link = await findLinkById(id);
@@ -31,14 +33,14 @@ export const DELETE = withErrorHandler(
   }
 );
 
-export const PUT = withErrorHandler(
-  async (request: NextRequest, { params }: { params: Params }) => {
-    const { id } = params;
-    const newData = (await request.json()) as EditLink;
-    const updatedLink = await editLink(id, newData);
-    return NextResponse.json(
-      { message: "Link edited", data: exclude(updatedLink, ["password"]) },
-      { status: 200 }
-    );
-  }
-);
+export const PUT = pipe(
+  withSchema(editLinkSchema),
+  withError
+)(async (_, linkDetails: EditLink, { params }: { params: Params }) => {
+  const { id } = params;
+  const updatedLink = await editLink(id, linkDetails);
+  return NextResponse.json(
+    { message: "Link edited", data: exclude(updatedLink, ["password"]) },
+    { status: 200 }
+  );
+});

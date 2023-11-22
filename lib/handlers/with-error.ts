@@ -1,9 +1,9 @@
+import { BaseError } from "@/lib/error/base-error";
+import logger from "@/lib/winston";
 import { NextRequest, NextResponse } from "next/server";
-import { BaseError } from "./base-error";
-import logger from "../winston";
 
-export function withErrorHandler(fn: Function) {
-  return async function (request: NextRequest, ...args: any) {
+export function withError(fn: Function) {
+  return async (request: NextRequest, ...args: any) => {
     try {
       return await fn(request, ...args);
     } catch (error) {

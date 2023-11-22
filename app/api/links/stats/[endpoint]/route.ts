@@ -6,20 +6,20 @@ import {
 import { NextResponse, type NextRequest } from "next/server";
 import { INTERVALS, TINYBIRD_API_ENDPOINTS } from "@/lib/constants";
 import { Interval } from "@/lib/types";
-import { withErrorHandler } from "@/lib/error";
+import { withError } from "@/lib/handlers";
 
 type Params = {
   endpoint: string;
 };
 
-export const GET = withErrorHandler(
+export const GET = withError(
   async (request: NextRequest, { params }: { params: Params }) => {
     const { endpoint } = params;
     const searchParams = request.nextUrl.searchParams;
 
     const domain = searchParams.get("domain");
     const key = searchParams.get("key");
-    const interval = (searchParams.get("interval") as Interval) ?? undefined;
+    const interval = (searchParams.get("interval") as Interval) ?? '24h';
 
     if (!domain || !key) {
       return NextResponse.json(

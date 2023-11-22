@@ -1,6 +1,6 @@
 "use server";
 
-import { Link } from "@/lib/types";
+import { RedisLink } from "@/lib/types";
 import { redis } from "@/lib/upstash";
 import bcrypt from "bcrypt";
 
@@ -14,7 +14,7 @@ export const verifyPassword = async (params: Params) => {
   const domain = decodeURIComponent(params.domain);
   const key = decodeURIComponent(params.key);
 
-  const link = await redis.get<Link>(`${domain}:${key}`);
+  const link = await redis.get<RedisLink>(`${domain}:${key}`);
   if (!link?.password) return { error: "Link not found" };
 
   const isValid = await bcrypt.compare(params.password, link.password);
