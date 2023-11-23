@@ -2,8 +2,8 @@ import { createLink, findLinks } from "@/lib/api/links";
 import { CreateLink } from "@/lib/types";
 import { exclude, pipe } from "@/lib/utils";
 import { type NextRequest, NextResponse } from "next/server";
-import { createLinkSchema } from "../../../lib/schemas/create-link";
-import { withError, withSchema } from "../../../lib/handlers";
+import { createLinkSchema } from "@/lib/schemas/create-link";
+import { withError, withSchema } from "@/lib/handlers";
 
 export const GET = withError(async (request: NextRequest) => {
   const searchParams = request.nextUrl.searchParams;

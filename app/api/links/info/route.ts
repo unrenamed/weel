@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { LinkNotFoundError } from "@/lib/error";
 import { findLinkByDomainKey } from "@/lib/api/links";
 import { exclude } from "@/lib/utils";
-import { withError } from "../../../../lib/handlers";
+import { withError } from "@/lib/handlers";
 
 export const GET = withError(async (request: NextRequest) => {
   const searchParams = request.nextUrl.searchParams;

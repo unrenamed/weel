@@ -1,6 +1,6 @@
 import { findLinkByDomainKey } from "@/lib/api/links";
 import { type NextRequest, NextResponse } from "next/server";
-import { withError } from "../../../../lib/handlers";
+import { withError } from "@/lib/handlers";
 
 export const GET = withError(async (request: NextRequest) => {
   const searchParams = request.nextUrl.searchParams;

@@ -3,8 +3,8 @@ import { deleteLink, editLink, findLinkById } from "@/lib/api/links";
 import { EditLink } from "@/lib/types";
 import { exclude, pipe } from "@/lib/utils";
 import { LinkNotFoundError } from "@/lib/error";
-import { withError, withSchema } from "../../../../lib/handlers";
-import { editLinkSchema } from "../../../../lib/schemas";
+import { withError, withSchema } from "@/lib/handlers";
+import { editLinkSchema } from "@/lib/schemas";
 
 type Params = {
   id: string;
