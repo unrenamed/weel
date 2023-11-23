@@ -92,13 +92,13 @@ export default function LinksContainer() {
   };
 
   return (
-    <div className="grid gap-3">
+    <div className="grid gap-5">
       <CreateEditLinkModal />
       <div className="flex justify-between flex-wrap space-y-3 xs:w-full xs:space-y-0">
         <CreateLinkButton onClick={show} />
         <LinkSort />
       </div>
-      <div className="grid grid-cols-1 gap-3 lg:grid-cols-7">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-7">
         <div className="col-span-1 lg:col-span-2">
           <LinksFilters />
         </div>
