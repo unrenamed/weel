@@ -17,6 +17,7 @@ import {
   ArchiveIcon,
   ArchiveRestore,
   BarChart,
+  CalendarClock,
   Check,
   Copy,
   Edit3,
@@ -26,6 +27,7 @@ import {
 } from "lucide-react";
 import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+import { differenceInDays, format, isAfter } from "date-fns";
 
 const imageLoader = ({ src, width }: { src: string; width: number }) => {
   return `https://payable-red-ostrich.faviconkit.com/${src}/${width}`;
@@ -204,6 +206,9 @@ function LinkCard({
                 {domainKey}
               </a>
               <CopyToClipboard value={domainKey} />
+              {!!link.expiresAt && (
+                <ExpirationWarning expiresAt={link.expiresAt} />
+              )}
             </div>
             <div className="flex items-center space-x-2 max-w-[140px] sm:max-w-[300px] md:max-w-[360px] xl:max-w-[400px]">
               <p className="text-sm text-gray-500 whitespace-nowrap">
@@ -358,7 +363,7 @@ function CopyToClipboard({ value }: { value: string }) {
   const [copied, setCopied] = useState(false);
   return (
     <button
-      className="h-6 w-6 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-700 hover:scale-110 transition-all duration-75 active:scale-90"
+      className="p-1.5 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-700 hover:scale-110 transition-all duration-75 active:scale-90"
       onClick={(event) => {
         event.stopPropagation();
         toast.promise(
@@ -381,6 +386,34 @@ function CopyToClipboard({ value }: { value: string }) {
       )}
     </button>
   );
+}
+
+function ExpirationWarning({ expiresAt }: { expiresAt: Date | string }) {
+  const now = new Date();
+  if (isAfter(now, new Date(expiresAt))) {
+    return (
+      <div title="Link has expired! It cannot be accessed and will redirect to a 404 page">
+        <CalendarClock className="h-4 w-4 text-red-400" strokeWidth={2} />
+      </div>
+    );
+  }
+  if (differenceInDays(new Date(expiresAt), new Date()) <= 1) {
+    return (
+      <div
+        title={`Link is going to expire soon, at ${format(
+          new Date(expiresAt),
+          "dd.MM.yyyy, HH:mm"
+        )}`}
+      >
+        <CalendarClock
+          className="h-4 w-4 animate-wiggle text-orange-400"
+          strokeWidth={2}
+        />
+      </div>
+    );
+  }
+
+  return null;
 }
 
 // function areEqual(prevProps: LinkCardProps, nextProps: LinkCardProps) {
