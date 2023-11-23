@@ -3,6 +3,7 @@ import { capitalize, parse } from "./utils";
 import {
   INTERVALS,
   LOCALHOST_GEO_DATA,
+  LOCALHOST_IP,
   TINYBIRD_API_ENDPOINTS,
 } from "./constants";
 import {
@@ -14,6 +15,8 @@ import {
   TinybirdPipe,
 } from "./types";
 import prisma from "@/lib/prisma";
+import { clicksRateLimit } from "./upstash";
+import { ipAddress } from "@vercel/edge";
 
 const intervalData: IntervalData = {
   "1h": {
@@ -61,8 +64,12 @@ export const recordClick = async (req: NextRequest) => {
   if (!key || !domain) return;
 
   const ua = userAgent(req);
+  const ip = ipAddress(req) ?? LOCALHOST_IP;
   const geo = req.geo ?? LOCALHOST_GEO_DATA;
   const referer = req.headers.get("referer");
+
+  const { success } = await clicksRateLimit.limit(`${ip}:${domain}:${key}`);
+  if (!success) return;
 
   await fetch("https://api.tinybird.co/v0/events?name=link_clicks", {
     method: "POST",

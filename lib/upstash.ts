@@ -9,3 +9,10 @@ export const linksRateLimit = new Ratelimit({
   prefix: "ratelimit",
   analytics: true,
 });
+
+export const clicksRateLimit = new Ratelimit({
+  redis,
+  limiter: Ratelimit.fixedWindow(1, "1 h"),
+  prefix: "ratelimit:clicks",
+  analytics: true,
+});
