@@ -193,6 +193,7 @@ function LinkCard({
             <div className="flex items-center space-x-2 max-w-fit">
               <a
                 href={href}
+                title={href}
                 target="_blank"
                 rel="noreferrer"
                 className={classNames(
@@ -211,6 +212,7 @@ function LinkCard({
               <p className="hidden xs:block">•</p>
               <a
                 href={link.url}
+                title={link.url}
                 target="_blank"
                 rel="noreferrer"
                 className="xs:block hidden truncate text-sm font-medium text-gray-700 underline-offset-2 hover:underline"
