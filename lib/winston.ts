@@ -1,18 +1,10 @@
 import { createLogger, transports, format } from "winston";
-import "winston-daily-rotate-file";
+import DailyRotateFile from "winston-daily-rotate-file";
 
 const customFormat = format.printf(
   ({ level, message, label = process.env.NODE_ENV, timestamp }) =>
     `${timestamp} [${label}] ${level}: ${message}`
 );
-
-const fileLogTransport = new transports.DailyRotateFile({
-  filename: `logs/%DATE%.log`,
-  datePattern: "YYYY-MM-DD",
-  zippedArchive: true,
-  maxSize: "20m",
-  maxFiles: "30d",
-});
 
 const consoleTransport = new transports.Console({
   level: process.env.LOG_LEVEL,
@@ -33,6 +25,13 @@ const logger = createLogger({
 });
 
 if (process.env.NODE_ENV === "development") {
+  const fileLogTransport = new DailyRotateFile({
+    filename: `logs/%DATE%.log`,
+    datePattern: "YYYY-MM-DD",
+    zippedArchive: true,
+    maxSize: "20m",
+    maxFiles: "30d",
+  });
   logger.add(fileLogTransport);
 }
 
