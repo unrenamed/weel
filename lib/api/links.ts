@@ -1,13 +1,13 @@
 import { CreateLink, EditLink, FindLinksParams, RedisLink } from "../types";
 import { redis } from "../upstash";
 import bcrypt from "bcrypt";
-import prisma from "@/lib/prisma";
+import { prismaLocalClient } from "@/lib/prisma";
 import { nanoid } from "../utils";
 import { isBefore } from "date-fns";
 import {
-  DuplicateKeyError,
-  InvalidExpirationTimeError,
-  LinkNotFoundError,
+    DuplicateKeyError,
+    InvalidExpirationTimeError,
+    LinkNotFoundError,
 } from "../error";
 import { Link } from "@prisma/client";
 
@@ -50,7 +50,7 @@ export const createLink = async (link: CreateLink) => {
 
   const addLinkToRedis = redis.set<RedisLink>(`${domain}:${key}`, value, opts);
 
-  const addLinkToDB = prisma.link.create({
+  const addLinkToDB = prismaLocalClient.link.create({
     data: {
       url,
       key,
@@ -115,7 +115,7 @@ export const editLink = async (id: string, newData: EditLink) => {
 
   const [updatedLink, _] = await Promise.all([
     // update link in SQL DB
-    prisma.link.update({
+    prismaLocalClient.link.update({
       where: { id },
       data: {
         url,
@@ -139,7 +139,7 @@ export const editLink = async (id: string, newData: EditLink) => {
 };
 
 export const deleteLink = async (domain: string, key: string) => {
-  const deleteFromDB = prisma.link.delete({
+  const deleteFromDB = prismaLocalClient.link.delete({
     where: { domain_key: { domain, key } },
   });
   const deleteFromRedis = redis.del(`${domain}:${key}`);
@@ -154,7 +154,7 @@ export const findLinks = async ({
   page,
   perPage = 10,
 }: FindLinksParams) => {
-  return await prisma.link.findMany({
+  return await prismaLocalClient.link.findMany({
     where: {
       ...(domain && { domain }),
       ...(search && {
@@ -186,13 +186,13 @@ export const generateRandomKey = async (domain: string): Promise<string> => {
 };
 
 export const findLinkByDomainKey = async (domain: string, key: string) => {
-  return await prisma.link.findUnique({
+  return await prismaLocalClient.link.findUnique({
     where: { domain_key: { domain, key } },
   });
 };
 
 export const findLinkById = async (id: string) => {
-  return await prisma.link.findUnique({
+  return await prismaLocalClient.link.findUnique({
     where: { id },
   });
 };
@@ -203,7 +203,7 @@ export const setArchiveStatus = async (
 ) => {
   const prevValue = await redis.get<RedisLink>(`${domain}:${key}`);
   await Promise.all([
-    prisma.link.update({ where: { id }, data: { archived } }),
+    prismaLocalClient.link.update({ where: { id }, data: { archived } }),
     ...(prevValue
       ? [
           redis.set<RedisLink>(`${domain}:${key}`, {

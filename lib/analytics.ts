@@ -14,8 +14,8 @@ import {
   TinybirdError,
   TinybirdPipe,
 } from "./types";
-import prisma from "@/lib/prisma";
 import { clicksRateLimit } from "./upstash";
+import { prismaEdgeClient } from "./prisma";
 import { ipAddress } from "@vercel/edge";
 
 const intervalData: IntervalData = {
@@ -102,7 +102,7 @@ export const recordClick = async (req: NextRequest) => {
     },
   });
 
-  await prisma.link.update({
+  await prismaEdgeClient.link.update({
     where: {
       domain_key: {
         domain,

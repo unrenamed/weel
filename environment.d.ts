@@ -7,6 +7,7 @@ declare global {
       UPSTASH_REDIS_REST_TOKEN: string;
       TINYBIRD_API_TOKEN: string;
       DATABASE_URL: string;
+      DATABASE_PROXY_URL: string;
       DASHBOARD_HOSTNAMES: string;
       APP_LINK_DOMAIN: string;
     }
