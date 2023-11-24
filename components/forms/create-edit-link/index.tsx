@@ -16,7 +16,7 @@ import { useRefinement } from "@/hooks/use-refinement";
 import { usePrevious } from "@/hooks/use-previous";
 import { classNames } from "@/components/utils";
 
-const LINK_DOMAINS = ["link.localhost:3000", "chatg.pt", "dub.sh"];
+const LINK_DOMAINS = process.env.NEXT_PUBLIC_APP_LINK_DOMAINS.split(',');
 
 type Switch = "password" | "ios" | "android" | "geo" | "expiresAt";
 

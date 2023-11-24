@@ -9,7 +9,7 @@ declare global {
       DATABASE_URL: string;
       DATABASE_PROXY_URL: string;
       DASHBOARD_HOSTNAMES: string;
-      APP_LINK_DOMAIN: string;
+      NEXT_PUBLIC_APP_LINK_DOMAINS: string;
     }
   }
 }
