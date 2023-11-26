@@ -1,5 +1,5 @@
 import { NextRequest, userAgent } from "next/server";
-import { capitalize, parse } from "./utils";
+import { capitalize, isBot, parse } from "./utils";
 import {
   INTERVALS,
   LOCALHOST_GEO_DATA,
@@ -63,13 +63,16 @@ export const recordClick = async (req: NextRequest) => {
   const { key, domain } = parse(req);
   if (!key || !domain) return;
 
-  const ua = userAgent(req);
-  const ip = ipAddress(req) ?? LOCALHOST_IP;
-  const geo = req.geo ?? LOCALHOST_GEO_DATA;
-  const referer = req.headers.get("referer");
+  const bot = isBot(req);
+  if (bot) return;
 
+  const ip = ipAddress(req) ?? LOCALHOST_IP;
   const { success } = await clicksRateLimit.limit(`${ip}:${domain}:${key}`);
   if (!success) return;
+
+  const ua = userAgent(req);
+  const geo = req.geo ?? LOCALHOST_GEO_DATA;
+  const referer = req.headers.get("referer");
 
   await fetch("https://api.tinybird.co/v0/events?name=link_clicks", {
     method: "POST",

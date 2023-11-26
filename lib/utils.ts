@@ -1,5 +1,5 @@
 import { ParsedURL, SWRError } from "./types";
-import { NextRequest } from "next/server";
+import { NextRequest, userAgent } from "next/server";
 import {
   format,
   differenceInMilliseconds,
@@ -7,6 +7,7 @@ import {
   isThisYear,
 } from "date-fns";
 import { customAlphabet } from "nanoid";
+import { botRegexp } from "./constants/bot-regexp-patterns";
 
 export const parse = (req: NextRequest): ParsedURL => {
   let domain = req.headers.get("host") as string;
@@ -28,6 +29,12 @@ export const parse = (req: NextRequest): ParsedURL => {
   const route = decodeURIComponent(path.slice(1));
 
   return { domain, path, fullPath, key, route };
+};
+
+export const isBot = (req: NextRequest) => {
+  const ua = userAgent(req);
+  if (ua.isBot) return true;
+  return botRegexp.test(ua.ua);
 };
 
 export const capitalize = (str: string) =>
