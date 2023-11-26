@@ -1,4 +1,5 @@
-"use client";;
+"use client";
+
 import { useLinks } from "@/lib/swr/use-links";
 import LinkSkeleton from "./skeleton";
 import LinkCard from "./card";
