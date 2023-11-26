@@ -12,6 +12,7 @@ import { Clipboard, ClipboardCheck, Download, ImageIcon } from "lucide-react";
 import { toast } from "sonner";
 import Popover from "../shared/popover";
 import { ButtonWithIcon } from "../shared/button-with-icon";
+import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 
 function LinkQrModalContent({ link }: { link: Link }) {
   const linkAppURL = `https://${link.domain}/${link.key}`;
@@ -60,18 +61,15 @@ function LinkQrModalContent({ link }: { link: Link }) {
 }
 
 function CopyToClipboardButton({ qrData }: { qrData: QRProps }) {
-  const [isCopied, setIsCopied] = useState(false);
+  const [copied, copyToClipboard] = useCopyToClipboard(2500);
 
   const copyQRCode = async () => {
     const canvas = await buildQRCodeCanvas(qrData);
     canvas.toBlob(
-      function copyToClipboard(blob) {
+      function copy(blob) {
         if (!blob) throw new Error();
         const item = new ClipboardItem({ [blob.type]: blob });
-        navigator.clipboard
-          .write([item])
-          .then(() => setIsCopied(true))
-          .then(() => setTimeout(() => setIsCopied(false), 2500));
+        copyToClipboard(item);
       },
       "image/png",
       1
@@ -80,9 +78,9 @@ function CopyToClipboardButton({ qrData }: { qrData: QRProps }) {
 
   return (
     <ButtonWithIcon
-      text={isCopied ? "Copied" : "Copy"}
+      text={copied ? "Copied" : "Copy"}
       icon={
-        isCopied ? (
+        copied ? (
           <ClipboardCheck strokeWidth={1.5} className="h-4 w-4" />
         ) : (
           <Clipboard strokeWidth={1.5} className="h-4 w-4" />
@@ -90,7 +88,7 @@ function CopyToClipboardButton({ qrData }: { qrData: QRProps }) {
       }
       className="w-32 px-5 py-1.5 font-normal"
       onClick={async () => {
-        if (isCopied) return;
+        if (copied) return;
         toast.promise(copyQRCode(), {
           loading: "Copying QR code to clipboard...",
           success: "Copied QR code to clipboard!",

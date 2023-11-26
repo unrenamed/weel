@@ -1,4 +1,4 @@
-"use client";
+"use client";;
 import { useLinks } from "@/lib/swr/use-links";
 import LinkSkeleton from "./skeleton";
 import LinkCard from "./card";
@@ -33,8 +33,8 @@ export default function LinksContainer() {
       if (isLoadingMore) return;
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver(
-        (entries) => {
-          if (entries[0].isIntersecting && !isReachingEnd) {
+        ([entry]) => {
+          if (entry.isIntersecting && !isReachingEnd) {
             setSize(size + 1);
           }
         },

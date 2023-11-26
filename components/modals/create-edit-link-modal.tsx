@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { CreateEditLink } from "@/lib/types";
 import { LoadingButton } from "../shared/loading-button";
 import { classNames } from "../utils";
+import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 
 type Props = {
   link?: Link;
@@ -26,6 +27,8 @@ function CreateEditLinkModalContent({
 
   const [isSubmitAtBottom, setIsSubmitAtBottom] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+
+  const [_, copyToClipboard] = useCopyToClipboard();
 
   const updateSubmitButtonPosition = (elem: HTMLDivElement) => {
     const { scrollTop, scrollHeight, clientHeight } = elem;
@@ -76,7 +79,7 @@ function CreateEditLinkModalContent({
     if ([200, 201].includes(response.status)) {
       const domainKey = `${payload.domain}/${payload.key}`;
       // Copy new link to clipboard
-      toast.promise(navigator.clipboard.writeText(domainKey), {
+      toast.promise(copyToClipboard(domainKey), {
         loading: "Copying link to clipboard...",
         success: "Copied link to clipboard!",
         error: "Failed to copy link.",

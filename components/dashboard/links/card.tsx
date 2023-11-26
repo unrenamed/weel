@@ -28,6 +28,8 @@ import {
 import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { differenceInDays, format, isAfter } from "date-fns";
+import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
+import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
 
 const imageLoader = ({ src, width }: { src: string; width: number }) => {
   return `https://payable-red-ostrich.faviconkit.com/${src}/${width}`;
@@ -59,6 +61,9 @@ function LinkCard({
   onDuplicate,
 }: LinkCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
+  const [_, entry] = useIntersectionObserver<HTMLDivElement>({}, cardRef);
+  const isCardInViewport = !!entry?.isIntersecting;
+
   const [isCardSelected, setIsCardSelected] = useState(false);
   const [isActionsMenuOpen, setIsActionsMenuOpen] = useState(false);
   const closeActionsMenu = () => setIsActionsMenuOpen(false);
@@ -132,9 +137,7 @@ function LinkCard({
   const onCardClick = useCallback(
     (event: MouseEvent) => {
       const target = event.target as Element;
-
-      const isCardDescendantClicked =
-        cardRef.current && cardRef.current.contains(target);
+      const isCardDescendantClicked = cardRef.current?.contains(target);
 
       const isReactiveElement =
         target.tagName.toLowerCase() === "img" ||
@@ -151,14 +154,18 @@ function LinkCard({
   );
 
   useEffect(() => {
-    document.addEventListener("click", onCardClick);
+    if (isCardInViewport) {
+      document.addEventListener("click", onCardClick);
+    }
     return () => document.removeEventListener("click", onCardClick);
-  }, [onCardClick]);
+  }, [isCardInViewport, onCardClick]);
 
   useEffect(() => {
-    document.addEventListener("keydown", onKeyDown);
+    if (isCardInViewport) {
+      document.addEventListener("keydown", onKeyDown);
+    }
     return () => document.removeEventListener("keydown", onKeyDown);
-  }, [onKeyDown]);
+  }, [isCardInViewport, onKeyDown]);
 
   return (
     <div
@@ -170,11 +177,15 @@ function LinkCard({
       )}
     >
       <div className="relative z-20 flex justify-between items-center rounded-lg bg-white p-3 shadow transition-all hover:shadow-md sm:p-4">
-        <ArchiveModal />
-        <DeleteModal />
-        <LinkQrModal />
-        <EditModal />
-        <DuplicateModal />
+        {isCardInViewport && (
+          <>
+            <ArchiveModal />
+            <DeleteModal />
+            <LinkQrModal />
+            <EditModal />
+            <DuplicateModal />
+          </>
+        )}
         <div className="flex gap-3 items-center">
           {link.archived ? (
             <div className="h-8 w-8 rounded-full sm:h-10 sm:w-10 bg-gray-200 flex items-center justify-center">
@@ -360,23 +371,17 @@ function PopoverItem({
 }
 
 function CopyToClipboard({ value }: { value: string }) {
-  const [copied, setCopied] = useState(false);
+  const [copied, copyToClipboard] = useCopyToClipboard();
   return (
     <button
       className="p-1.5 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-700 hover:scale-110 transition-all duration-75 active:scale-90"
       onClick={(event) => {
         event.stopPropagation();
-        toast.promise(
-          navigator.clipboard
-            .writeText(value)
-            .then(() => setCopied(true))
-            .then(() => setTimeout(() => setCopied(false), 3000)),
-          {
-            loading: "Copying link to clipboard...",
-            success: "Copied link to clipboard!",
-            error: "Failed to copy",
-          }
-        );
+        toast.promise(copyToClipboard(value), {
+          loading: "Copying link to clipboard...",
+          success: "Copied link to clipboard!",
+          error: "Failed to copy",
+        });
       }}
     >
       {copied ? (
