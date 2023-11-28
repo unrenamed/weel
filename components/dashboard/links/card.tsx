@@ -8,7 +8,14 @@ import { useCreateEditLinkModal } from "@/components/modals/create-edit-link-mod
 import BlurImage from "@/components/shared/blur-image";
 import Popover from "@/components/shared/popover";
 import { classNames } from "@/components/utils";
-import { formatDate, capitalize, getApexDomain } from "@/lib/utils";
+import {
+  dateTimeAgo,
+  capitalize,
+  getApexDomain,
+  pluralize,
+  pluralizeJSX,
+  dateTimeSoon,
+} from "@/lib/utils";
 import { Link } from "@prisma/client";
 import * as Separator from "@radix-ui/react-separator";
 import NextLink from "next/link";
@@ -27,9 +34,10 @@ import {
 } from "lucide-react";
 import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { differenceInDays, format, isAfter } from "date-fns";
+import { differenceInHours, isAfter } from "date-fns";
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
+import { Tooltip } from "@/components/shared/tooltip";
 
 const imageLoader = ({ src, width }: { src: string; width: number }) => {
   return `https://payable-red-ostrich.faviconkit.com/${src}/${width}`;
@@ -223,7 +231,7 @@ function LinkCard({
             </div>
             <div className="flex items-center space-x-2 max-w-[140px] sm:max-w-[300px] md:max-w-[360px] xl:max-w-[400px]">
               <p className="text-sm text-gray-500 whitespace-nowrap">
-                {capitalize(formatDate(link.createdAt))}
+                {capitalize(dateTimeAgo(link.createdAt))}
               </p>
               <p className="hidden xs:block">•</p>
               <a
@@ -239,17 +247,32 @@ function LinkCard({
           </div>
         </div>
         <div className="flex items-center space-x-2">
-          <NextLink
-            onClick={(e) => e.stopPropagation()}
-            href={`/analytics?domain=${link.domain}&key=${link.key}`}
-            className="flex items-center space-x-1 rounded-md bg-gray-100 px-2 py-0.5 transition-all duration-75 hover:scale-105 active:scale-100 text-gray-500"
+          <Tooltip
+            content={
+              <LinkTotalClicks
+                totalClicks={link.totalClicks}
+                lastClicked={link.lastClicked}
+              />
+            }
           >
-            <BarChart strokeWidth={1.5} className="h-4 w-4" />
-            <span className="whitespace-nowrap text-sm text-gray-500">
-              {link.totalClicks}
-              <span className="ml-1 hidden sm:inline-block">clicks</span>
-            </span>
-          </NextLink>
+            <NextLink
+              onClick={(e) => e.stopPropagation()}
+              href={`/analytics?domain=${link.domain}&key=${link.key}`}
+              className="flex items-center space-x-1 rounded-md bg-gray-100 px-2 py-0.5 transition-all duration-75 hover:scale-105 active:scale-100 text-gray-500"
+            >
+              <BarChart strokeWidth={1.5} className="h-4 w-4" />
+              {pluralizeJSX(
+                (count, noun) => (
+                  <span className="whitespace-nowrap text-sm text-gray-500">
+                    {count}
+                    <span className="ml-1 hidden sm:inline-block">{noun}</span>
+                  </span>
+                ),
+                link.totalClicks,
+                "click"
+              )}
+            </NextLink>
+          </Tooltip>
           <Popover
             align="end"
             isOpen={isActionsMenuOpen}
@@ -395,30 +418,59 @@ function CopyToClipboard({ value }: { value: string }) {
 
 function ExpirationWarning({ expiresAt }: { expiresAt: Date | string }) {
   const now = new Date();
+
   if (isAfter(now, new Date(expiresAt))) {
+    const message =
+      "Link has expired! It cannot be accessed and will redirect to the home page";
     return (
-      <div title="Link has expired! It cannot be accessed and will redirect to a 404 page">
-        <CalendarClock className="h-4 w-4 text-red-400" strokeWidth={2} />
-      </div>
+      <Tooltip content={message}>
+        <div>
+          <CalendarClock className="h-4 w-4 text-red-400" strokeWidth={2} />
+        </div>
+      </Tooltip>
     );
   }
-  if (differenceInDays(new Date(expiresAt), new Date()) <= 1) {
+
+  if (differenceInHours(new Date(expiresAt), new Date()) <= 24) {
+    const message = `Link is going to expire ${dateTimeSoon(
+      new Date(expiresAt),
+      true
+    )}`;
     return (
-      <div
-        title={`Link is going to expire soon, at ${format(
-          new Date(expiresAt),
-          "dd.MM.yyyy, HH:mm"
-        )}`}
-      >
-        <CalendarClock
-          className="h-4 w-4 animate-wiggle text-orange-400"
-          strokeWidth={2}
-        />
-      </div>
+      <Tooltip content={message}>
+        <div>
+          <CalendarClock
+            className="h-4 w-4 animate-wiggle text-orange-400"
+            strokeWidth={2}
+          />
+        </div>
+      </Tooltip>
     );
   }
 
   return null;
+}
+
+function LinkTotalClicks({
+  totalClicks,
+  lastClicked,
+}: {
+  totalClicks: number;
+  lastClicked: Date | null;
+}) {
+  if (totalClicks === 0) return null;
+  return (
+    <div className="block max-w-xs px-4 py-2 text-center">
+      <p className="text-sm font-semibold text-gray-700">
+        {pluralize(totalClicks, "total click")}
+      </p>
+      {lastClicked && (
+        <p className="mt-1 text-xs text-gray-500">
+          Last clicked {dateTimeAgo(lastClicked)}
+        </p>
+      )}
+    </div>
+  );
 }
 
 // function areEqual(prevProps: LinkCardProps, nextProps: LinkCardProps) {

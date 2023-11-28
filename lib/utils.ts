@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import { ParsedURL, SWRError } from "./types";
 import { NextRequest, userAgent } from "next/server";
 import {
@@ -9,6 +10,7 @@ import {
 import { customAlphabet } from "nanoid";
 import { botRegexp } from "./constants/bot-regexp-patterns";
 
+// ----------------------Request utilities----------------------
 export const parse = (req: NextRequest): ParsedURL => {
   let domain = req.headers.get("host") as string;
   domain = domain.replace("www.", ""); // remove www. from domain
@@ -37,11 +39,83 @@ export const isBot = (req: NextRequest) => {
   return botRegexp.test(ua.ua);
 };
 
+// ----------------------String utilities----------------------
 export const capitalize = (str: string) =>
   str.charAt(0).toUpperCase() + str.slice(1);
 
 export const uncapitalize = (str: string) =>
   str.charAt(0).toLowerCase() + str.slice(1);
+
+export const pluralize = (count: number, noun: string, suffix = "s") =>
+  `${count} ${noun}${count !== 1 ? suffix : ""}`;
+
+export const pluralizeJSX = (
+  func: (count: number, noun: string) => ReactNode,
+  count: number,
+  noun: string,
+  suffix = "s"
+) => {
+  return func(count, `${noun}${count !== 1 ? suffix : ""}`);
+};
+
+export const nanoid = (size?: number) =>
+  customAlphabet(
+    // Numbers and english alphabet without lookalikes: 1, l, I, 0, O, o, u, v, 5, S, s, 2, Z.
+    "346789ABCDEFGHJKLMNPQRTUVWXYabcdefghijkmnpqrtwxyz",
+    size
+  )();
+
+// ----------------------Date & time utilities----------------------
+export const dateTimeAgo = (timestamp: Date) => {
+  const date = new Date(timestamp);
+  const diff = differenceInMilliseconds(Date.now(), date);
+
+  if (diff < 2 * 1000) {
+    return "just now";
+  } else if (diff < 24 * 60 * 60 * 1000) {
+    return `${formatDistanceToNow(date)} ago`;
+  } else {
+    return format(date, `MMM d ${isThisYear(date) ? "" : "y"}`);
+  }
+};
+
+export const dateTimeSoon = (timestamp: Date, addSuffix = false) => {
+  const date = new Date(timestamp);
+  const diff = differenceInMilliseconds(date, Date.now());
+
+  if (diff < 1 * 1000) {
+    return formatDistanceToNow(date, { addSuffix, includeSeconds: true });
+  } else if (diff < 24 * 60 * 60 * 1000) {
+    return formatDistanceToNow(date, { addSuffix });
+  } else {
+    const suffix = addSuffix ? "on " : "";
+    return suffix + format(date, `ccc, MMM do ${isThisYear(date) ? "" : "y"}`);
+  }
+};
+
+export const getDateTimeLocal = (d: Date | string): string => {
+  const date = new Date(d);
+  if (isNaN(date.getTime())) return "";
+  const timePart = date.toLocaleTimeString().split(":").slice(0, 2).join(":");
+  const datePart = date.toISOString().split("T")[0];
+  return `${datePart}T${timePart}`;
+};
+
+// ----------------------URL utilities----------------------
+export const getApexDomain = (url: string) => {
+  try {
+    // replace any custom scheme (e.g. notion://) with https://
+    return new URL(url.replace(/^[a-zA-Z]+:\/\//, "https://")).hostname;
+  } catch (e) {
+    return "";
+  }
+};
+
+// ----------------------Common utilities----------------------
+export const pipe =
+  <T>(...fns: Array<(arg: T) => T>) =>
+  (value: T) =>
+    fns.reduce((acc, fn) => fn(acc), value);
 
 export function exclude<T>(obj: T, keys: (keyof T)[]): Partial<T> {
   const excludedObj: Partial<T> = {};
@@ -72,45 +146,3 @@ export const fetcher = async (input: RequestInfo | URL, init?: RequestInit) => {
 
   return res.json();
 };
-
-export const formatDate = (timestamp: Date) => {
-  const date = new Date(timestamp);
-  const diff = differenceInMilliseconds(Date.now(), date);
-
-  if (diff < 2 * 1000) {
-    return "just now";
-  } else if (diff < 24 * 60 * 60 * 1000) {
-    return `${formatDistanceToNow(date)} ago`;
-  } else {
-    return format(date, `MMM d ${isThisYear(date) ? "" : "y"}`);
-  }
-};
-
-export const getApexDomain = (url: string) => {
-  try {
-    // replace any custom scheme (e.g. notion://) with https://
-    return new URL(url.replace(/^[a-zA-Z]+:\/\//, "https://")).hostname;
-  } catch (e) {
-    return "";
-  }
-};
-
-export const getDateTimeLocal = (d: Date | string): string => {
-  const date = new Date(d);
-  if (isNaN(date.getTime())) return "";
-  const timePart = date.toLocaleTimeString().split(":").slice(0, 2).join(":");
-  const datePart = date.toISOString().split("T")[0];
-  return `${datePart}T${timePart}`;
-};
-
-export const nanoid = (size?: number) =>
-  customAlphabet(
-    // Numbers and english alphabet without lookalikes: 1, l, I, 0, O, o, u, v, 5, S, s, 2, Z.
-    "346789ABCDEFGHJKLMNPQRTUVWXYabcdefghijkmnpqrtwxyz",
-    size
-  )();
-
-export const pipe =
-  <T>(...fns: Array<(arg: T) => T>) =>
-  (value: T) =>
-    fns.reduce((acc, fn) => fn(acc), value);
