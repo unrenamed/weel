@@ -146,3 +146,7 @@ export const fetcher = async (input: RequestInfo | URL, init?: RequestInit) => {
 
   return res.json();
 };
+
+// ----------------------Number utilities----------------------
+export const round = (num: number, decimalPlaces: number) =>
+  Number(Math.round(Number(num + "e" + decimalPlaces)) + "e-" + decimalPlaces);
