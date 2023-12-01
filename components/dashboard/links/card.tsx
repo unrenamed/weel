@@ -15,6 +15,7 @@ import {
   pluralize,
   pluralizeJSX,
   dateTimeSoon,
+  nFormatter,
 } from "@/lib/utils";
 import { Link } from "@prisma/client";
 import * as Separator from "@radix-ui/react-separator";
@@ -264,7 +265,7 @@ function LinkCard({
               {pluralizeJSX(
                 (count, noun) => (
                   <span className="whitespace-nowrap text-sm text-gray-500">
-                    {count}
+                    {nFormatter(count)}
                     <span className="ml-1 hidden sm:inline-block">{noun}</span>
                   </span>
                 ),

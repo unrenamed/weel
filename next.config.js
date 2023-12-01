@@ -3,7 +3,20 @@
  */
 const nextConfig = {
   images: {
-    domains: ["avatar.vercel.sh", "api.faviconkit.com"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "payable-red-ostrich.faviconkit.com",
+        port: "",
+        pathname: "**",
+      },
+      {
+        protocol: "https",
+        hostname: "avatar.vercel.sh",
+        port: "",
+        pathname: "**",
+      },
+    ],
   },
 };
 
