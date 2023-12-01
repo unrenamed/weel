@@ -1,5 +1,6 @@
 import "./globals.css";
 import "@radix-ui/themes/styles.css";
+import "react-virtualized/styles.css";
 
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";

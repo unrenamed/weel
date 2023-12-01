@@ -46,6 +46,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.46.2",
+    "react-virtualized": "^9.22.5",
     "sonner": "^1.0.3",
     "swr": "^2.2.4",
     "tailwind-merge": "^2.0.0",
@@ -59,7 +60,9 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^8.2.0",
+    "@types/react-virtualized": "^9.21.28",
     "prisma": "^5.4.1",
+    "tailwind-scrollbar": "^3.0.5",
     "ts-node": "^10.9.1"
   },
   "prisma": {
