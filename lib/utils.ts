@@ -9,6 +9,8 @@ import {
 } from "date-fns";
 import { customAlphabet } from "nanoid";
 import { botRegexp } from "./constants/bot-regexp-patterns";
+import { SECOND_LEVEL_DOMAINS } from "./constants";
+import { ccTLDs } from "./constants/cctlds";
 
 // ----------------------Request utilities----------------------
 export const parse = (req: NextRequest): ParsedURL => {
@@ -105,12 +107,38 @@ export const getDateTimeLocal = (d: Date | string): string => {
 
 // ----------------------URL utilities----------------------
 export const getApexDomain = (url: string) => {
+  let domain;
   try {
     // replace any custom scheme (e.g. notion://) with https://
-    return new URL(url.replace(/^[a-zA-Z]+:\/\//, "https://")).hostname;
+    domain = new URL(url.replace(/^[a-zA-Z]+:\/\//, "https://")).hostname;
   } catch (e) {
-    return "";
+    domain = "";
   }
+
+  const hostParts = domain.split(".");
+  if (hostParts.length < 3) {
+    return domain;
+  }
+
+  const topLevelDomain = hostParts.at(-1);
+  const secondLevelDomain = hostParts.at(-2);
+
+  // if this is a country code top-level domain (e.g. co.uk, .com.ua, .org.tt), we return the last 3 parts
+  if (
+    secondLevelDomain &&
+    SECOND_LEVEL_DOMAINS.has(secondLevelDomain) &&
+    topLevelDomain &&
+    ccTLDs.has(topLevelDomain)
+  ) {
+    return hostParts.slice(-3).join(".");
+  }
+
+  // if hostname starts with www, remove it from the apex domain
+  if (hostParts[0] === "www") {
+    return hostParts.slice(1, hostParts.length).join(".");
+  }
+
+  return hostParts.slice(-3).join(".");
 };
 
 // ----------------------Common utilities----------------------

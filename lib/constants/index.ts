@@ -21,3 +21,25 @@ export const TINYBIRD_API_ENDPOINTS = [
 ] as const;
 
 export const INTERVALS = ["1h", "24h", "7d", "30d", "90d", "all"] as const;
+
+export const SECOND_LEVEL_DOMAINS = new Set([
+  "com",
+  "co",
+  "net",
+  "org",
+  "edu",
+  "gov",
+  "in",
+]);
+
+export const SPECIAL_APEX_DOMAINS = new Set([
+  "my.id",
+  "github.io",
+  "vercel.app",
+  "now.sh",
+  "pages.dev",
+  "webflow.io",
+  "netlify.app",
+  "fly.dev",
+  "web.app",
+]);
