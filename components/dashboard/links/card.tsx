@@ -5,17 +5,16 @@ import {
   useLinkQrModal,
 } from "@/components/modals";
 import { useCreateEditLinkModal } from "@/components/modals/create-edit-link-modal";
-import BlurImage from "@/components/shared/blur-image";
 import Popover from "@/components/shared/popover";
 import { classNames } from "@/components/utils";
 import {
   dateTimeAgo,
   capitalize,
-  getApexDomain,
   pluralize,
   pluralizeJSX,
   dateTimeSoon,
   nFormatter,
+  getApexDomain,
 } from "@/lib/utils";
 import { Link } from "@prisma/client";
 import * as Separator from "@radix-ui/react-separator";
@@ -39,20 +38,8 @@ import { differenceInHours, isAfter } from "date-fns";
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
 import { Tooltip } from "@/components/shared/tooltip";
-
-const imageLoader = ({ src, width }: { src: string; width: number }) => {
-  return `https://payable-red-ostrich.faviconkit.com/${src}/${width}`;
-};
-
-const fallbackImageLoader = ({
-  src,
-  width: _,
-}: {
-  src: string;
-  width: number;
-}) => {
-  return `https://avatar.vercel.sh/${src}`;
-};
+import Image from "next/image";
+import { avatarLoader, faviconLoader } from "@/lib/image-loaders";
 
 type LinkCardProps = {
   link: Link;
@@ -101,7 +88,6 @@ function LinkCard({
 
   const domainKey = `${link.domain}/${link.key}`;
   const href = `https://${domainKey}`;
-  const apexDomain = getApexDomain(link.url);
 
   const onKeyDown = useCallback(
     (event: Event) => {
@@ -201,15 +187,7 @@ function LinkCard({
               <ArchiveIcon className="h-6 w-6 text-gray-400" />
             </div>
           ) : (
-            <BlurImage
-              src={apexDomain}
-              loader={imageLoader}
-              fallbackLoader={fallbackImageLoader}
-              alt={apexDomain}
-              className="h-8 w-8 rounded-full sm:h-10 sm:w-10"
-              width={32}
-              height={32}
-            />
+            <LinkAvatar url={link.url} />
           )}
           <div>
             <div className="flex items-center space-x-2 max-w-fit">
@@ -343,6 +321,34 @@ function LinkCard({
         </div>
       </div>
     </div>
+  );
+}
+
+function LinkAvatar({ url }: { url: string }) {
+  const [loading, setLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
+
+  const apexDomain = getApexDomain(url);
+  const loaderOpts = { src: apexDomain, width: 32 };
+
+  const src = isError ? avatarLoader(loaderOpts) : faviconLoader(loaderOpts);
+
+  return (
+    <Image
+      src={src}
+      alt={apexDomain}
+      className={classNames(
+        "h-8 w-8 rounded-full sm:h-10 sm:w-10 duration-700 ease-in-out",
+        loading
+          ? "scale-110 blur-sm grayscale bg-gray-200"
+          : "scale-100 blur-0 grayscale-0"
+      )}
+      quality={100}
+      width={32}
+      height={32}
+      onLoad={() => setLoading(false)}
+      onError={() => setIsError(true)}
+    />
   );
 }
 
