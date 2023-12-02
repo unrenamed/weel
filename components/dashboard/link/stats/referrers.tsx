@@ -10,16 +10,16 @@ import { faviconLoader } from "@/lib/image-loaders";
 
 export default function Referrers({ link }: { link: Link }) {
   const { data, isLoading, isValidating } = useSWR<
-    { referer: string; clicks: number }[]
-  >(`/api/links/stats/referer?domain=${link.domain}&key=${link.key}`, fetcher);
+    { referrer: string; clicks: number }[]
+  >(`/api/links/stats/referrer?domain=${link.domain}&key=${link.key}`, fetcher);
 
   return (
     <BarListCard
       title="Referrers"
       data={(data ?? []).map((d) => ({
-        title: d.referer,
+        title: d.referrer,
         clicks: d.clicks,
-        icon: <ReferrerIcon referrer={d.referer} />,
+        icon: <ReferrerIcon referrer={d.referrer} />,
       }))}
       isLoading={isLoading || isValidating}
       tabs={[]}

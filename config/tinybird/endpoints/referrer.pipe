@@ -1,5 +1,5 @@
 DESCRIPTION >
-	Link clicks per referer for a given period
+	Link clicks per referrer for a given period
 
 
 TOKEN "user token" READ
@@ -21,16 +21,16 @@ SQL >
 
 
 
-NODE count_clicks_by_referer
+NODE count_clicks_by_referrer
 DESCRIPTION >
-    Group clicks by referer column and count a total number of clicks
+    Group clicks by referrer column and count a total number of clicks
 
 SQL >
 
     %
-    select count(*) as clicks, referer
+    select count(*) as clicks, referrer
     from filter_by_timestamp_interval
-    group by referer
+    group by referrer
 
 
 
@@ -89,6 +89,6 @@ SQL >
             )
         }}
     select *
-    from count_clicks_by_referer
+    from count_clicks_by_referrer
 
 

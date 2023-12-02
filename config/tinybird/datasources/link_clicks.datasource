@@ -19,7 +19,7 @@ SCHEMA >
     `longitude` String `json:$.longitude`,
     `os` String `json:$.os`,
     `os_version` String `json:$.os_version`,
-    `referer` String `json:$.referer`,
+    `referrer` String `json:$.referrer`,
     `region` String `json:$.region`,
     `timestamp` DateTime `json:$.timestamp`,
     `ua` String `json:$.ua`

@@ -17,7 +17,7 @@ export const TINYBIRD_API_ENDPOINTS = [
   "browser",
   "os",
   "bot",
-  "referer",
+  "referrer",
 ] as const;
 
 export const INTERVALS = ["1h", "24h", "7d", "30d", "90d", "all"] as const;

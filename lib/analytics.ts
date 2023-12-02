@@ -72,7 +72,7 @@ export const recordClick = async (req: NextRequest) => {
 
   const ua = userAgent(req);
   const geo = req.geo ?? LOCALHOST_GEO_DATA;
-  const referer = req.headers.get("referer");
+  const referrer = req.headers.get("referrer");
 
   await fetch("https://api.tinybird.co/v0/events?name=link_clicks", {
     method: "POST",
@@ -97,8 +97,8 @@ export const recordClick = async (req: NextRequest) => {
       device_model: ua.device.model ?? "Unknown",
       cpu_architecture: ua.cpu?.architecture ?? "Unknown",
       bot: ua.isBot,
-      referer: referer ?? "(direct)",
-      referer_url: referer ?? "(direct)",
+      referrer: referrer ?? "(direct)",
+      referrer_url: referrer ?? "(direct)",
     }),
     headers: {
       Authorization: `Bearer ${process.env.TINYBIRD_API_TOKEN}`,
