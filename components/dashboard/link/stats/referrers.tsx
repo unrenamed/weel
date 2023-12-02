@@ -1,6 +1,6 @@
 import { Link } from "@prisma/client";
 import BarListCard from "./bar-list-card/card";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { fetcher } from "@/lib/utils";
 import { classNames } from "@/components/utils";
@@ -32,6 +32,10 @@ export default function Referrers({ link }: { link: Link }) {
 function ReferrerIcon({ referrer }: { referrer: string }) {
   const [loading, setLoading] = useState(true);
   const [isError, setIsError] = useState(false);
+
+  useEffect(() => {
+    setIsError(false);
+  }, [referrer]);
 
   return (
     <div className={classNames({ "animate-pulse bg-gray-200": loading })}>

@@ -1,6 +1,6 @@
 import { Link } from "@prisma/client";
 import BarListCard from "./bar-list-card/card";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { fetcher } from "@/lib/utils";
 import Image from "next/image";
@@ -41,14 +41,16 @@ const iconsFolderMap: { [key in DeviceTab]: string } = {
 };
 
 function DeviceIcon({ tab, name }: { tab: DeviceTab; name: string }) {
-  const [loading, setLoading] = useState(true);
-  const [isError, setIsError] = useState(false);
-
   const iconsFolderPath = iconsFolderMap[tab];
   const iconURL = `${iconsFolderPath}/${name.toLowerCase()}`;
   const iconDefaultURL = `${iconsFolderPath}/default`;
 
-  const src = isError ? iconDefaultURL : iconURL;
+  const [loading, setLoading] = useState(true);
+  const [src, setSrc] = useState(iconURL);
+
+  useEffect(() => {
+    setSrc(iconURL);
+  }, [iconURL]);
 
   return (
     <div className={classNames({ "animate-pulse bg-gray-200": loading })}>
@@ -57,7 +59,7 @@ function DeviceIcon({ tab, name }: { tab: DeviceTab; name: string }) {
         src={src}
         loader={deviceIconLoader}
         onLoad={() => setLoading(false)}
-        onError={() => setIsError(true)}
+        onError={() => setSrc(iconDefaultURL)}
         quality={100}
         width={16}
         height={16}
