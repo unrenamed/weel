@@ -42,7 +42,10 @@ const iconsFolderMap: { [key in DeviceTab]: string } = {
 
 function DeviceIcon({ tab, name }: { tab: DeviceTab; name: string }) {
   const iconsFolderPath = iconsFolderMap[tab];
-  const iconURL = `${iconsFolderPath}/${name.toLowerCase()}`;
+  const iconURL = `${iconsFolderPath}/${encodeURIComponent(
+    // encode symbols like a whitespace to fix warnings with a bad srcset prop
+    name.toLowerCase()
+  )}`;
   const iconDefaultURL = `${iconsFolderPath}/default`;
 
   const [loading, setLoading] = useState(true);
