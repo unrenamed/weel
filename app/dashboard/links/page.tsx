@@ -1,4 +1,11 @@
 import LinksContainer from "@/components/dashboard/links/container";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "My Short Links",
+  description:
+    "Effortlessly manage your short links with our user-friendly platform. View, create, delete, and take control of your links for a seamless experience.",
+};
 
 export default function LinksPage() {
   return (

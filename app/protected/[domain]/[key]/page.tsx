@@ -1,10 +1,10 @@
 import { VerifyLinkPasswordForm } from "@/components/forms/verify-link-password";
+import type { Metadata } from "next";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Password Required",
   description:
-    "This link is password protected. Please enter the password to view it",
-  noIndex: true,
+    "Unlock protected content on our secured page – enter the password to access a password-protected short link.",
 };
 
 export default function PasswordProtectedLinkPage() {
@@ -12,8 +12,11 @@ export default function PasswordProtectedLinkPage() {
     <main className="flex h-screen w-screen items-center justify-center">
       <div className="w-full max-w-md overflow-hidden rounded-2xl border border-gray-100 shadow-xl">
         <div className="flex flex-col items-center justify-center space-y-3 border-b border-gray-200 bg-white px-4 py-6 pt-8 text-center sm:px-16">
-          <h3 className="text-xl font-semibold">{metadata.title}</h3>
-          <p className="text-sm text-gray-500">{metadata.description}</p>
+          <h3 className="text-xl font-semibold">Password Required</h3>
+          <p className="text-sm text-gray-500">
+            This link is password protected. Please enter the password to view
+            it
+          </p>
         </div>
         <VerifyLinkPasswordForm />
       </div>
