@@ -16,6 +16,7 @@ export const metadata: Metadata = {
   },
   description:
     "Weel serves as a link management tool designed for marketing teams, enabling them to generate, distribute, and monitor short links.",
+  icons: "/favicon.ico",
 };
 
 export default function RootLayout({
