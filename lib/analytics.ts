@@ -92,7 +92,7 @@ export const recordClick = async (req: NextRequest) => {
       engine_version: ua.engine.version ?? "Unknown",
       os: ua.os.name ?? "Unknown",
       os_version: ua.os.version ?? "Unknown",
-      device: ua.device.type ? capitalize(ua.device.type) : "desktop",
+      device: ua.device.type ? capitalize(ua.device.type) : "Desktop",
       device_vendor: ua.device.vendor ?? "Unknown",
       device_model: ua.device.model ?? "Unknown",
       cpu_architecture: ua.cpu?.architecture ?? "Unknown",
