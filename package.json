@@ -61,6 +61,7 @@
   "devDependencies": {
     "@faker-js/faker": "^8.2.0",
     "@types/react-virtualized": "^9.21.28",
+    "csv": "^6.3.5",
     "prisma": "^5.4.1",
     "tailwind-scrollbar": "^3.0.5",
     "ts-node": "^10.9.1"
