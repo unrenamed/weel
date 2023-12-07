@@ -38,6 +38,7 @@ next-env.d.ts
 # tinybird
 config/tinybird/.tinyb
 config/tinybird/.tinyenv
+config/tinybird/datasources/fixtures/*
 
 # logs
 /logs
