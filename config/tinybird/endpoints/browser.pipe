@@ -31,6 +31,7 @@ SQL >
     select count(*) as clicks, browser as browser
     from filter_by_timestamp_interval
     group by browser
+    order by clicks DESC
 
 
 

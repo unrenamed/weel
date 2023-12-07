@@ -33,7 +33,7 @@ SQL >
                     toDateTime({{ DateTime(start, '2022-09-09 10:10:10') }}),
                     toDateTime({{ DateTime(end, '2022-10-09 10:10:10') }})
                 ) as range_end,
-                arrayJoin(range(0, toUInt64(range_end))) as unit
+                arrayJoin(range(0, toUInt64(range_end + 1))) as unit
         ) as period
 
 

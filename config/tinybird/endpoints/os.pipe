@@ -31,7 +31,7 @@ SQL >
     select count(*) as clicks, os as os
     from filter_by_timestamp_interval
     group by os
-
+    order by clicks DESC
 
 
 NODE endpoint

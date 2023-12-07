@@ -31,7 +31,8 @@ SQL >
     select count(*) as clicks, device as device
     from filter_by_timestamp_interval
     group by device
-
+    order by clicks DESC
+    
 
 
 NODE endpoint

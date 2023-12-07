@@ -28,7 +28,10 @@ DESCRIPTION >
 SQL >
 
     %
-    select count(*) as clicks, country as country from filter_by_timestamp_interval group by country
+    select count(*) as clicks, country as country 
+    from filter_by_timestamp_interval 
+    group by country
+    order by clicks DESC
 
 
 

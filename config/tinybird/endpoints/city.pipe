@@ -31,6 +31,7 @@ SQL >
     select count(*) as clicks, city as city, country as country
     from filter_by_timestamp_interval
     group by city, country
+    order by clicks DESC
 
 
 

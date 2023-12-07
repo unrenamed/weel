@@ -28,7 +28,10 @@ DESCRIPTION >
 SQL >
 
     %
-    select count(*) as clicks, bot from filter_by_timestamp_interval group by bot
+    select count(*) as clicks, bot 
+    from filter_by_timestamp_interval 
+    group by bot
+    order by clicks DESC
 
 
 
