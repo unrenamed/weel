@@ -6,7 +6,7 @@ import LinkCard from "./card";
 import LinkSort from "./sort";
 import { HTMLProps, useCallback, useEffect, useRef } from "react";
 import LinksFilters from "./filters";
-import { useCreateEditLinkModal } from "@/components/modals/create-edit-link-modal";
+import { useCreateEditLinkModal } from "@/components/modals";
 import { KeyboardActionButton } from "@/components/shared/keyboard-action-button";
 
 export default function LinksContainer() {

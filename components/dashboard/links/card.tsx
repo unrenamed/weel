@@ -3,8 +3,8 @@ import {
   useArchiveLinkModal,
   useDeleteLinkModal,
   useLinkQrModal,
+  useCreateEditLinkModal,
 } from "@/components/modals";
-import { useCreateEditLinkModal } from "@/components/modals/create-edit-link-modal";
 import Popover from "@/components/shared/popover";
 import { classNames } from "@/components/utils";
 import {
