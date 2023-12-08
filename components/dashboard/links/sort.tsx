@@ -1,4 +1,4 @@
-import DropdownMenu from "@/components/shared/dropdown";
+import ButtonDropdown from "@/components/shared/button-dropdown";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { ArrowDown10, Check } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -42,7 +42,7 @@ export default function LinkSort() {
   };
 
   return (
-    <DropdownMenu
+    <ButtonDropdown
       content={
         <div className="p-2 xs:w-48 w-full">
           {sortOptions.map((o) => (
@@ -59,11 +59,8 @@ export default function LinkSort() {
           ))}
         </div>
       }
-    >
-      <button className="flex items-center rounded-md shadow transition-all active:scale-95 px-3 py-2.5 space-x-2 bg-white hover:shadow-md w-full xs:w-48">
-        <ArrowDown10 className="h-4 w-4" strokeWidth={1.5} />
-        <p className="text-sm">Sort by</p>
-      </button>
-    </DropdownMenu>
+      icon={<ArrowDown10 className="h-4 w-4" strokeWidth={1.5} />}
+      text="Sort by"
+    />
   );
 }

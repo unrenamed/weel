@@ -1,4 +1,4 @@
-import DropdownMenu from "@/components/shared/dropdown";
+import ButtonDropdown from "@/components/shared/button-dropdown";
 import { INTERVALS_DISPLAY_VALUES } from "@/lib/constants";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { Calendar, Check } from "lucide-react";
@@ -29,7 +29,7 @@ export default function IntervalDropdown() {
   };
 
   return (
-    <DropdownMenu
+    <ButtonDropdown
       content={
         <div className="p-2 xs:w-48 w-full">
           {INTERVALS_DISPLAY_VALUES.map(({ value, displayValue }) => (
@@ -48,11 +48,8 @@ export default function IntervalDropdown() {
           ))}
         </div>
       }
-    >
-      <button className="flex items-center rounded-md shadow transition-all active:scale-95 px-3 py-2.5 space-x-2 bg-white hover:shadow-md w-full xs:w-48">
-        <Calendar className="h-4 w-4" />
-        <p className="text-sm">{selectedInterval.displayValue}</p>
-      </button>
-    </DropdownMenu>
+      icon={<Calendar className="h-4 w-4" />}
+      text={selectedInterval.displayValue}
+    />
   );
 }
