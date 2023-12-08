@@ -4,7 +4,7 @@ import { classNames } from "@/components/utils";
 import Image from "next/image";
 import useSWR from "swr";
 import { fetcher } from "@/lib/utils";
-import { COUNTRIES } from "@/lib/constants/countries";
+import { COUNTRIES } from "@/lib/constants";
 import { flagIconLoader } from "@/lib/image-loaders";
 import { useSearchParams } from "next/navigation";
 

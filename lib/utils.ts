@@ -8,9 +8,7 @@ import {
   isThisYear,
 } from "date-fns";
 import { customAlphabet } from "nanoid";
-import { botRegexp } from "./constants/bot-regexp-patterns";
-import { SECOND_LEVEL_DOMAINS } from "./constants";
-import { ccTLDs } from "./constants/cctlds";
+import { SECOND_LEVEL_DOMAINS, botRegexp, ccTLDs } from "./constants";
 
 // ----------------------Request utilities----------------------
 export const parse = (req: NextRequest): ParsedURL => {

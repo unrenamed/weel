@@ -1,4 +1,4 @@
-import HttpStatusCode from "../constants/http-status-code";
+import { HttpStatusCode } from "../constants";
 import { BaseError } from "./base-error";
 
 export class DuplicateKeyError extends BaseError {

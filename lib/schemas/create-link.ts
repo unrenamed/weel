@@ -1,4 +1,4 @@
-import { COUNTRIES } from "@/lib/constants/countries";
+import { COUNTRIES } from "@/lib/constants";
 import { z } from "zod";
 
 export const createLinkSchema = z.object({
