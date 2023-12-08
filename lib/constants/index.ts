@@ -22,6 +22,33 @@ export const TINYBIRD_API_ENDPOINTS = [
 
 export const INTERVALS = ["1h", "24h", "7d", "30d", "90d", "all"] as const;
 
+export const INTERVALS_DISPLAY_VALUES = [
+  {
+    value: "1h",
+    displayValue: "Last hour",
+  },
+  {
+    value: "24h",
+    displayValue: "Last 24 hours",
+  },
+  {
+    value: "7d",
+    displayValue: "Last 7 days",
+  },
+  {
+    value: "30d",
+    displayValue: "Last 30 days",
+  },
+  {
+    value: "90d",
+    displayValue: "Last 3 months",
+  },
+  {
+    value: "all",
+    displayValue: "All Time",
+  },
+];
+
 export const SECOND_LEVEL_DOMAINS = new Set([
   "com",
   "co",

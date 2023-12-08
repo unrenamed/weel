@@ -1,4 +1,3 @@
-import { Link } from "@prisma/client";
 import BarListCard from "./bar-list-card/card";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
@@ -7,11 +6,14 @@ import { classNames } from "@/components/utils";
 import Image from "next/image";
 import { Globe } from "lucide-react";
 import { faviconLoader } from "@/lib/image-loaders";
+import { useSearchParams } from "next/navigation";
 
-export default function Referrers({ link }: { link: Link }) {
+export default function Referrers() {
+  const searchParams = useSearchParams();
+  
   const { data, isLoading, isValidating } = useSWR<
     { referrer: string; clicks: number }[]
-  >(`/api/links/stats/referrer?domain=${link.domain}&key=${link.key}`, fetcher);
+  >(`/api/links/stats/referrer?${searchParams}`, fetcher);
 
   return (
     <BarListCard

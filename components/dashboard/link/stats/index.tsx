@@ -28,9 +28,9 @@ export default function LinkStats({ link }: Params) {
       </div>
       <div className="w-full max-w-4xl mx-auto p-3">
         <div className="grid gap-5 grid-cols-1 md:grid-cols-2">
-          <Locations link={link} />
-          <Devices link={link} />
-          <Referrers link={link} />
+          <Locations />
+          <Devices />
+          <Referrers />
         </div>
       </div>
     </div>

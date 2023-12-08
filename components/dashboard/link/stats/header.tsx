@@ -1,4 +1,5 @@
 import { ArrowRight, ChevronRight } from "lucide-react";
+import IntervalDropdown from "./interval-dropdown";
 
 export default function Header({ title }: { title: string }) {
   return (
@@ -21,6 +22,7 @@ export default function Header({ title }: { title: string }) {
           />
         </div>
       </a>
+      <IntervalDropdown />
     </div>
   );
 }

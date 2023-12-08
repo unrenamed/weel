@@ -1,4 +1,3 @@
-import { Link } from "@prisma/client";
 import BarListCard from "./bar-list-card/card";
 import { useState } from "react";
 import { classNames } from "@/components/utils";
@@ -7,15 +6,17 @@ import useSWR from "swr";
 import { fetcher } from "@/lib/utils";
 import { COUNTRIES } from "@/lib/constants/countries";
 import { flagIconLoader } from "@/lib/image-loaders";
+import { useSearchParams } from "next/navigation";
 
 type LocationTab = "country" | "city";
 
-export default function Locations({ link }: { link: Link }) {
+export default function Locations() {
+  const searchParams = useSearchParams();
   const [tab, setTab] = useState<LocationTab>("country");
 
   const { data, isLoading, isValidating } = useSWR<
     { country: string; city: string; clicks: number }[]
-  >(`/api/links/stats/${tab}?domain=${link.domain}&key=${link.key}`, fetcher);
+  >(`/api/links/stats/${tab}?${searchParams}`, fetcher);
 
   return (
     <BarListCard
