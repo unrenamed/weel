@@ -19,7 +19,7 @@ const variantColors = {
     "border-gray-300 bg-gray-100 text-black hover:bg-white hover:text-gray-900",
 };
 
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   function Button(
     {
       text,
@@ -53,3 +53,5 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     );
   }
 );
+
+export default Button;

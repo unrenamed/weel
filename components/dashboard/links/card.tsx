@@ -5,7 +5,7 @@ import {
   useLinkQrModal,
   useCreateEditLinkModal,
 } from "@/components/modals";
-import Popover from "@/components/shared/popover";
+import { Popover, Tooltip } from "@/components/shared";
 import { classNames } from "@/components/utils";
 import {
   dateTimeAgo,
@@ -36,7 +36,6 @@ import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { differenceInHours, isAfter } from "date-fns";
 import { useCopyToClipboard, useIntersectionObserver } from "@/hooks";
-import { Tooltip } from "@/components/shared/tooltip";
 import Image from "next/image";
 import { avatarLoader, faviconLoader } from "@/lib/image-loaders";
 

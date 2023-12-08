@@ -1,8 +1,8 @@
 import { forwardRef } from "react";
-import { Button, ButtonProps } from "./button";
+import Button, { ButtonProps } from "./button";
 import { classNames } from "../utils";
 
-export type KeyboardActionButtonProps = {
+type KeyboardActionButtonProps = {
   kbd: string;
 } & ButtonProps;
 
@@ -15,7 +15,7 @@ const variantColors = {
     "bg-gray-200 text-gray-700 group-hover:bg-gray-100 group-hover:text-gray-600",
 };
 
-export const KeyboardActionButton = forwardRef<
+const KeyboardActionButton = forwardRef<
   HTMLButtonElement,
   KeyboardActionButtonProps
 >(function KeyboardActionButton(
@@ -45,3 +45,5 @@ export const KeyboardActionButton = forwardRef<
     </Button>
   );
 });
+
+export default KeyboardActionButton;

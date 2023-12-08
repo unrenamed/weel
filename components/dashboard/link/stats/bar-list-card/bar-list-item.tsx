@@ -1,4 +1,4 @@
-import { Tooltip } from "@/components/shared/tooltip";
+import { Tooltip } from "@/components/shared";
 import { classNames } from "@/components/utils";
 import { nFormatter, pluralize } from "@/lib/utils";
 import { motion } from "framer-motion";

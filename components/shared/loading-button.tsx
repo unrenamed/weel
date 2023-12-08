@@ -1,13 +1,13 @@
 import { forwardRef } from "react";
-import { Button, ButtonProps } from "./button";
+import Button, { ButtonProps } from "./button";
 import LoadingSpinner from "./loading-spinner";
 import { classNames } from "../utils";
 
-export type LoadingButtonProps = {
+type LoadingButtonProps = {
   loading?: boolean;
 } & ButtonProps;
 
-export const LoadingButton = forwardRef<HTMLButtonElement, LoadingButtonProps>(
+const LoadingButton = forwardRef<HTMLButtonElement, LoadingButtonProps>(
   function LoadingButton(
     { loading = false, className, disabled, ...props },
     ref
@@ -25,3 +25,5 @@ export const LoadingButton = forwardRef<HTMLButtonElement, LoadingButtonProps>(
     );
   }
 );
+
+export default LoadingButton;

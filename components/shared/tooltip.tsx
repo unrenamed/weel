@@ -7,7 +7,7 @@ type Props = {
 } & Pick<TooltipPrimitive.TooltipContentProps, "side"> &
   Pick<TooltipPrimitive.TooltipProviderProps, "delayDuration">;
 
-export function Tooltip({
+function Tooltip({
   children,
   content,
   side = "top",
@@ -36,3 +36,5 @@ export function Tooltip({
     </TooltipPrimitive.Provider>
   );
 }
+
+export default Tooltip;

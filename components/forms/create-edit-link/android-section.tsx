@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
-import Switch from "@/components/shared/switch";
+import { Switch, FormTextInput } from "@/components/shared";
 import { motion } from "framer-motion";
-import FormTextInput from "@/components/shared/form-text-input";
 
 export function AndroidTargetingSection({
   formProps,

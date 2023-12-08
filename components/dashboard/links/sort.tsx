@@ -1,4 +1,4 @@
-import ButtonDropdown from "@/components/shared/button-dropdown";
+import { ButtonDropdown } from "@/components/shared";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { ArrowDown10, Check } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";

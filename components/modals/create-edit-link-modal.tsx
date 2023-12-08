@@ -5,7 +5,7 @@ import { CreateEditLinkForm } from "../forms/create-edit-link";
 import { FormData } from "../forms/create-edit-link/schema";
 import { toast } from "sonner";
 import { CreateEditLink } from "@/lib/types";
-import { LoadingButton } from "../shared/loading-button";
+import { LoadingButton } from "../shared";
 import { classNames } from "../utils";
 import { useCopyToClipboard } from "@/hooks";
 

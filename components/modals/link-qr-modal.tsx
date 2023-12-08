@@ -10,8 +10,7 @@ import {
 } from "@/lib/qr";
 import { Clipboard, ClipboardCheck, Download, ImageIcon } from "lucide-react";
 import { toast } from "sonner";
-import Popover from "../shared/popover";
-import { ButtonWithIcon } from "../shared/button-with-icon";
+import { ButtonWithIcon, Popover } from "../shared";
 import { useCopyToClipboard } from "@/hooks";
 
 function LinkQrModalContent({ link }: { link: Link }) {

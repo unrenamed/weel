@@ -2,7 +2,7 @@ import { ChangeEvent, useCallback, useState } from "react";
 import { Link } from "@prisma/client";
 import { useModal } from "./base-modal";
 import { toast } from "sonner";
-import { LoadingButton } from "../shared/loading-button";
+import { LoadingButton } from "../shared";
 
 type Props = {
   link: Link;

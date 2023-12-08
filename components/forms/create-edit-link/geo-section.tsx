@@ -9,10 +9,8 @@ import { FormData } from "./schema";
 import { COUNTRIES } from "@/lib/constants";
 import { uncapitalize } from "@/lib/utils";
 import { Trash2 } from "lucide-react";
-import Switch from "@/components/shared/switch";
 import { AnimatePresence, motion } from "framer-motion";
-import FormTextInput from "@/components/shared/form-text-input";
-import { Button } from "@/components/shared/button";
+import { Button, Switch, FormTextInput } from "@/components/shared";
 
 export function GeoTargetingSection({
   control,

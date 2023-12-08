@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
-import Switch from "@/components/shared/switch";
+import { Switch, FormPasswordInput } from "@/components/shared";
 import { motion } from "framer-motion";
-import FormPasswordInput from "@/components/shared/form-password-input";
 
 export function PasswordSection({
   formProps,

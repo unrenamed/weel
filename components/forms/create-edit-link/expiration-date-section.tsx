@@ -1,8 +1,7 @@
-import Switch from "@/components/shared/switch";
 import { UseFormRegisterReturn } from "react-hook-form";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import FormDatetimeInput from "@/components/shared/form-datetime-input";
+import { FormDatetimeInput, Switch } from "@/components/shared";
 
 export function ExpirationDateSection({
   formProps,

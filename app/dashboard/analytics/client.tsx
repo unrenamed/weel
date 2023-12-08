@@ -1,4 +1,5 @@
 "use client";
+
 import LinkStats from "@/components/dashboard/link/stats";
 import { useLink } from "@/lib/swr/use-link";
 import { useRouter } from "next/navigation";

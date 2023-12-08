@@ -1,5 +1,5 @@
 import { ReactNode, useState } from "react";
-import DropdownMenu from "./dropdown";
+import { DropdownMenu } from "./";
 import { ChevronDown } from "lucide-react";
 import { classNames } from "../utils";
 

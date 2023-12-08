@@ -1,4 +1,4 @@
-import ButtonDropdown from "@/components/shared/button-dropdown";
+import { ButtonDropdown } from "@/components/shared";
 import { INTERVALS_DISPLAY_VALUES } from "@/lib/constants";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { Calendar, Check } from "lucide-react";

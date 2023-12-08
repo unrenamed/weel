@@ -1,7 +1,7 @@
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import Switch from "@/components/shared/switch";
+import { Switch } from "@/components/shared";
 import { Search } from "lucide-react";
 
 export default function LinksFilters() {

@@ -1,17 +1,17 @@
 "use client";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { FormData, linkPasswordSchema } from "./schema";
 import { useParams, useRouter } from "next/navigation";
 import { verifyPassword } from "./actions";
-import FormPasswordInput from "@/components/shared/form-password-input";
-import { LoadingButton } from "@/components/shared/loading-button";
+import { LoadingButton, FormPasswordInput } from "@/components/shared";
 
 export function VerifyLinkPasswordForm() {
-  const { domain, key } = useParams() as {
+  const { domain, key } = useParams<{
     domain: string;
     key: string;
-  };
+  }>();
 
   const router = useRouter();
 

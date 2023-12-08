@@ -10,7 +10,7 @@ import { PasswordSection } from "./password-section";
 import { GeoTargetingSection } from "./geo-section";
 import { Link } from "@prisma/client";
 import { getDateTimeLocal } from "@/lib/utils";
-import FormTextInput from "@/components/shared/form-text-input";
+import { FormTextInput } from "@/components/shared";
 import { Dices, Loader } from "lucide-react";
 import { useRefinement, usePrevious } from "@/hooks";
 import { classNames } from "@/components/utils";
