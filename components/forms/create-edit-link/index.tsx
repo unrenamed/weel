@@ -74,7 +74,7 @@ export function CreateEditLinkForm(props: Props) {
     ),
     defaultValues: {
       ...link,
-      domain: link?.domain || LINK_DOMAINS[0],
+      domain: link?.domain ?? LINK_DOMAINS[0],
       password: link?.password ?? undefined,
       ios: link?.ios ?? undefined,
       android: link?.android ?? undefined,
@@ -205,7 +205,7 @@ export function CreateEditLinkForm(props: Props) {
                   <span
                     className={classNames(
                       "absolute inset-y-center text-gray-500",
-                      !!errors?.key?.message ? "right-10" : "right-3"
+                      errors?.key?.message ? "right-10" : "right-3"
                     )}
                   >
                     <Loader className="h-4 w-4 animate-spin-slow" />

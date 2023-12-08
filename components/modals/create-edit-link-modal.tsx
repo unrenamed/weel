@@ -51,9 +51,9 @@ function CreateEditLinkModalContent({
 
     const payload: CreateEditLink = {
       ...rawData,
-      ios: rawData.ios || null,
-      android: rawData.android || null,
-      password: rawData.password || null,
+      ios: rawData.ios ?? null,
+      android: rawData.android ?? null,
+      password: rawData.password ?? null,
       expiresAt: rawData.expiresAt
         ? new Date(rawData.expiresAt).toISOString()
         : null,

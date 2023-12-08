@@ -1,6 +1,6 @@
 import { MutableRefObject, useEffect, useRef } from "react";
 
-export interface Refinement<T> {
+interface Refinement<T> {
   /**
    * Refinement function signature
    */
@@ -12,9 +12,10 @@ export interface Refinement<T> {
   invalidate(): void;
 }
 
-export interface RefinementCallback<T> {
-  (data: T, ctx: { signal: AbortSignal }): boolean | Promise<boolean>; // Callback function signature
-}
+type RefinementCallback<T> = (
+  data: T,
+  ctx: { signal: AbortSignal }
+) => boolean | Promise<boolean>; // Callback function signature
 
 /**
  * Special hook returning a callback to be used in conjunction with zod refinements.
@@ -90,7 +91,8 @@ function createRefinement<T>(ctxRef: MutableRefObject<RefinementContext<T>>) {
       return result;
     }
 
-    return (result = start(data));
+    result = start(data);
+    return result;
   };
 
   const abort = () => {
