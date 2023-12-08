@@ -12,11 +12,10 @@ import { Link } from "@prisma/client";
 import { getDateTimeLocal } from "@/lib/utils";
 import FormTextInput from "@/components/shared/form-text-input";
 import { Dices, Loader } from "lucide-react";
-import { useRefinement } from "@/hooks/use-refinement";
-import { usePrevious } from "@/hooks/use-previous";
+import { useRefinement, usePrevious } from "@/hooks";
 import { classNames } from "@/components/utils";
 
-const LINK_DOMAINS = process.env.NEXT_PUBLIC_APP_LINK_DOMAINS.split(',');
+const LINK_DOMAINS = process.env.NEXT_PUBLIC_APP_LINK_DOMAINS.split(",");
 
 type Switch = "password" | "ios" | "android" | "geo" | "expiresAt";
 

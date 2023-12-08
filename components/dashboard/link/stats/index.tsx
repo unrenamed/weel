@@ -1,5 +1,5 @@
 import { classNames } from "@/components/utils";
-import { useScroll } from "@/hooks/use-scroll";
+import { useScroll } from "@/hooks";
 import { Link } from "@prisma/client";
 import { useState } from "react";
 import Header from "./header";

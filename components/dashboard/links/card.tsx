@@ -35,8 +35,7 @@ import {
 import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { differenceInHours, isAfter } from "date-fns";
-import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
-import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
+import { useCopyToClipboard, useIntersectionObserver } from "@/hooks";
 import { Tooltip } from "@/components/shared/tooltip";
 import Image from "next/image";
 import { avatarLoader, faviconLoader } from "@/lib/image-loaders";

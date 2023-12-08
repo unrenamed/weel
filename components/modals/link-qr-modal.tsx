@@ -12,7 +12,7 @@ import { Clipboard, ClipboardCheck, Download, ImageIcon } from "lucide-react";
 import { toast } from "sonner";
 import Popover from "../shared/popover";
 import { ButtonWithIcon } from "../shared/button-with-icon";
-import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
+import { useCopyToClipboard } from "@/hooks";
 
 function LinkQrModalContent({ link }: { link: Link }) {
   const linkAppURL = `https://${link.domain}/${link.key}`;

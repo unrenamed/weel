@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { CreateEditLink } from "@/lib/types";
 import { LoadingButton } from "../shared/loading-button";
 import { classNames } from "../utils";
-import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
+import { useCopyToClipboard } from "@/hooks";
 
 type Props = {
   link?: Link;
