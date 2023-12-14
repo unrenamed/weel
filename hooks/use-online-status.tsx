@@ -14,6 +14,7 @@ const getSnapshot = () => navigator.onLine;
 function getServerSnapshot() {
   return true; // Always show "Online" for server-generated HTML
 }
+
 const subscribe = (callback: (ev: Event) => void) => {
   window.addEventListener("online", callback);
   window.addEventListener("offline", callback);
