@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 import { linksRateLimit, redis } from "../upstash";
 import { parse } from "../utils";
 import { RedisLink } from "../types";
-import { LOCALHOST_GEO_DATA, LOCALHOST_IP } from "../constants";
+import { APP_HEADERS, LOCALHOST_GEO_DATA, LOCALHOST_IP } from "../constants";
 import { ipAddress } from "@vercel/edge";
 import { recordClick } from "../analytics";
 
@@ -36,12 +36,16 @@ export const LinkMiddleware = async (req: NextRequest, ev: NextFetchEvent) => {
 
   // When link is not found or archived
   if (!link || link.archived) {
-    return NextResponse.redirect(new URL("/", req.url));
+    return NextResponse.redirect(new URL("/", req.url), {
+      headers: APP_HEADERS,
+    });
   }
 
   // If link has expired
   if (link.expiresAt && new Date() > link.expiresAt) {
-    return NextResponse.redirect(new URL("/", req.url));
+    return NextResponse.redirect(new URL("/", req.url), {
+      headers: APP_HEADERS,
+    });
   }
 
   ev.waitUntil(recordClick(req));
@@ -57,11 +61,13 @@ export const LinkMiddleware = async (req: NextRequest, ev: NextFetchEvent) => {
   const { os } = userAgent(req);
 
   if (link.ios && os?.name === "iOS") {
-    return NextResponse.redirect(new URL(link.ios));
+    return NextResponse.redirect(new URL(link.ios), { headers: APP_HEADERS });
   }
 
   if (link.android && os?.name === "Android") {
-    return NextResponse.redirect(new URL(link.android));
+    return NextResponse.redirect(new URL(link.android), {
+      headers: APP_HEADERS,
+    });
   }
 
   // If geo targeting is enabled
@@ -69,8 +75,10 @@ export const LinkMiddleware = async (req: NextRequest, ev: NextFetchEvent) => {
     req.geo && "country" in req.geo ? req.geo : LOCALHOST_GEO_DATA;
 
   if (link.geo && country && country in link.geo) {
-    return NextResponse.redirect(new URL(link.geo[country]));
+    return NextResponse.redirect(new URL(link.geo[country]), {
+      headers: APP_HEADERS,
+    });
   }
 
-  return NextResponse.redirect(new URL(link.url));
+  return NextResponse.redirect(new URL(link.url), { headers: APP_HEADERS });
 };

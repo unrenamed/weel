@@ -75,3 +75,7 @@ export const SPECIAL_APEX_DOMAINS = new Set([
   "fly.dev",
   "web.app",
 ]);
+
+export const APP_HEADERS = {
+  "x-powered-by": "Weel - Link Management tool",
+};
