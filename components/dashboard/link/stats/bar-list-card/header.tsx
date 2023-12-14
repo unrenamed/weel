@@ -27,7 +27,7 @@ export default function BarListCardHeader({
   return (
     <div
       className={classNames(
-        "z-10 rounded-t-md sticky top-0 px-7 py-5 bg-white w-full flex flex-col",
+        "z-10 rounded-t-md sticky top-0 px-5 py-3 sm:px-7 sm:py-5 bg-white w-full flex flex-col",
         {
           "shadow-md": scrolled,
         }
@@ -42,7 +42,7 @@ export default function BarListCardHeader({
       />
       <div className="w-full flex items-center justify-between">
         <div className="flex space-x-1 items-center relative">
-          <h2 className="text-lg font-medium">{title}</h2>
+          <h2 className="text-md font-medium sm:text-lg">{title}</h2>
           <button
             className="group rounded-full p-2 hover:bg-gray-200 active:scale-95 transition-all duration-75"
             onClick={() => {
@@ -62,7 +62,7 @@ export default function BarListCardHeader({
               key={tab}
               onClick={() => setTab?.(tab)}
               className={classNames(
-                "rounded-md bg-gray-100 hover:bg-gray-200 text-gray-600 transition duration-75 active:scale-95 text-sm font-medium py-1 px-2",
+                "rounded-md bg-gray-100 hover:bg-gray-200 text-gray-600 transition duration-75 active:scale-95 text-xs sm:text-sm font-medium py-1 px-2",
                 {
                   "bg-gray-200": selectedTab === tab,
                 }

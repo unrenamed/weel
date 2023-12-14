@@ -3,6 +3,7 @@ import BarListItem from "./bar-list-item";
 import VirtualizedList from "react-virtualized/dist/es/List";
 import AutoSizer from "react-virtualized/dist/es/AutoSizer";
 import { round } from "@/lib/utils";
+import { useMediaQuery } from "@/hooks";
 
 export default function BarList({
   data,
@@ -19,6 +20,8 @@ export default function BarList({
   onScroll: (scrolled: boolean) => void;
   barBackground: string;
 }) {
+  const isMobile = useMediaQuery("only screen and (max-width : 640px)");
+
   const rowRenderer = ({
     key,
     index,
@@ -51,7 +54,7 @@ export default function BarList({
             onScroll(round(scrollTop / (scrollHeight - clientHeight), 4) > 0);
           }}
           width={width}
-          height={300}
+          height={isMobile ? 316 : 300}
           rowCount={data.length}
           rowHeight={36}
           rowRenderer={rowRenderer}

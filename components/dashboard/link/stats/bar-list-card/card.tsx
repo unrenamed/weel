@@ -48,7 +48,7 @@ export default function BarListCard({
     }
 
     return (
-      <div className="px-7 pb-5">
+      <div className="px-5 pb-3 sm:px-7 sm:pb-5">
         <BarList
           data={filteredData}
           maxClicks={maxClicks}

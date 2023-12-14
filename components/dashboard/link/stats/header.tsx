@@ -3,9 +3,9 @@ import IntervalDropdown from "./interval-dropdown";
 
 export default function Header({ title }: { title: string }) {
   return (
-    <div className="flex justify-between items-center">
+    <div className="flex flex-col space-y-3 justify-between items-center md:flex-row md:space-y-0">
       <a
-        className="flex group items-center text-lg font-semibold text-gray-800 md:text-xl"
+        className="flex group items-center text-md sm:text-lg font-semibold text-gray-800 md:text-xl"
         href={`https://${title}`}
         target="_blank"
         rel="noreferrer"
@@ -22,7 +22,9 @@ export default function Header({ title }: { title: string }) {
           />
         </div>
       </a>
-      <IntervalDropdown />
+      <div>
+        <IntervalDropdown />
+      </div>
     </div>
   );
 }

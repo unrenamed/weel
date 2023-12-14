@@ -18,16 +18,19 @@ export default function LinkStats({ link }: Params) {
   return (
     <div className="w-full grid grid-cols-1 place-content-center py-3">
       <div
-        className={classNames("sticky md:py-5 py-3 top-0 bg-gray-50 z-20", {
-          "shadow-md": scrolled,
-        })}
+        className={classNames(
+          "sticky md:py-5 py-3 top-[4rem] bg-gray-50 z-20",
+          {
+            "shadow-md": scrolled,
+          }
+        )}
       >
-        <div className="w-full max-w-4xl mx-auto px-3">
+        <div className="w-full 2xl:w-3/5 xl:w-4/5 mx-auto px-3">
           <Header title={`${link.domain}/${link.key}`} />
         </div>
       </div>
-      <div className="w-full max-w-4xl mx-auto p-3">
-        <div className="grid gap-5 grid-cols-1 md:grid-cols-2">
+      <div className="w-full 2xl:w-3/5 xl:w-4/5 mx-auto p-3">
+        <div className="grid gap-3 grid-cols-1 md:grid-cols-2 sm:gap-5">
           <Locations />
           <Devices />
           <Referrers />

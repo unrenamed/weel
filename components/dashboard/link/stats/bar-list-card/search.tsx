@@ -20,7 +20,7 @@ export default function BardListCardSearch({
       {isVisible && (
         <motion.div
           key="locations-search-input"
-          className="absolute top-0 left-0 right-0 py-5 px-7 z-20 flex items-center"
+          className="absolute top-0 left-0 right-0 px-5 py-3 sm:px-7 sm:py-5 z-20 flex items-center"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}

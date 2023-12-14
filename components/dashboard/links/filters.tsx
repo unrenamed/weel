@@ -7,7 +7,7 @@ import { Search } from "lucide-react";
 export default function LinksFilters() {
   return (
     <div className="drop-shadow-lg rounded-md border-gray-200 border-1 flex bg-white px-5 self-start">
-      <div className="w-full flex flex-col gap-3 py-6">
+      <div className="w-full flex flex-col gap-3 py-3 sm:py-5">
         <h3 className="font-semibold ml-1">Filters</h3>
         <SearchField />
         <IncludeArchivedSwitch />
