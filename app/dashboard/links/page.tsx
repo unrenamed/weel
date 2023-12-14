@@ -10,7 +10,8 @@ export const metadata: Metadata = {
 export default function LinksPage() {
   return (
     <section className="relative flex place-content-center">
-      <div className="w-full 2xl:w-3/5 xl:w-4/5 p-3">
+      <div className="w-full 2xl:w-3/5 xl:w-4/5 px-3 py-3 sm:py-5 flex flex-col gap-3 sm:gap-5">
+        <h1 className="text-2xl text-gray-800">My Links</h1>
         <LinksContainer />
       </div>
     </section>
