@@ -15,8 +15,8 @@ export default function HeaderLogo() {
       )}
       src="/_static/logo.png"
       alt="App logo"
-      width={40}
-      height={40}
+      width={32}
+      height={32}
       onLoad={() => setLoading(false)}
     />
   );
