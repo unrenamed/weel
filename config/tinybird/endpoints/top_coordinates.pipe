@@ -1,0 +1,57 @@
+TOKEN "user token" READ
+
+NODE get_coordinates_sorted_by_click_timestamp
+SQL >
+
+    %
+    select distinct
+        toFloat32(longitude) as longitude, toFloat32(latitude) as latitude
+    from link_clicks as c
+    where
+        timestamp between {{ DateTime(start) }} and {{ DateTime(end) }}
+        and c.latitude != 'Unknown'
+        and c.longitude != 'Unknown'
+    order by timestamp desc
+    limit 25
+
+
+
+NODE endpoint
+SQL >
+
+    %
+    {% if defined(start) and not defined(end) %}
+        {{
+            error(
+                'You need to provide both start and end dates to filter by datetime interval'
+            )
+        }}
+    {% end %}
+    {% if defined(end) and not defined(start) %}
+        {{
+            error(
+                'You need to provide both start and end dates to filter by datetime interval'
+            )
+        }}
+    {% end %}
+    with
+        {{
+            DateTime(
+                start,
+                default="2022-01-01 00:00:00",
+                description="Start date of the interval",
+                required=False,
+            )
+        }},
+        {{
+            DateTime(
+                end,
+                default="2022-01-10 00:00:00",
+                description="End date of the interval",
+                required=False,
+            )
+        }}
+    select *
+    from get_coordinates_sorted_by_click_timestamp
+
+
