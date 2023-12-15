@@ -16,20 +16,21 @@ export function useIntersectionObserver<E extends Element>(
         previousObserver.current = null;
       }
 
-      const observerParams = { threshold, root, rootMargin };
-      const observer = new IntersectionObserver(([entry]) => {
-        setEntry(entry);
-      }, observerParams);
+      if (node?.nodeType === Node.ELEMENT_NODE) {
+        const observerParams = { threshold, root, rootMargin };
+        const observer = new IntersectionObserver(([entry]) => {
+          setEntry(entry);
+        }, observerParams);
 
-      observer.observe(node);
-      previousObserver.current = observer;
+        observer.observe(node);
+        previousObserver.current = observer;
+      }
     },
     [root, rootMargin, threshold]
   );
 
   useEffect(() => {
     if (elementRef?.current) customRef(elementRef?.current);
-    return () => previousObserver.current?.disconnect();
   }, [elementRef, customRef]);
 
   return [customRef, entry];
