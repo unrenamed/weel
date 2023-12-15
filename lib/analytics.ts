@@ -151,11 +151,55 @@ export const getStats = async (
     headers: {
       Authorization: `Bearer ${process.env.TINYBIRD_API_TOKEN}`,
     },
+    next: {
+      revalidate: 43200, // every 12 hours
+    },
   });
 
   const json: TinybirdPipe | TinybirdError = await response.json();
   if (isTinybirdPipe(json)) {
     return json.data;
+  } else {
+    return Promise.reject(new Error(json.error));
+  }
+};
+
+export const getCoordinates = async (
+  interval: Interval
+): Promise<
+  {
+    latitude: number;
+    longitude: number;
+  }[]
+> => {
+  const url = new URL(`https://api.tinybird.co/v0/pipes/top_coordinates.json`);
+  if (interval && intervalData[interval]) {
+    url.searchParams.append(
+      "start",
+      intervalData[interval].startDate
+        .toISOString()
+        .substring(0, 19)
+        .replace("T", " ")
+    );
+
+    url.searchParams.append(
+      "end",
+      new Date(Date.now()).toISOString().substring(0, 19).replace("T", " ")
+    );
+  }
+
+  const response = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${process.env.TINYBIRD_API_TOKEN}`,
+    },
+  });
+
+  const json: TinybirdPipe | TinybirdError = await response.json();
+  if (isTinybirdPipe(json)) {
+    return json.data as {
+      latitude: number;
+      longitude: number;
+    }[];
   } else {
     return Promise.reject(new Error(json.error));
   }
