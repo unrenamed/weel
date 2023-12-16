@@ -4,15 +4,33 @@ import { ChevronDown } from "lucide-react";
 import { classNames } from "../utils";
 
 type Props = {
-  content: ReactNode | string;
   icon: ReactNode;
   text: string;
+  items: { value: string; display: string }[];
+  selected: string;
+  onSelect: (value: string) => void;
 };
 
-export default function ButtonDropdown({ content, icon, text }: Props) {
+export default function ButtonDropdown({
+  icon,
+  text,
+  items,
+  selected,
+  onSelect,
+}: Props) {
   const [open, setOpen] = useState(false);
+
   return (
-    <DropdownMenu content={content} onOpenChange={setOpen}>
+    <DropdownMenu
+      open={open}
+      setOpen={setOpen}
+      items={items}
+      selected={selected}
+      onSelect={(value) => {
+        setOpen(false);
+        onSelect(value);
+      }}
+    >
       <button className="flex items-center justify-between space-x-2 rounded-md shadow transition-all active:scale-95 px-3 py-2.5 bg-white hover:shadow-md w-full xs:w-48">
         <div className="flex items-center space-x-2">
           {icon}

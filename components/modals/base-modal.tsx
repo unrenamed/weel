@@ -1,4 +1,7 @@
+"use client";
+
 import * as Dialog from "@radix-ui/react-dialog";
+import { Drawer } from "vaul";
 import {
   Dispatch,
   ReactNode,
@@ -9,6 +12,7 @@ import {
   useState,
 } from "react";
 import { classNames } from "../utils";
+import { useMediaQuery } from "@/hooks";
 
 type Props = {
   isOpen: boolean;
@@ -23,11 +27,41 @@ const BaseModal = memo(function BaseModal({
   setIsOpen,
   contentClassName,
 }: Props) {
+  const isMobile = useMediaQuery("only screen and (max-width : 640px)");
+
   const closeModal = () => {
     if (setIsOpen) {
       setIsOpen(false);
     }
   };
+
+  if (isMobile) {
+    return (
+      <Drawer.Root
+        open={isOpen}
+        onOpenChange={(open) => {
+          if (!open) {
+            closeModal();
+          }
+        }}
+      >
+        <Drawer.Portal>
+          <Drawer.Overlay className="fixed inset-0 bg-gray-100/10 backdrop-blur" />
+          <Drawer.Content
+            className={classNames(
+              "fixed bottom-0 left-0 right-0 z-50 max-h-[92%] rounded-t-[10px] bg-white border-t border-zinc-200",
+              contentClassName
+            )}
+          >
+            <div className="sticky my-3 top-0 z-10 rounded-t-[10px] bg-inherit">
+              <div className="mx-auto h-1.5 w-12 rounded-full bg-zinc-300 flex-shrink-0" />
+            </div>
+            {children}
+          </Drawer.Content>
+        </Drawer.Portal>
+      </Drawer.Root>
+    );
+  }
 
   return (
     <Dialog.Root

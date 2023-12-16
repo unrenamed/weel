@@ -18,7 +18,7 @@ export const useMediaQuery = (query: string) => {
   };
 
   const getServerSnapshot = () => {
-    throw Error("useMediaQuery is a client-only hook");
+    return false; // Media query should not run for server-generated HTML 
   };
 
   return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);

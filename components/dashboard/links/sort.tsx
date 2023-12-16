@@ -1,21 +1,20 @@
 import { ButtonDropdown } from "@/components/shared";
-import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
-import { ArrowDown10, Check } from "lucide-react";
+import { ArrowDown10 } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 
 const sortOptions = [
   {
     key: "createdAt", // used by default
-    displayText: "Date Created",
+    display: "Date Created",
   },
   {
     key: "totalClicks",
-    displayText: "Number of clicks",
+    display: "Number of clicks",
   },
   {
     key: "lastClicked",
-    displayText: "Last Clicked",
+    display: "Last Clicked",
   },
 ];
 
@@ -43,24 +42,11 @@ export default function LinkSort() {
 
   return (
     <ButtonDropdown
-      content={
-        <div className="p-2 xs:w-48 w-full">
-          {sortOptions.map((o) => (
-            <DropdownMenuPrimitive.Item
-              key={o.key}
-              className="flex w-full items-center justify-between space-x-2 px-2 py-2 rounded-md hover:bg-gray-100 active:bg-gray-100 focus-visible:bg-gray-100 outline-0"
-              asChild
-            >
-              <button onClick={() => changeSort(o.key)}>
-                <p className="text-sm">{o.displayText}</p>
-                {selectedSort.key === o.key && <Check className="h-4 w-4" />}
-              </button>
-            </DropdownMenuPrimitive.Item>
-          ))}
-        </div>
-      }
-      icon={<ArrowDown10 className="h-4 w-4" strokeWidth={1.5} />}
       text="Sort by"
+      icon={<ArrowDown10 className="h-4 w-4" strokeWidth={1.5} />}
+      items={sortOptions.map(({ key: value, display }) => ({ value, display }))}
+      onSelect={changeSort}
+      selected={selectedSort.key}
     />
   );
 }

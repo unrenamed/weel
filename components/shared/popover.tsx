@@ -1,5 +1,7 @@
-import * as PopoverPrimitive from "@radix-ui/react-popover";
 import { ReactNode } from "react";
+import * as PopoverPrimitive from "@radix-ui/react-popover";
+import { Drawer } from "vaul";
+import { useMediaQuery } from "@/hooks";
 
 type Props = {
   children: ReactNode;
@@ -16,6 +18,29 @@ export default function Popover({
   isOpen,
   onOpenChange,
 }: Props) {
+  const isMobile = useMediaQuery("only screen and (max-width : 640px)");
+
+  if (isMobile) {
+    return (
+      <Drawer.Root open={isOpen} onOpenChange={onOpenChange}>
+        <Drawer.Trigger asChild>{children}</Drawer.Trigger>
+        <Drawer.Portal>
+          <Drawer.Overlay className="fixed inset-0 z-50 bg-gray-100/10 backdrop-blur" />
+          <Drawer.Content
+            className={
+              "fixed bottom-0 left-0 right-0 z-50 rounded-t-[10px] bg-white border-t border-zinc-200"
+            }
+          >
+            <div className="sticky my-3 top-0 z-10 rounded-t-[10px] bg-inherit">
+              <div className="mx-auto h-1.5 w-12 rounded-full bg-zinc-300 flex-shrink-0" />
+            </div>
+            <div className="max-w-md">{content}</div>
+          </Drawer.Content>
+        </Drawer.Portal>
+      </Drawer.Root>
+    );
+  }
+
   return (
     <PopoverPrimitive.Root open={isOpen} onOpenChange={onOpenChange}>
       <PopoverPrimitive.Trigger asChild>{children}</PopoverPrimitive.Trigger>
