@@ -57,7 +57,7 @@ function DeleteLinkModalContent({ link, hideModal, onSubmit }: Props) {
         </p>
         <input
           id="password"
-          className="block w-full rounded-md focus:outline-none sm:text-sm"
+          className="block w-full rounded-md focus:outline-none text-sm"
           onChange={verifyInput}
         />
         <LoadingButton

@@ -20,7 +20,7 @@ const FormTextInput = forwardRef<HTMLInputElement, Props>(
           type="text"
           autoComplete="off"
           className={classNames(
-            "block w-full rounded-md focus:outline-none sm:text-sm",
+            "block w-full rounded-md focus:outline-none text-sm",
             {
               "border-red-300 pr-10 text-red-500 placeholder-red-300 focus:border-red-500 focus:ring-red-500":
                 isError,

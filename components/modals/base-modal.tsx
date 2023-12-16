@@ -49,7 +49,7 @@ const BaseModal = memo(function BaseModal({
           <Drawer.Overlay className="fixed inset-0 bg-gray-100/10 backdrop-blur" />
           <Drawer.Content
             className={classNames(
-              "fixed bottom-0 left-0 right-0 z-50 max-h-[92%] rounded-t-[10px] bg-white border-t border-zinc-200",
+              "fixed bottom-0 left-0 right-0 z-50 rounded-t-[10px] bg-white border-t border-zinc-200",
               contentClassName
             )}
           >

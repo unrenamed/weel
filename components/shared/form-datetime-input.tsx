@@ -19,7 +19,7 @@ const FormDatetimeInput = forwardRef<HTMLInputElement, Props>(
           ref={ref}
           type="datetime-local"
           className={classNames(
-            "rounded-md shadow-sm flex w-full items-center justify-center space-x-2 border transition-all focus:outline-non sm:text-sm cursor-text",
+            "rounded-md shadow-sm flex w-full items-center justify-center space-x-2 border transition-all focus:outline-non text-sm cursor-text",
             {
               "border-red-300 pr-10 text-red-500 focus:border-red-500 focus:ring-red-500":
                 isError,

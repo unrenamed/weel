@@ -72,18 +72,18 @@ function ArchiveLinkModalContent({ link, hideModal, onSubmit }: Props) {
           ? "By unarchiving this link, it will show up on your main dashboard again."
           : "Archived links will still work - they just won't show up on your main dashboard."}
       </p>
-      <div className="flex justify-end space-x-4">
+      <div className="flex justify-between sm:justify-end space-x-4">
         <Button
           text="No"
           variant="secondary"
           onClick={hideModal}
-          className="h-10"
+          className="h-10 w-full sm:w-auto"
         />
         <LoadingButton
           text={`Yes, ${archive ? "archive" : "unarchive"}`}
           loading={isLoading}
           onClick={handleArchiveRequest}
-          className="h-10"
+          className="h-10 w-full sm:w-auto"
         />
       </div>
     </div>
