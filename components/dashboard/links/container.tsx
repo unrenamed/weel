@@ -137,7 +137,7 @@ function CreateLinkButton({ onClick }: { onClick: () => void }) {
   return (
     <KeyboardActionButton
       text="Create link"
-      kbd="C"
+      kbd="c"
       onClick={onClick}
       className="h-10 w-full xs:w-40"
     />

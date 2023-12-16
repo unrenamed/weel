@@ -161,6 +161,9 @@ module.exports = {
           900: "#43302b",
         },
       },
+      boxShadow: {
+        'kbd': 'inset 0 -1px 0 rgba(110, 118, 129, 0.4)',
+      }
     },
   },
   plugins: [

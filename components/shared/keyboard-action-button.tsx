@@ -8,11 +8,11 @@ type KeyboardActionButtonProps = {
 
 const variantColors = {
   primary:
-    "bg-zinc-700 text-gray-400 group-hover:bg-gray-100 group-hover:text-gray-500",
+    "bg-zinc-700 text-gray-400 group-hover:bg-gray-100 group-hover:text-gray-500 border-zinc-500/40",
   error:
-    "bg-red-400 text-white group-hover:bg-red-100 group-hover:text-red-600",
+    "bg-red-400 text-white group-hover:bg-red-100 group-hover:text-red-600 border-red-500/40",
   secondary:
-    "bg-gray-200 text-gray-700 group-hover:bg-gray-100 group-hover:text-gray-600",
+    "bg-gray-200 text-gray-700 group-hover:bg-gray-100 group-hover:text-gray-600 border-gray-500/40",
 };
 
 const KeyboardActionButton = forwardRef<
@@ -32,7 +32,7 @@ const KeyboardActionButton = forwardRef<
       <p>{props.text}</p>
       <kbd
         className={classNames(
-          "transition-all duration-75 px-2 py-0.5 rounded text-xs",
+          "hidden sm:inline-block transition-all duration-75 px-2 py-0.5 rounded-md text-xs border shadow-kbd",
           {
             [variantColors.primary]: variant === "primary",
             [variantColors.secondary]: variant === "secondary",

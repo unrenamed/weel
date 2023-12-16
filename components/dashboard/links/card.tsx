@@ -258,7 +258,7 @@ function LinkCard({
               <div className="flex flex-col items-center p-2 sm:w-48">
                 <PopoverItem
                   text="Edit"
-                  kbd="E"
+                  kbd="e"
                   icon={<Edit3 strokeWidth={1.5} className="h-4 w-4" />}
                   onClick={() => {
                     closeActionsMenu();
@@ -267,7 +267,7 @@ function LinkCard({
                 />
                 <PopoverItem
                   text="Duplicate"
-                  kbd="D"
+                  kbd="d"
                   icon={<PlusSquare strokeWidth={1.5} className="h-4 w-4" />}
                   onClick={() => {
                     closeActionsMenu();
@@ -276,7 +276,7 @@ function LinkCard({
                 />
                 <PopoverItem
                   text="QR Code"
-                  kbd="Q"
+                  kbd="q"
                   icon={<QrCode strokeWidth={1.5} className="h-4 w-4" />}
                   onClick={() => {
                     closeActionsMenu();
@@ -285,8 +285,8 @@ function LinkCard({
                 />
                 <Separator.Root className="bg-gray-200 h-px w-full px-2 my-2" />
                 <PopoverItem
-                  text={`${link.archived ? "Unarchive" : "Archive"}...`}
-                  kbd="A"
+                  text={link.archived ? "Unarchive" : "Archive"}
+                  kbd="a"
                   icon={
                     link.archived ? (
                       <ArchiveRestore strokeWidth={1.5} className="h-4 w-4" />
@@ -301,8 +301,8 @@ function LinkCard({
                 />
                 <PopoverItem
                   variant="danger"
-                  text="Delete..."
-                  kbd="X"
+                  text="Delete"
+                  kbd="x"
                   icon={<Trash2 strokeWidth={1.5} className="h-4 w-4" />}
                   onClick={() => {
                     closeActionsMenu();
@@ -366,11 +366,11 @@ function PopoverItem({
   const variantColors = {
     normal: {
       button: "text-gray-500 hover:bg-gray-100",
-      kbd: "text-gray-500 bg-gray-100 group-hover:bg-gray-200",
+      kbd: "text-gray-500 bg-gray-100 group-hover:bg-gray-200 border-zinc-500/40",
     },
     danger: {
       button: "text-red-500 hover:bg-red-500 hover:text-white",
-      kbd: "bg-red-100 text-red-400 group-hover:bg-red-400 group-hover:text-white",
+      kbd: "bg-red-100 text-red-400 group-hover:bg-red-400 group-hover:text-white border-red-500/40",
     },
   };
 
@@ -388,7 +388,7 @@ function PopoverItem({
       </div>
       <kbd
         className={classNames(
-          "transition-all duration-75 px-2 py-0.5 rounded text-xs font-light",
+          "hidden sm:inline-block transition-all duration-75 px-2 py-0.5 rounded-md text-xs font-light border shadow-kbd",
           variantColors[variant].kbd
         )}
       >
