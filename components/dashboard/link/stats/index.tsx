@@ -6,6 +6,7 @@ import Header from "./header";
 import Locations from "./locations";
 import Devices from "./devices";
 import Referrers from "./referrers";
+import Clicks from "./clicks";
 
 type Params = {
   link: Link;
@@ -29,7 +30,8 @@ export default function LinkStats({ link }: Params) {
           <Header title={`${link.domain}/${link.key}`} />
         </div>
       </div>
-      <div className="w-full 2xl:w-3/5 xl:w-4/5 mx-auto p-3">
+      <div className="w-full 2xl:w-3/5 xl:w-4/5 mx-auto p-3 flex flex-col gap-3 sm:gap-5">
+        <Clicks total={link.totalClicks} />
         <div className="grid gap-3 grid-cols-1 md:grid-cols-2 sm:gap-5">
           <Locations />
           <Devices />

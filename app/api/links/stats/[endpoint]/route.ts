@@ -19,7 +19,7 @@ export const GET = withError(
 
     const domain = searchParams.get("domain");
     const key = searchParams.get("key");
-    const interval = (searchParams.get("interval") as Interval) ?? '24h';
+    const interval = (searchParams.get("interval") as Interval) ?? "24h";
 
     if (!domain || !key) {
       return NextResponse.json(
