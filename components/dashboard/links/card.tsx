@@ -166,7 +166,7 @@ function LinkCard({
       className={classNames(
         "relative transition-all duration-75",
         isCardSelected &&
-          "before:absolute before:left-0 before:top-0 before:z-10 before:h-full before:w-full before:bg-gradient-to-r before:from-[#ffbe0b] before:to-[#f42b03] before:blur-[5px]"
+          "before:absolute before:left-0 before:top-0 before:z-10 before:h-full before:w-full before:bg-gradient-to-r before:from-[#ffbe0b] before:to-[#f42b03] sm:before:blur-[5px] before:blur-[3px]"
       )}
     >
       <div className="relative z-10 flex justify-between items-center rounded-lg bg-white p-3 shadow transition-all hover:shadow-md sm:p-4">
