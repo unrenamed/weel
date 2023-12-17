@@ -11,3 +11,4 @@ export { default as LoadingSpinner } from "./loading-spinner";
 export { default as Popover } from "./popover";
 export { default as Switch } from "./switch";
 export { default as Tooltip } from "./tooltip";
+export { default as NumberTooltip } from "./number-tooltip";

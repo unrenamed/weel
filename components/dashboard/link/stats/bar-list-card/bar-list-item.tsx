@@ -1,6 +1,6 @@
-import { Tooltip } from "@/components/shared";
+import { NumberTooltip } from "@/components/shared";
 import { classNames } from "@/components/utils";
-import { nFormatter, pluralize } from "@/lib/utils";
+import { nFormatter } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { CSSProperties, ReactNode } from "react";
 
@@ -40,17 +40,9 @@ export default function BarListItem({
           animate={{ transform: "scaleX(1)" }}
         />
       </div>
-      <Tooltip
-        content={
-          <div className="block max-w-xs px-4 py-2 text-center">
-            <p className="text-sm font-semibold text-gray-700">
-              {pluralize(clicks, "click")}
-            </p>
-          </div>
-        }
-      >
+      <NumberTooltip value={clicks} unit="click">
         <span className="pr-2">{nFormatter(clicks)}</span>
-      </Tooltip>
+      </NumberTooltip>
     </div>
   );
 }
