@@ -49,11 +49,11 @@ const BaseModal = memo(function BaseModal({
           <Drawer.Overlay className="fixed inset-0 bg-gray-100/10 backdrop-blur" />
           <Drawer.Content
             className={classNames(
-              "fixed bottom-0 left-0 right-0 z-50 rounded-t-[10px] bg-white border-t border-zinc-200",
+              "fixed bottom-0 left-0 right-0 z-50 rounded-t-[10px] max-h-[85dvh] min-h-[5dvh] bg-white border-t border-zinc-200",
               contentClassName
             )}
           >
-            <div className="sticky my-3 top-0 z-10 rounded-t-[10px] bg-inherit">
+            <div className="sticky my-3 top-0 z-20 rounded-t-[10px] bg-inherit">
               <div className="mx-auto h-1.5 w-12 rounded-full bg-zinc-300 flex-shrink-0" />
             </div>
             {children}
@@ -81,7 +81,7 @@ const BaseModal = memo(function BaseModal({
           onOpenAutoFocus={(e) => e.preventDefault()}
           onCloseAutoFocus={(e) => e.preventDefault()}
           className={classNames(
-            `animate-scale-in fixed inset-0 z-40 m-auto max-h-fit w-full max-w-md overflow-hidden border border-gray-200 bg-white p-0 shadow-xl md:rounded-xl`,
+            `animate-scale-in fixed inset-0 z-40 m-auto max-h-fit w-full max-w-md overflow-hidden border border-gray-200 bg-white p-0 shadow-xl sm:rounded-xl`,
             contentClassName
           )}
         >
