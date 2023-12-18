@@ -5,14 +5,23 @@ import { useCallback, useMemo } from "react";
 import { max } from "@visx/vendor/d3-array";
 import { Interval } from "@/lib/types";
 import { motion } from "framer-motion";
-import { nFormatter } from "@/lib/utils";
+import { nFormatter, pluralizeJSX } from "@/lib/utils";
 import { Group } from "@visx/group";
 import { useMediaQuery } from "@/hooks";
+import { useTooltip, useTooltipInPortal, defaultStyles } from "@visx/tooltip";
+import { localPoint } from "@visx/event";
 
-type DataObject = { t: string; value: number };
+type BarData = { date: Date; value: number };
+
+type TooltipData = {
+  value: number;
+  start: Date;
+  end: Date;
+};
 
 type Props = {
-  data: DataObject[];
+  data: BarData[];
+  unit: string;
   width: number;
   height: number;
   interval?: Interval;
@@ -26,14 +35,14 @@ export const gray500 = "#9e9e9e";
 export const gray800 = "#424242";
 
 // accessors
-const getDate = (d: DataObject) => new Date(d.t);
-const getValue = (d: DataObject) => d.value;
+const getDate = (d: BarData) => d.date;
+const getValue = (d: BarData) => d.value;
 
 // constants
 const LEFT_AXIS_MIN_NUM_OF_TICKS = 5;
 
 // utils
-const getMaxValueForLeftAxisDomainRange = (data: DataObject[]) => {
+const getMaxValueForLeftAxisDomainRange = (data: BarData[]) => {
   const maxV = max(data, getValue) ?? 0;
 
   // Ensure a constant number of ticks is always displayed when all data values are below a certain threshold.
@@ -53,14 +62,42 @@ const getMaxValueForLeftAxisDomainRange = (data: DataObject[]) => {
 // defaults
 const defaultMargin = { top: 40, right: 30, bottom: 50, left: 40 };
 
+// styles
+const tooltipStyles = {
+  ...defaultStyles,
+  minWidth: 150,
+  borderRadius: "5px",
+  boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+};
+
+// variables
+let tooltipTimeout: number;
+
 export default function BarChart({
   data,
   interval,
+  unit,
   height,
   width,
   margin = defaultMargin,
 }: Props) {
   const isMobile = useMediaQuery("only screen and (max-width : 640px)");
+
+  const {
+    tooltipOpen,
+    tooltipLeft,
+    tooltipTop,
+    tooltipData,
+    hideTooltip,
+    showTooltip,
+  } = useTooltip<TooltipData>();
+
+  const { containerRef, TooltipInPortal } = useTooltipInPortal({
+    // TooltipInPortal is rendered in a separate child of <body /> and positioned
+    // with page coordinates which should be updated on scroll. consider using
+    // Tooltip or TooltipWithBounds if you don't need to render inside a Portal
+    scroll: true,
+  });
 
   // bounds
   const xMax = Math.max(width - margin.left - margin.right, 0);
@@ -128,7 +165,7 @@ export default function BarChart({
 
   return (
     <div>
-      <svg width={width} height={height}>
+      <svg ref={containerRef} width={width} height={height}>
         <rect x={0} y={0} width={width} height={height} fill={gray50} rx={5} />
         <Group left={margin.left} top={margin.top}>
           <GridRows
@@ -164,15 +201,15 @@ export default function BarChart({
               fontSize: isMobile ? 9 : 12,
             }}
           />
-          {data.map(({ t, value }) => {
+          {data.map(({ date, value }, idx) => {
             const barWidth = dateScale.bandwidth();
             const barHeight = yMax - (valueScale(value) ?? 0);
-            const barX = dateScale(getDate({ t, value })) ?? 0;
+            const barX = dateScale(date) ?? 0;
             const barY = yMax - barHeight;
 
             return (
               <motion.rect
-                key={`bar-${interval}-${t}`}
+                key={`bar-${value}-${date.toISOString()}`}
                 transition={{ ease: "easeOut", duration: 0.3 }}
                 className="!origin-bottom fill-blue-500"
                 initial={{ transform: "scaleY(0)" }}
@@ -181,11 +218,70 @@ export default function BarChart({
                 y={barY}
                 width={barWidth}
                 height={barHeight}
+                onMouseLeave={() => {
+                  tooltipTimeout = window.setTimeout(() => {
+                    hideTooltip();
+                  }, 300);
+                }}
+                onMouseMove={(event) => {
+                  if (tooltipTimeout) clearTimeout(tooltipTimeout);
+                  // TooltipInPortal expects coordinates to be relative to containerRef
+                  // localPoint returns coordinates relative to the nearest SVG, which
+                  // is what containerRef is set to.
+                  const eventSvgCoords = localPoint(event);
+
+                  // center horizontally the tooltip by its bar
+                  const left = barX + barWidth / 2 - 46;
+                  // raise the tooltip above the mouse cursor
+                  const top = eventSvgCoords
+                    ? eventSvgCoords.y - 100
+                    : undefined;
+
+                  showTooltip({
+                    tooltipData: {
+                      value,
+                      start: date,
+                      end: data[idx + 1]?.date ?? new Date(),
+                    },
+                    tooltipTop: top,
+                    tooltipLeft: left,
+                  });
+                }}
               />
             );
           })}
         </Group>
       </svg>
+      {tooltipOpen && tooltipData && (
+        <TooltipInPortal
+          top={tooltipTop}
+          left={tooltipLeft}
+          style={tooltipStyles}
+        >
+          <div className="text-center px-1 py-1 sm:px-2">
+            {pluralizeJSX(
+              (count, noun) => (
+                <h3 className="text-black">
+                  <span className="text-xl sm:text-2xl font-semibold">
+                    {nFormatter(count)}
+                  </span>{" "}
+                  {noun}
+                </h3>
+              ),
+              tooltipData.value,
+              unit
+            )}
+            <p className="text-xs text-gray-600">
+              {formatTimestamp(tooltipData.start)} -{" "}
+              {interval === "24h"
+                ? new Date(tooltipData.end).toLocaleTimeString("en-us", {
+                    hour: "numeric",
+                  })
+                : formatTimestamp(tooltipData.end)}
+            </p>
+          </div>
+        </TooltipInPortal>
+      )}
     </div>
   );
 }

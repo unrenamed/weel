@@ -36,6 +36,7 @@
     "@visx/grid": "^3.5.0",
     "@visx/responsive": "^3.3.0",
     "@visx/scale": "^3.5.0",
+    "@visx/tooltip": "^3.3.0",
     "autoprefixer": "10.4.15",
     "bcrypt": "^5.1.1",
     "clsx": "^2.0.0",

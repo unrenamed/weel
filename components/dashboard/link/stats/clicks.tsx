@@ -44,11 +44,12 @@ export default function Clicks({ total }: { total: number }) {
           <ParentSize>
             {({ width, height }) => (
               <BarChart
+                unit="click"
                 width={width}
                 height={height}
                 interval={interval}
                 data={(data ?? []).map(({ t, clicks }) => ({
-                  t,
+                  date: new Date(t),
                   value: clicks,
                 }))}
               />

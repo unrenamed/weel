@@ -3,10 +3,10 @@ import { useScroll } from "@/hooks";
 import { Link } from "@prisma/client";
 import { useState } from "react";
 import Header from "./header";
+import Clicks from "./clicks";
 import Locations from "./locations";
 import Devices from "./devices";
 import Referrers from "./referrers";
-import Clicks from "./clicks";
 
 type Params = {
   link: Link;
