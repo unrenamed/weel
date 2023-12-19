@@ -137,7 +137,7 @@ SQL >
                 required=True,
             )
         }}
-    select *
+    select formatDateTime(t, '%FT%T.000Z') as t, clicks
     from result_data
 
 
