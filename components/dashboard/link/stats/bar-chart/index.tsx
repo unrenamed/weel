@@ -10,6 +10,8 @@ import { Group } from "@visx/group";
 import { useMediaQuery } from "@/hooks";
 import { useTooltip, useTooltipInPortal, defaultStyles } from "@visx/tooltip";
 import { localPoint } from "@visx/event";
+import { NoChartData } from "./no-data";
+import { format } from "date-fns";
 
 type BarData = { date: Date; value: number };
 
@@ -103,33 +105,18 @@ export default function BarChart({
   const xMax = Math.max(width - margin.left - margin.right, 0);
   const yMax = Math.max(height - margin.top - margin.bottom, 0);
 
-  const formatTimestamp = useCallback(
+  const formatDate = useCallback(
     (e: Date) => {
       switch (interval) {
         case "1h":
-          return new Date(e).toLocaleTimeString("en-us", {
-            hour: "numeric",
-            minute: "numeric",
-          });
+          return format(e, "h:mm a");
         case "24h":
-          return new Date(e)
-            .toLocaleDateString("en-us", {
-              month: "short",
-              day: "numeric",
-              hour: "numeric",
-            })
-            .replace(",", " ");
+          return format(e, "MMM d, h a");
         case "90d":
         case "all":
-          return new Date(e).toLocaleDateString("en-us", {
-            month: "short",
-            year: "numeric",
-          });
+          return format(e, "MMM y");
         default:
-          return new Date(e).toLocaleDateString("en-us", {
-            month: "short",
-            day: "numeric",
-          });
+          return format(e, "MMM d");
       }
     },
     [interval]
@@ -156,7 +143,7 @@ export default function BarChart({
   valueScale.range([yMax, 0]);
 
   if (data.length === 0) {
-    return <NoData />;
+    return <NoChartData />;
   }
 
   if (width < 200) {
@@ -179,7 +166,7 @@ export default function BarChart({
             numTicks={6}
             top={yMax}
             scale={dateScale}
-            tickFormat={formatTimestamp}
+            tickFormat={formatDate}
             stroke={gray500}
             tickStroke={gray500}
             tickLabelProps={{
@@ -272,12 +259,10 @@ export default function BarChart({
               unit
             )}
             <p className="text-xs text-gray-600">
-              {formatTimestamp(tooltipData.start)} -{" "}
+              {formatDate(tooltipData.start)} -{" "}
               {interval === "24h"
-                ? new Date(tooltipData.end).toLocaleTimeString("en-us", {
-                    hour: "numeric",
-                  })
-                : formatTimestamp(tooltipData.end)}
+                ? format(tooltipData.end, "h a")
+                : formatDate(tooltipData.end)}
             </p>
           </div>
         </TooltipInPortal>
@@ -285,13 +270,3 @@ export default function BarChart({
     </div>
   );
 }
-
-const NoData = () => {
-  return (
-    <div className="px-7 pb-5 w-full h-full flex place-content-center justify-center items-center">
-      <p className="flex items-center justify-center flex-wrap text-sm font-light text-gray-500">
-        No data available
-      </p>
-    </div>
-  );
-};
