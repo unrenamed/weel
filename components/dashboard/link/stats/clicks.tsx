@@ -7,24 +7,29 @@ import { Interval } from "@/lib/types";
 import BarChart from "./bar-chart";
 import ParentSize from "@visx/responsive/lib/components/ParentSize";
 
-export default function Clicks({ total }: { total: number }) {
+export default function Clicks() {
   const searchParams = useSearchParams();
   const interval = (searchParams.get("interval") as Interval) ?? "24h";
 
-  const { data, isLoading } = useSWR<{ t: string; clicks: number }[]>(
-    `/api/links/stats/timeseries?${searchParams}`,
-    fetcher
-  );
+  const { data: timeseries, isLoading: loadingTimeseries } = useSWR<
+    { t: string; clicks: number }[]
+  >(`/api/links/stats/timeseries?${searchParams}`, fetcher);
+
+  const { data: clicksData, isLoading: loadingClicks } = useSWR<
+    { clicks: number }[]
+  >(`/api/links/stats/clicks?${searchParams}`, fetcher);
+
+  const totalClicks = clicksData?.[0]?.clicks ?? 0;
 
   return (
     <div className="border border-gray-200 bg-white rounded-md shadow-md p-5 sm:p-10">
       <div className="mb-5 flex items-start justify-between space-x-4">
         <div className="flex-none">
           <div className="flex items-end space-x-1">
-            {total || total === 0 ? (
-              <NumberTooltip value={total} unit="total click">
+            {!loadingClicks && totalClicks ? (
+              <NumberTooltip value={totalClicks} unit="total click">
                 <h1 className="text-3xl font-bold sm:text-4xl">
-                  {nFormatter(total)}
+                  {nFormatter(totalClicks)}
                 </h1>
               </NumberTooltip>
             ) : (
@@ -37,7 +42,7 @@ export default function Clicks({ total }: { total: number }) {
           </p>
         </div>
       </div>
-      {isLoading ? (
+      {loadingTimeseries ? (
         <div className="rounded animate-pulse bg-gray-200 w-full h-[300px] sm:h-[400px]" />
       ) : (
         <div className="h-[400px] w-full">
@@ -48,7 +53,7 @@ export default function Clicks({ total }: { total: number }) {
                 width={width}
                 height={height}
                 interval={interval}
-                data={(data ?? []).map(({ t, clicks }) => ({
+                data={(timeseries ?? []).map(({ t, clicks }) => ({
                   date: new Date(t),
                   value: clicks,
                 }))}

@@ -31,7 +31,7 @@ export default function LinkStats({ link }: Params) {
         </div>
       </div>
       <div className="w-full 2xl:w-3/5 xl:w-4/5 mx-auto p-3 flex flex-col gap-3 sm:gap-5">
-        <Clicks total={link.totalClicks} />
+        <Clicks />
         <div className="grid gap-3 grid-cols-1 md:grid-cols-2 sm:gap-5">
           <Locations />
           <Devices />
