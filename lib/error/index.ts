@@ -30,3 +30,13 @@ export class LinkNotFoundError extends BaseError {
     });
   }
 }
+
+export class LinkStatsLoadingError extends BaseError {
+  constructor(message: string) {
+    super({
+      name: "Link stats cannot be loaded",
+      statusCode: HttpStatusCode.INTERNAL_SERVER_ERROR,
+      message,
+    });
+  }
+}

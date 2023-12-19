@@ -7,6 +7,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { INTERVALS, TINYBIRD_API_ENDPOINTS } from "@/lib/constants";
 import { Interval } from "@/lib/types";
 import { withError } from "@/lib/handlers";
+import { LinkStatsLoadingError } from "@/lib/error";
 
 type Params = {
   endpoint: string;
@@ -29,7 +30,9 @@ export const GET = withError(
     }
 
     if (!isTinybirdApiEndpoint(endpoint)) {
-      const supportedEndpoints = Object.values(TINYBIRD_API_ENDPOINTS).join(", ");
+      const supportedEndpoints = Object.values(TINYBIRD_API_ENDPOINTS).join(
+        ", "
+      );
       const error = `The endpoint '${endpoint}' is not supported. Supported endpoints include: ${supportedEndpoints}`;
       return NextResponse.json({ error }, { status: 404 });
     }
@@ -40,13 +43,23 @@ export const GET = withError(
       return NextResponse.json({ error }, { status: 404 });
     }
 
-    return NextResponse.json(
-      await getStats({
-        key,
-        domain,
-        interval,
-        endpoint,
-      })
-    );
+    try {
+      return NextResponse.json(
+        await getStats({
+          key,
+          domain,
+          interval,
+          endpoint,
+        })
+      );
+    } catch (err) {
+      if (err instanceof Error) {
+        throw new LinkStatsLoadingError(err.message);
+      } else {
+        throw new LinkStatsLoadingError(
+          "Something went wrong when fetching link stats data!"
+        );
+      }
+    }
   }
 );
