@@ -151,9 +151,6 @@ export const getStats = async (
     headers: {
       Authorization: `Bearer ${process.env.TINYBIRD_API_TOKEN}`,
     },
-    next: {
-      revalidate: 43200, // every 12 hours
-    },
   });
 
   const json: TinybirdPipe | TinybirdError = await response.json();
@@ -191,6 +188,9 @@ export const getCoordinates = async (
   const response = await fetch(url, {
     headers: {
       Authorization: `Bearer ${process.env.TINYBIRD_API_TOKEN}`,
+    },
+    next: {
+      revalidate: 3600, // every 1 hour
     },
   });
 
