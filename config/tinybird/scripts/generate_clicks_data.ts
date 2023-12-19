@@ -220,22 +220,31 @@ const genRandEvent = () => {
   };
 };
 
-async function main() {
+function main() {
   const filename = "link_clicks.csv";
   const writableStream = fs.createWriteStream(filename);
   const stringifier = stringify({ header: true, columns: COLUMNS });
 
-  console.log(`Start generating 🌱`);
+  // Pipe the stringifier to the writable stream
+  stringifier.pipe(writableStream);
 
-  console.log(`Create events and write them to the stream...`);
-  [...Array(1_000_000)].forEach(() => {
+  console.log("Start generating 🌱");
+  console.log("Create events and write them to the CSV file...");
+  [...Array(100)].forEach(() => {
     const event = genRandEvent();
     stringifier.write(event);
   });
 
-  console.log(`Send data to the CSV file...`);
-  stringifier.pipe(writableStream);
-  console.log(`Finished writting events to the file 🏁`);
+  // End the stringifier to trigger the finish event
+  stringifier.end();
+
+  writableStream.on("finish", () => {
+    console.log("Finished writting events to the file 🏁");
+  });
+
+  writableStream.on("error", (err: Error) => {
+    console.error("Error writing to the CSV file: ", err);
+  });
 }
 
-main().then(() => process.exit(1));
+main();

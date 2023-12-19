@@ -1,1 +1,1 @@
-tb pipe data timeseries --domain unrenamed.me --key OmZUf --granularity month --start "2022-12-01 15:05:00" --end "2023-03-01 15:05:00" --format CSV
+tb pipe data timeseries --domain weel.vercel.app --key github --granularity month --start "2022-12-01 15:05:00" --end "2023-03-01 15:05:00" --format CSV
