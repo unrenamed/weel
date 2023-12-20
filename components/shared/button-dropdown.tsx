@@ -31,7 +31,7 @@ export default function ButtonDropdown({
         onSelect(value);
       }}
     >
-      <button className="flex items-center justify-between space-x-2 rounded-md shadow transition-all active:scale-95 px-3 py-2.5 bg-white hover:shadow-md w-full xs:w-48">
+      <button className="flex items-center justify-between space-x-2 rounded-md shadow transition-all active:scale-95 px-3 py-2.5 bg-white dark:bg-neutral-800 hover:shadow-md w-full xs:w-48">
         <div className="flex items-center space-x-2">
           {icon}
           <p className="text-sm">{text}</p>

@@ -19,11 +19,11 @@ const FormDatetimeInput = forwardRef<HTMLInputElement, Props>(
           ref={ref}
           type="datetime-local"
           className={classNames(
-            "rounded-md shadow-sm flex w-full items-center justify-center space-x-2 border transition-all focus:outline-non text-sm cursor-text",
+            "rounded-md shadow-sm flex w-full items-center justify-center space-x-2 border transition-all focus:outline-non text-sm cursor-text dark:bg-neutral-700",
             {
-              "border-red-300 pr-10 text-red-500 focus:border-red-500 focus:ring-red-500":
+              "pr-10 border-red-300 text-red-500 placeholder-red-300 focus:border-red-500 focus:ring-red-500":
                 isError,
-              "border-gray-300 text-gray-900 focus:border-gray-500 focus:ring-gray-500":
+              "border-gray-300 text-gray-900 focus:border-gray-500 focus:ring-gray-500 dark:border-neutral-600 dark:text-gray-50 dark:focus:border-neutral-600 dark:focus:ring-neutral-600":
                 !isError,
               "cursor-not-allowed border-gray-300 bg-gray-100 text-gray-500":
                 props.disabled,

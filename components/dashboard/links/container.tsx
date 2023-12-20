@@ -1,5 +1,4 @@
 "use client";
-
 import { useLinks } from "@/lib/swr/use-links";
 import LinkSkeleton from "./skeleton";
 import LinkCard from "./card";
@@ -138,8 +137,8 @@ function CreateLinkButton({ onClick }: { onClick: () => void }) {
     <KeyboardActionButton
       text="Create link"
       kbd="c"
-      onClick={onClick}
       className="h-10 w-full xs:w-40"
+      onClick={onClick}
     />
   );
 }

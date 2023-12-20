@@ -25,7 +25,7 @@ export function IOSTargetingSection({
   return (
     <div className="flex flex-col space-y-3">
       <div className="flex justify-between items-center">
-        <span className="text-sm font-medium text-gray-900">iOS Targeting</span>
+        <span className="text-sm font-medium">iOS Targeting</span>
         <Switch checked={isOpen} onCheckedChange={handleCheckedChange} />
       </div>
       {open && (

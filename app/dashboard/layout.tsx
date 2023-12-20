@@ -4,7 +4,7 @@ import OnlineStatus from "@/components/dashboard/online-status";
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="min-h-screen w-full bg-gray-50">
+    <div className="min-h-screen w-full bg-gray-50 dark:dark:bg-neutral-900">
       <OnlineStatus />
       <AppHeader />
       {children}

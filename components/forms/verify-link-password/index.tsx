@@ -39,14 +39,11 @@ export function VerifyLinkPasswordForm() {
 
   return (
     <form
-      className="flex flex-col space-y-4 bg-gray-50 px-4 py-8 sm:px-16"
+      className="flex flex-col space-y-4 bg-gray-50 dark:bg-neutral-800 px-4 py-8 sm:px-16"
       onSubmit={handleSubmit(onSubmit)}
     >
       <div className="space-y-2">
-        <label
-          htmlFor="password"
-          className="block text-xs text-gray-600 uppercase"
-        >
+        <label htmlFor="password" className="block text-xs uppercase">
           Password
         </label>
         <FormPasswordInput

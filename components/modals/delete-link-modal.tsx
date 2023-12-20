@@ -47,7 +47,7 @@ function DeleteLinkModalContent({ link, hideModal, onSubmit }: Props) {
   return (
     <div className="p-4 flex flex-col space-y-2">
       <h3 className="text-lg font-medium">Delete {domainKey}</h3>
-      <p className="text-sm text-gray-500">
+      <p className="text-sm text-gray-500 dark:text-gray-400">
         Warning: Deleting this link will permanently remove all of its stats.
         This action cannot be undone.
       </p>

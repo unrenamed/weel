@@ -21,10 +21,10 @@ function Tooltip({
           <TooltipPrimitive.Content
             side={side}
             sideOffset={12}
-            className="animate-slide-up-fade z-[99] items-center overflow-hidden rounded border shadow-md md:block border-gray-200 bg-white"
+            className="animate-slide-up-fade z-[99] items-center overflow-hidden rounded border shadow-md md:block border-gray-200 bg-white dark:bg-neutral-800 dark:border-neutral-700"
           >
             {typeof content === "string" ? (
-              <div className="block max-w-xs px-4 py-2 text-center text-xs text-gray-800">
+              <div className="block max-w-xs px-4 py-2 text-center text-xs text-gray-800 dark:text-gray-50">
                 {content}
               </div>
             ) : (

@@ -47,7 +47,7 @@ export function GeoTargetingSection({
   return (
     <div>
       <div className="flex justify-between items-center">
-        <span className="text-sm font-medium text-gray-900">Geo Targeting</span>
+        <span className="text-sm font-medium">Geo Targeting</span>
         <Switch checked={isOpen} onCheckedChange={handleCheckedChange} />
       </div>
       {open && (
@@ -122,7 +122,7 @@ function GeoLink({
           <select
             {...register(`geo.${index}.country` as const)}
             id={`geo.${index}.country`}
-            className="flex w-32 items-center justify-center rounded-l-md border-gray-300 bg-gray-50 pl-3 pr-7 text-center text-sm text-gray-500 focus:border-gray-300 focus:outline-none focus:ring-0 border border-r-0"
+            className="flex w-32 items-center justify-center rounded-l-md pl-3 pr-7 text-center text-sm focus:outline-none focus:ring-0 border border-r-0 bg-inherit border-gray-300 dark:border-neutral-600 text-gray-500 dark:text-gray-200 focus:border-gray-300 dark:focus:border-neutral-600 cursor-pointer"
             defaultValue=""
           >
             <option value="" disabled>

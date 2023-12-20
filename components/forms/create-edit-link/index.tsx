@@ -130,13 +130,13 @@ export function CreateEditLinkForm(props: Props) {
 
   return (
     <form
-      className="flex flex-col bg-gray-50 pt-6"
+      className="flex flex-col bg-gray-50 dark:bg-neutral-800 pt-6"
       onSubmit={handleSubmit(onSubmit)}
     >
       <div className="space-y-8">
         <div className="flex flex-col space-y-4 px-4 md:px-16">
           <div className="flex flex-col space-y-2">
-            <label className="text-sm font-medium text-gray-900" htmlFor="url">
+            <label className="text-sm font-medium" htmlFor="url">
               Destination URL
             </label>
             <FormTextInput
@@ -151,15 +151,12 @@ export function CreateEditLinkForm(props: Props) {
           </div>
           <div className="flex flex-col space-y-2">
             <div className="flex justify-between items-center">
-              <label
-                className="text-sm font-medium text-gray-900"
-                htmlFor="key"
-              >
+              <label className="text-sm font-medium" htmlFor="key">
                 Short link
               </label>
               {!isEditMode && (
                 <button
-                  className="flex items-center space-x-2 text-sm text-gray-500 transition-all duration-75 hover:text-black active:scale-95"
+                  className="flex items-center space-x-2 text-sm text-gray-500 dark:text-neutral-400 transition-all duration-75 hover:text-black hover:dark:text-neutral-100 active:scale-95"
                   onClick={() => {
                     if (!loadingRandomKey) {
                       clearErrors("key");
@@ -183,7 +180,7 @@ export function CreateEditLinkForm(props: Props) {
               <select
                 {...register("domain", { onChange: uniqueKey.invalidate })}
                 id="domain"
-                className="flex w-48 items-center justify-center rounded-l-md border-gray-300 bg-gray-50 pl-3 pr-7 text-sm text-gray-500 focus:border-gray-300 focus:outline-none focus:ring-0 border border-r-0"
+                className="flex w-48 items-center justify-center rounded-l-md bg-inherit pl-3 pr-7 text-sm border-gray-300 dark:border-neutral-600 text-gray-500 dark:text-gray-200 focus:border-gray-300 dark:focus:border-neutral-600 focus:outline-none focus:ring-0 border border-r-0 cursor-pointer"
                 disabled={isEditMode}
               >
                 {LINK_DOMAINS.map((domain) => (

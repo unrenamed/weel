@@ -32,28 +32,28 @@ export default function Clicks() {
   const totalClicks = clicksData?.[0]?.clicks ?? 0;
 
   return (
-    <div className="border border-gray-200 bg-white rounded-md shadow-md p-5 sm:p-10">
+    <div className="bg-white dark:bg-neutral-800 rounded-md shadow-md p-5 sm:p-10">
       <div className="mb-5 flex items-start justify-between space-x-4">
         <div className="flex-none">
-          <div className="flex items-end space-x-1">
-            {!loadingClicks && !validatingClicks && totalClicks ? (
+          <div className="flex items-end space-x-2">
+            {!loadingClicks && !validatingClicks ? (
               <NumberTooltip value={totalClicks} unit="total click">
                 <h1 className="text-3xl font-bold sm:text-4xl">
                   {nFormatter(totalClicks)}
                 </h1>
               </NumberTooltip>
             ) : (
-              <div className="h-10 w-12 animate-pulse rounded-md bg-gray-200" />
+              <div className="h-10 w-12 animate-pulse rounded-md bg-gray-200 dark:bg-neutral-700" />
             )}
-            <BarChart3 className="mb-1 h-6 w-6 text-gray-600" />
+            <BarChart3 className="mb-1 h-6 w-6 text-gray-600 dark:text-white" />
           </div>
-          <p className="text-sm font-medium uppercase text-gray-600">
+          <p className="text-sm font-medium uppercase text-gray-600 dark:text-white">
             Total Clicks
           </p>
         </div>
       </div>
       {loadingTimeseries || validatingTimeseries ? (
-        <div className="rounded animate-pulse bg-gray-200 w-full h-[300px] sm:h-[400px]" />
+        <div className="rounded animate-pulse bg-gray-200w-full h-[300px] sm:h-[400px]" />
       ) : (
         <div className="h-[400px] w-full">
           <ParentSize>

@@ -25,11 +25,11 @@ const FormPasswordInput = forwardRef<HTMLInputElement, Props>(
           type={showPassword ? "text" : "password"}
           autoComplete="off"
           className={classNames(
-            "block w-full rounded-md focus:outline-none text-sm",
+            "block w-full rounded-md focus:outline-none text-sm dark:bg-neutral-700",
             {
-              "border-red-300 pr-10 text-red-500 placeholder-red-300 focus:border-red-500 focus:ring-red-500":
+              "pr-10 border-red-300 text-red-500 placeholder-red-300 focus:border-red-500 focus:ring-red-500":
                 isError,
-              "border-gray-300 text-gray-900 placeholder-gray-300 focus:border-gray-500 focus:ring-gray-500":
+              "border-gray-300 text-gray-900 placeholder-gray-300 focus:border-gray-500 focus:ring-gray-500 dark:border-neutral-600 dark:text-gray-50 dark:placeholder:text-neutral-500 dark:focus:border-neutral-600 dark:focus:ring-neutral-600":
                 !isError,
               "cursor-not-allowed border-gray-300 bg-gray-100 text-gray-500":
                 props.disabled,

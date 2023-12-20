@@ -12,6 +12,8 @@ import { useTooltip, useTooltipInPortal, defaultStyles } from "@visx/tooltip";
 import { localPoint } from "@visx/event";
 import { NoChartData } from "./no-data";
 import { format } from "date-fns";
+import { useTheme } from "next-themes";
+import colors from "tailwindcss/colors";
 
 type BarData = { date: Date; value: number };
 
@@ -29,12 +31,6 @@ type Props = {
   interval?: Interval;
   margin?: { top: number; right: number; bottom: number; left: number };
 };
-
-// colors
-export const gray50 = "#fafafa";
-export const gray300 = "#e0e0e0";
-export const gray500 = "#9e9e9e";
-export const gray800 = "#424242";
 
 // accessors
 const getDate = (d: BarData) => d.date;
@@ -84,6 +80,7 @@ export default function BarChart({
   margin = defaultMargin,
 }: Props) {
   const isMobile = useMediaQuery("only screen and (max-width : 640px)");
+  const { theme } = useTheme();
 
   const {
     tooltipOpen,
@@ -104,6 +101,14 @@ export default function BarChart({
   // bounds
   const xMax = Math.max(width - margin.left - margin.right, 0);
   const yMax = Math.max(height - margin.top - margin.bottom, 0);
+
+  // colors
+  const rectBgColor = theme === "dark" ? colors.neutral[700] : colors.gray[50];
+  const gridFillColor =
+    theme === "dark" ? colors.neutral[600] : colors.gray[300];
+  const axisFillColor = theme === "dark" ? colors.white : colors.gray[800];
+  const axisStrokeColor = theme === "dark" ? colors.gray[50] : colors.gray[500];
+  const tooltipBgColor = theme === "dark" ? colors.neutral[800] : colors.white;
 
   const formatDate = useCallback(
     (e: Date) => {
@@ -153,24 +158,31 @@ export default function BarChart({
   return (
     <div>
       <svg ref={containerRef} width={width} height={height}>
-        <rect x={0} y={0} width={width} height={height} fill={gray50} rx={5} />
+        <rect
+          x={0}
+          y={0}
+          width={width}
+          height={height}
+          fill={rectBgColor}
+          rx={5}
+        />
         <Group left={margin.left} top={margin.top}>
           <GridRows
             numTicks={6}
             scale={valueScale}
             width={xMax}
             height={yMax}
-            stroke={gray300}
+            stroke={gridFillColor}
           />
           <AxisBottom
             numTicks={6}
             top={yMax}
             scale={dateScale}
             tickFormat={formatDate}
-            stroke={gray500}
-            tickStroke={gray500}
+            stroke={axisStrokeColor}
+            tickStroke={axisStrokeColor}
             tickLabelProps={{
-              fill: gray800,
+              fill: axisFillColor,
               fontSize: isMobile ? 9 : 12,
               textAnchor: "middle",
               angle: isMobile ? -45 : 0,
@@ -179,12 +191,12 @@ export default function BarChart({
           />
           <AxisLeft
             numTicks={6}
-            stroke={gray500}
-            tickStroke={gray500}
+            stroke={axisStrokeColor}
+            tickStroke={axisStrokeColor}
             scale={valueScale}
             tickFormat={(d) => nFormatter(d as number)}
             tickLabelProps={{
-              fill: gray800,
+              fill: axisFillColor,
               fontSize: isMobile ? 9 : 12,
             }}
           />
@@ -243,12 +255,12 @@ export default function BarChart({
         <TooltipInPortal
           top={tooltipTop}
           left={tooltipLeft}
-          style={tooltipStyles}
+          style={{ ...tooltipStyles, backgroundColor: tooltipBgColor }}
         >
           <div className="text-center px-1 py-1 sm:px-2">
             {pluralizeJSX(
               (count, noun) => (
-                <h3 className="text-black">
+                <h3 className="text-black dark:text-white">
                   <span className="text-xl sm:text-2xl font-semibold">
                     {nFormatter(count)}
                   </span>{" "}
@@ -258,7 +270,7 @@ export default function BarChart({
               tooltipData.value,
               unit
             )}
-            <p className="text-xs text-gray-600">
+            <p className="text-xs text-gray-600 dark:text-gray-100">
               {formatDate(tooltipData.start)} -{" "}
               {interval === "24h"
                 ? format(tooltipData.end, "h a")

@@ -106,10 +106,10 @@ function CreateEditLinkModalContent({
       onScroll={(event: UIEvent<HTMLDivElement>) =>
         updateSubmitButtonPosition(event.currentTarget)
       }
-      className="scrollbar-hide overflow-auto max-h-[80dvh]"
+      className="scrollbar-hide overflow-auto max-h-[80dvh] bg-inherit"
     >
-      <div className="flex flex-col">
-        <div className="z-10 flex justify-center border-bborder-gray-200 bg-white px-4 py-3 sm:py-4 md:px-16 md:py-6 transition-all md:sticky md:top-0">
+      <div className="flex flex-col bg-inherit">
+        <div className="z-10 flex justify-center border-b border-gray-200 dark:border-neutral-700 px-4 py-3 sm:py-4 md:px-16 md:py-6 transition-all md:sticky md:top-0 bg-inherit">
           <h3 className="text-lg font-medium">
             {isEditMode ? "Edit Link" : "Create Link"}
           </h3>
@@ -127,7 +127,7 @@ function CreateEditLinkModalContent({
                 className={classNames(
                   "z-10 px-4 py-8 transition-all md:sticky md:bottom-0 md:px-16 m-0",
                   {
-                    "bg-gray-50 md:shadow-[0_-20px_30px_-10px_rgba(0,0,0,0.1)]":
+                    "bg-inherit md:shadow-[0_-20px_30px_-10px_rgba(0,0,0,0.1)]":
                       !isSubmitAtBottom,
                   }
                 )}

@@ -26,7 +26,7 @@ export function PasswordSection({
   return (
     <div className="flex flex-col space-y-3">
       <div className="flex justify-between items-center">
-        <span className="text-sm font-medium text-gray-900">
+        <span className="text-sm font-medium">
           Password Protection
         </span>
         <Switch checked={isOpen} onCheckedChange={handleCheckedChange} />

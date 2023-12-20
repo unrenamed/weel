@@ -6,7 +6,7 @@ import { Search } from "lucide-react";
 
 export default function LinksFilters() {
   return (
-    <div className="drop-shadow-lg rounded-md border-gray-200 border-1 flex bg-white px-5 self-start">
+    <div className="drop-shadow-lg rounded-md border-gray-200 border-1 flex bg-white dark:bg-neutral-800 px-5 self-start">
       <div className="w-full flex flex-col gap-3 py-3 sm:py-5">
         <h3 className="font-semibold ml-1">Filters</h3>
         <SearchField />
@@ -38,11 +38,11 @@ const SearchField = () => {
   return (
     <div className="relative">
       <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-        <Search className="h-4 w-4 text-gray-500" />
+        <Search className="h-4 w-4 text-gray-500 dark:text-neutral-500" />
       </div>
       <input
         type="text"
-        className="w-full rounded-md pl-10 border-gray-200 text-black bg-gray-200 placeholder:text-gray-500 text-sm focus:border-black focus:ring-0"
+        className="w-full rounded-md pl-10 text-sm focus:ring-0 bg-gray-200 border-gray-300 text-gray-800 placeholder-gray-500 focus:border-gray-500 focus:ring-gray-500 dark:bg-neutral-700 dark:border-neutral-600 dark:text-gray-50 dark:placeholder:text-neutral-500 dark:focus:border-neutral-500 dark:focus:ring-neutral-500"
         placeholder="Search the links..."
         defaultValue={searchParams.get("search") ?? ""}
         onChange={(ev) => debounced(ev.target.value)}
@@ -68,7 +68,7 @@ const IncludeArchivedSwitch = () => {
 
   return (
     <div className="flex items-center justify-between pt-2">
-      <label className="text-sm text-gray-800 leading-none font-medium">
+      <label className="text-sm leading-none font-medium">
         Include archived
       </label>
       <Switch

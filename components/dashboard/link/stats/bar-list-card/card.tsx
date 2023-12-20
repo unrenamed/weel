@@ -60,7 +60,7 @@ export default function BarListCard({
   };
 
   return (
-    <div className="relative rounded-md shadow-md h-[400px] bg-white border-gray-200 flex flex-col gap-0.5">
+    <div className="relative rounded-md shadow-md h-[400px] bg-white dark:bg-neutral-800 border-gray-200 flex flex-col gap-0.5">
       <BarListCardHeader
         title={title}
         tabs={tabs}
@@ -71,10 +71,10 @@ export default function BarListCard({
         setSearch={setSearch}
       />
       {renderData()}
-      <div className="absolute inset-x-0 bottom-5 z-10 w-full bg-gradient-to-b from-transparent to-white">
+      <div className="absolute inset-x-0 bottom-5 z-10 w-full bg-gradient-to-b from-transparent to-white dark:to-neutral-800">
         <div className="h-8" />
       </div>
-      <div className="absolute inset-x-0 bottom-0 z-10 w-full bg-white rounded-b-md">
+      <div className="absolute inset-x-0 bottom-0 z-10 w-full bg-white dark:bg-neutral-800 rounded-b-md">
         <div className="h-4" />
       </div>
     </div>

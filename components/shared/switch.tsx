@@ -9,7 +9,7 @@ export default function Switch({ className, ...rootProps }: Props) {
   return (
     <SwitchPrimitive.Root
       className={classNames(
-        "rounded-full relative outline-none cursor-pointer w-9 h-5 data-[state=unchecked]:bg-gray-200 data-[state=checked]:bg-yellow-400 focus-visible:ring focus-visible:ring-yellow-400 focus-visible:ring-opacity-75 transition-colors duration-200 ease-in-out border-2 border-transparent",
+        "rounded-full relative outline-none cursor-pointer w-9 h-5 data-[state=unchecked]:bg-gray-200 dark:data-[state=unchecked]:bg-neutral-700 data-[state=checked]:bg-yellow-400 dark:data-[state=checked]:bg-blue-500 focus-visible:ring focus-visible:ring-yellow-400 dark:focus-visible:ring-blue-500 focus-visible:ring-opacity-75 transition-colors duration-200 ease-in-out border-2 border-transparent",
         className
       )}
       {...rootProps}

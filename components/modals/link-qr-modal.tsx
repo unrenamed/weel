@@ -23,7 +23,7 @@ function LinkQrModalContent({ link }: { link: Link }) {
     size: 1024,
     level: "Q",
     imageSettings: {
-      src: new URL("/_static/logo.png", window.location.origin).href,
+      src: new URL("/_static/dark-logo.png", window.location.origin).href,
       height: 256,
       width: 256,
       excavate: true,
@@ -180,7 +180,7 @@ function ExportOption({
   return (
     <button
       onClick={onClick}
-      className="p-2 flex items-center rounded-md transition-all duration-75 hover:bg-gray-100"
+      className="p-2 flex items-center rounded-md transition-all duration-75 hover:bg-gray-100 dark:hover:bg-neutral-700 dark:text-gray-200"
     >
       {icon}
       {text}

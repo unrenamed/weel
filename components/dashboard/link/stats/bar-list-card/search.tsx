@@ -33,7 +33,7 @@ export default function BardListCardSearch({
             ref={inputRef}
             autoFocus
             type="text"
-            className="h-8 w-full rounded-md pl-10 border-gray-100 text-black bg-gray-100 placeholder:text-gray-500 text-sm focus:border-gray-500 focus:ring-0"
+            className="h-8 w-full rounded-md pl-10 border-gray-100 text-black bg-gray-100 placeholder:text-gray-500 focus:border-gray-500 dark:bg-neutral-700 dark:border-neutral-700 dark:text-gray-50 dark:placeholder:text-neutral-500 focus:ring-0 text-sm"
             placeholder="Search..."
             value={search}
             onBlur={() => hide()}

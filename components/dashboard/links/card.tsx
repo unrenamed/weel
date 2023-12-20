@@ -1,4 +1,4 @@
-import ThreeDots from "@/components/icons/three-dots";
+import { ThreeDots } from "@/components/icons";
 import {
   useArchiveLinkModal,
   useDeleteLinkModal,
@@ -166,10 +166,10 @@ function LinkCard({
       className={classNames(
         "relative transition-all duration-75",
         isCardSelected &&
-          "before:absolute before:left-0 before:top-0 before:z-10 before:h-full before:w-full before:bg-gradient-to-r before:from-[#ffbe0b] before:to-[#f42b03] sm:before:blur-[5px] before:blur-[3px]"
+          "before:absolute before:left-0 before:top-0 before:z-10 before:h-full before:w-full before:bg-gradient-to-r before:from-[#ffbe0b] before:to-[#f42b03] dark:before:from-[#b621fe] dark:before:to-[#1fd1f9] sm:before:blur-[7px] before:blur-[5px]"
       )}
     >
-      <div className="relative z-10 flex justify-between items-center rounded-lg bg-white p-3 shadow transition-all hover:shadow-md sm:p-4">
+      <div className="relative z-10 flex justify-between items-center rounded-lg bg-white dark:bg-neutral-800 p-3 shadow transition-all hover:shadow-md sm:p-4">
         {isCardInViewport && (
           <>
             <ArchiveModal />
@@ -188,7 +188,7 @@ function LinkCard({
             <LinkAvatar url={link.url} />
           )}
           <div>
-            <div className="flex items-center space-x-2 max-w-fit">
+            <div className="flex items-center space-x-3 max-w-fit">
               <a
                 href={href}
                 title={href}
@@ -196,7 +196,9 @@ function LinkCard({
                 rel="noreferrer"
                 className={classNames(
                   "w-full truncate font-semibold text-sm sm:text-base max-w-[140px] sm:max-w-[300px] md:max-w-[360px] xl:max-w-[400px]",
-                  link.archived ? "text-gray-500" : "text-blue-800"
+                  link.archived
+                    ? "text-gray-500"
+                    : "text-blue-800 dark:text-blue-500"
                 )}
               >
                 {domainKey}
@@ -207,7 +209,7 @@ function LinkCard({
               )}
             </div>
             <div className="flex items-center space-x-2 max-w-[140px] sm:max-w-[300px] md:max-w-[360px] xl:max-w-[400px]">
-              <p className="text-sm text-gray-500 whitespace-nowrap">
+              <p className="text-sm text-gray-500 dark:text-gray-100 whitespace-nowrap">
                 {capitalize(dateTimeAgo(link.createdAt))}
               </p>
               <p className="hidden xs:block">•</p>
@@ -216,7 +218,7 @@ function LinkCard({
                 title={link.url}
                 target="_blank"
                 rel="noreferrer"
-                className="xs:block hidden truncate text-sm font-medium text-gray-700 underline-offset-2 hover:underline"
+                className="xs:block hidden truncate text-sm font-medium text-gray-700 dark:text-white underline-offset-2 hover:underline"
               >
                 {link.url}
               </a>
@@ -235,12 +237,12 @@ function LinkCard({
             <NextLink
               onClick={(e) => e.stopPropagation()}
               href={`/analytics?domain=${link.domain}&key=${link.key}`}
-              className="flex items-center space-x-1 rounded-md bg-gray-100 px-2 py-0.5 transition-all duration-75 hover:scale-105 active:scale-100 text-gray-500"
+              className="flex items-center space-x-1 rounded-md bg-gray-100 dark:bg-neutral-700 px-2 py-0.5 transition-all duration-75 hover:scale-105 active:scale-100 text-gray-500 dark:text-white"
             >
               <BarChart strokeWidth={1.5} className="h-4 w-4" />
               {pluralizeJSX(
                 (count, noun) => (
-                  <span className="whitespace-nowrap text-sm text-gray-500">
+                  <span className="whitespace-nowrap text-sm ">
                     {nFormatter(count)}
                     <span className="ml-1 hidden sm:inline-block">{noun}</span>
                   </span>
@@ -283,7 +285,7 @@ function LinkCard({
                     showLinkQrModal();
                   }}
                 />
-                <Separator.Root className="bg-gray-200 h-px w-full px-2 my-2" />
+                <Separator.Root className="bg-gray-200 dark:bg-neutral-700 h-px w-full px-2 my-2" />
                 <PopoverItem
                   text={link.archived ? "Unarchive" : "Archive"}
                   kbd="a"
@@ -312,7 +314,7 @@ function LinkCard({
               </div>
             }
           >
-            <button className="m-0 px-1 py-2 rounded-md hover:bg-gray-100 active:bg-gray-200">
+            <button className="m-0 px-1 py-2 rounded-md hover:bg-gray-100 active:bg-gray-200 hover:dark:bg-neutral-700 active:dark:bg-neutral-700">
               <ThreeDots className="h-5 w-5" />
             </button>
           </Popover>
@@ -338,7 +340,7 @@ function LinkAvatar({ url }: { url: string }) {
       className={classNames(
         "h-8 w-8 rounded-full sm:h-10 sm:w-10 duration-700 ease-in-out",
         loading
-          ? "scale-110 blur-sm grayscale bg-gray-200"
+          ? "scale-110 blur-sm grayscale bg-gray-200 dark:bg-neutral-700"
           : "scale-100 blur-0 grayscale-0"
       )}
       quality={100}
@@ -365,12 +367,13 @@ function PopoverItem({
 }) {
   const variantColors = {
     normal: {
-      button: "text-gray-500 hover:bg-gray-100",
-      kbd: "text-gray-500 bg-gray-100 group-hover:bg-gray-200 border-zinc-500/40",
+      button:
+        "text-gray-500 hover:bg-gray-100 dark:text-gray-50 hover:dark:bg-neutral-700",
+      kbd: "text-gray-500 bg-gray-100 group-hover:bg-gray-200 border-zinc-500/40 dark:bg-neutral-700 dark:text-gray-50 group-hover:dark:bg-neutral-600",
     },
     danger: {
       button: "text-red-500 hover:bg-red-500 hover:text-white",
-      kbd: "bg-red-100 text-red-400 group-hover:bg-red-400 group-hover:text-white border-red-500/40",
+      kbd: "bg-red-100 text-red-400 group-hover:bg-red-400 group-hover:text-white border-red-500/40 dark:bg-red-500 dark:text-white",
     },
   };
 
@@ -402,7 +405,7 @@ function CopyToClipboard({ value }: { value: string }) {
   const [copied, copyToClipboard] = useCopyToClipboard();
   return (
     <button
-      className="p-1.5 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-700 hover:scale-110 transition-all duration-75 active:scale-90"
+      className="p-1.5 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-700 dark:bg-neutral-700 hover:dark:bg-neutral-600 dark:text-gray-200 hover:dark:text-gray-100 hover:scale-110 transition-all duration-75 active:scale-90"
       onClick={(event) => {
         event.stopPropagation();
         toast.promise(copyToClipboard(value), {
@@ -466,11 +469,11 @@ function LinkTotalClicks({
   if (totalClicks === 0) return null;
   return (
     <div className="block max-w-xs px-4 py-2 text-center">
-      <p className="text-sm font-semibold text-gray-700">
+      <p className="text-sm font-semibold text-gray-700 dark:text-gray-100">
         {pluralize(totalClicks, "total click")}
       </p>
       {lastClicked && (
-        <p className="mt-1 text-xs text-gray-500">
+        <p className="mt-1 text-xs text-gray-500 dark:text-gray-200">
           Last clicked {dateTimeAgo(lastClicked)}
         </p>
       )}

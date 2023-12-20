@@ -26,7 +26,7 @@ export default function Referrers() {
       isLoading={isLoading || isValidating}
       tabs={[]}
       maxClicks={data?.[0]?.clicks ?? 0}
-      barBackground="bg-violet-100"
+      barBackground="bg-violet-100 dark:bg-violet-500"
     />
   );
 }
@@ -40,9 +40,9 @@ function ReferrerIcon({ referrer }: { referrer: string }) {
   }, [referrer]);
 
   return (
-    <div className={classNames({ "animate-pulse bg-gray-200": loading })}>
+    <div className={classNames({ "animate-pulse bg-gray-200 dark:bg-neutral-700": loading })}>
       {isError ? (
-        <Globe className="h-4 w-4 text-gray-700" />
+        <Globe className="h-4 w-4 text-gray-700 dark:text-gray-300" />
       ) : (
         <Image
           alt={referrer}
