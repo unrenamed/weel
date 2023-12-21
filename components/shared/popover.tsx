@@ -25,7 +25,7 @@ export default function Popover({
       <Drawer.Root open={isOpen} onOpenChange={onOpenChange}>
         <Drawer.Trigger asChild>{children}</Drawer.Trigger>
         <Drawer.Portal>
-          <Drawer.Overlay className="fixed inset-0 z-50 bg-gray-100/10 backdrop-blur" />
+          <Drawer.Overlay className="fixed inset-0 z-50 bg-gray-100/20 dark:bg-neutral-900/20 backdrop-blur" />
           <Drawer.Content className="fixed bottom-0 left-0 right-0 z-50 rounded-t-[10px] bg-white dark:bg-neutral-900 border-t border-zinc-200 dark:border-neutral-700">
             <div className="sticky my-3 top-0 z-20 rounded-t-[10px] bg-inherit">
               <div className="mx-auto h-1.5 w-12 rounded-full bg-zinc-300 flex-shrink-0" />
