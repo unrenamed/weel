@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import { Link } from "@prisma/client";
 import { useModal } from "./base-modal";
 import { toast } from "sonner";
-import { Button, LoadingButton } from "../shared";
+import { Button, LinkAvatar, LoadingButton } from "../shared";
 
 type Props = {
   link: Link;
@@ -63,26 +63,29 @@ function ArchiveLinkModalContent({ link, hideModal, onSubmit }: Props) {
   };
 
   return (
-    <div className="p-4 flex flex-col space-y-2">
-      <h3 className="text-lg font-medium">
-        {link.archived ? "Unarchive" : "Archive"} {domainKey}
-      </h3>
-      <p className="text-sm text-gray-500 dark:text-gray-400">
-        {link.archived
-          ? "By unarchiving this link, it will show up on your main dashboard again."
-          : "Archived links will still work - they just won't show up on your main dashboard."}
-      </p>
-      <div className="flex justify-between sm:justify-end space-x-4">
-        <Button
-          text="No"
-          variant="secondary"
-          onClick={hideModal}
-          className="h-10 w-full sm:w-auto"
-        />
+    <div className="flex flex-col">
+      <div className="flex flex-col space-y-3 sm:px-12 px-4 sm:pt-8 pt-4 pb-4 text-center items-center border-b bg-white border-gray-200 dark:bg-neutral-900 dark:border-neutral-800">
+        <LinkAvatar url={link.url} />
+        <h3 className="text-lg font-medium">
+          {link.archived ? "Unarchive" : "Archive"} {domainKey}
+        </h3>
+        <p className="text-sm text-gray-500 dark:text-neutral-500">
+          {link.archived
+            ? "Unarchiving this link will make it accessible and functional again."
+            : "Archived links are not accessible and will redirect users to the home page."}
+        </p>
+      </div>
+      <div className="flex flex-col space-y-2 sm:px-12 px-4 sm:py-8 py-4 bg-gray-50 dark:bg-neutral-800">
         <LoadingButton
           text={`Yes, ${archive ? "archive" : "unarchive"}`}
           loading={isLoading}
           onClick={handleArchiveRequest}
+          className="h-10 w-full sm:w-auto"
+        />
+        <Button
+          text="No"
+          variant="secondary"
+          onClick={hideModal}
           className="h-10 w-full sm:w-auto"
         />
       </div>

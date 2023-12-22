@@ -10,7 +10,7 @@ import {
 } from "@/lib/qr";
 import { Clipboard, ClipboardCheck, Download, ImageIcon } from "lucide-react";
 import { toast } from "sonner";
-import { ButtonWithIcon, Popover } from "../shared";
+import { ButtonWithIcon, LinkAvatar, Popover } from "../shared";
 import { useCopyToClipboard } from "@/hooks";
 
 function LinkQrModalContent({ link }: { link: Link }) {
@@ -31,29 +31,36 @@ function LinkQrModalContent({ link }: { link: Link }) {
   };
 
   return (
-    <div className="p-4 flex flex-col items-center space-y-5">
-      <h3 className="text-lg font-medium">Download QR code</h3>
-      <div className="flex rounded-md border-2 border-gray-200 bg-white p-3">
-        <QRCodeSVG
-          value={qrData.value}
-          size={qrData.size / 8}
-          bgColor={qrData.bgColor}
-          fgColor={qrData.fgColor}
-          level={qrData.level}
-          includeMargin={false}
-          imageSettings={{
-            ...qrData.imageSettings,
-            height: qrData.imageSettings ? qrData.imageSettings.height / 8 : 0,
-            width: qrData.imageSettings ? qrData.imageSettings.width / 8 : 0,
-          }}
-        />
+    <div className="flex flex-col">
+      <div className="flex flex-col space-y-3 sm:px-12 px-4 sm:pt-8 pt-4 pb-4 text-center items-center border-b bg-white border-gray-200 dark:bg-neutral-900 dark:border-neutral-800">
+      <LinkAvatar url={link.url} />
+        <h3 className="text-lg font-medium">Download QR code</h3>
       </div>
-      <div className="flex space-x-3 items-center mb-3">
-        <CopyToClipboardButton qrData={qrData} />
-        <ExportDropdown
-          qrData={qrData}
-          exportFileName={`${link.key}-qr-code`}
-        />
+      <div className="flex flex-col items-center space-y-6 sm:px-12 px-4 sm:py-8 py-4 bg-gray-50 dark:bg-neutral-800">
+        <div className="flex rounded-md border-2 border-gray-200 dark:border-neutral-900 bg-white p-3">
+          <QRCodeSVG
+            value={qrData.value}
+            size={qrData.size / 8}
+            bgColor={qrData.bgColor}
+            fgColor={qrData.fgColor}
+            level={qrData.level}
+            includeMargin={false}
+            imageSettings={{
+              ...qrData.imageSettings,
+              height: qrData.imageSettings
+                ? qrData.imageSettings.height / 8
+                : 0,
+              width: qrData.imageSettings ? qrData.imageSettings.width / 8 : 0,
+            }}
+          />
+        </div>
+        <div className="flex space-x-3 items-center mb-3">
+          <CopyToClipboardButton qrData={qrData} />
+          <ExportDropdown
+            qrData={qrData}
+            exportFileName={`${link.key}-qr-code`}
+          />
+        </div>
       </div>
     </div>
   );

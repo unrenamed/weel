@@ -5,17 +5,9 @@ import {
   useLinkQrModal,
   useCreateEditLinkModal,
 } from "@/components/modals";
-import { Popover, Tooltip } from "@/components/shared";
+import { LinkAvatar, Popover, Tooltip } from "@/components/shared";
 import { classNames } from "@/components/utils";
-import {
-  dateTimeAgo,
-  capitalize,
-  pluralize,
-  pluralizeJSX,
-  dateTimeSoon,
-  nFormatter,
-  getApexDomain,
-} from "@/lib/utils";
+import { dateTimeAgo, capitalize, pluralize, pluralizeJSX, dateTimeSoon, nFormatter } from "@/lib/utils";
 import { Link } from "@prisma/client";
 import * as Separator from "@radix-ui/react-separator";
 import NextLink from "next/link";
@@ -36,8 +28,6 @@ import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { differenceInHours, isAfter } from "date-fns";
 import { useCopyToClipboard, useIntersectionObserver } from "@/hooks";
-import Image from "next/image";
-import { avatarLoader, faviconLoader } from "@/lib/image-loaders";
 
 type LinkCardProps = {
   link: Link;
@@ -321,34 +311,6 @@ function LinkCard({
         </div>
       </div>
     </div>
-  );
-}
-
-function LinkAvatar({ url }: { url: string }) {
-  const [loading, setLoading] = useState(true);
-  const [isError, setIsError] = useState(false);
-
-  const apexDomain = getApexDomain(url);
-  const loaderOpts = { src: apexDomain, width: 32 };
-
-  const src = isError ? avatarLoader(loaderOpts) : faviconLoader(loaderOpts);
-
-  return (
-    <Image
-      src={src}
-      alt={apexDomain}
-      className={classNames(
-        "h-8 w-8 rounded-full sm:h-10 sm:w-10 duration-700 ease-in-out",
-        loading
-          ? "scale-110 blur-sm grayscale bg-gray-200 dark:bg-neutral-700"
-          : "scale-100 blur-0 grayscale-0"
-      )}
-      quality={100}
-      width={32}
-      height={32}
-      onLoad={() => setLoading(false)}
-      onError={() => setIsError(true)}
-    />
   );
 }
 

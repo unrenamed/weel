@@ -12,3 +12,4 @@ export { default as Popover } from "./popover";
 export { default as Switch } from "./switch";
 export { default as Tooltip } from "./tooltip";
 export { default as NumberTooltip } from "./number-tooltip";
+export { default as LinkAvatar } from "./link-avatar";
