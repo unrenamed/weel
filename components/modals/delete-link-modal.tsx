@@ -2,7 +2,7 @@ import { ChangeEvent, useCallback, useState } from "react";
 import { Link } from "@prisma/client";
 import { useModal } from "./base-modal";
 import { toast } from "sonner";
-import { LinkAvatar, LoadingButton } from "../shared";
+import { LinkAvatar, LoadingButton, TextInput } from "../shared";
 
 type Props = {
   link: Link;
@@ -59,10 +59,7 @@ function DeleteLinkModalContent({ link, hideModal, onSubmit }: Props) {
           <p className="text-sm">
             To verify, type <span className="font-bold">{domainKey}</span> below
           </p>
-          <input
-            className="w-full rounded-md text-sm focus:ring-0 bg-gray-200 border-gray-300 text-gray-800 placeholder-gray-500 focus:border-gray-500 focus:ring-gray-500 dark:bg-neutral-700 dark:border-neutral-600 dark:text-gray-50 dark:placeholder:text-neutral-500 dark:focus:border-neutral-500 dark:focus:ring-neutral-500"
-            onChange={verifyInput}
-          />
+          <TextInput onChange={verifyInput} />
         </div>
         <LoadingButton
           text="Confirm delete"

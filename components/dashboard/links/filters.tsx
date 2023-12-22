@@ -1,8 +1,7 @@
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { Switch } from "@/components/shared";
-import { Search } from "lucide-react";
+import { SearchInput, Switch } from "@/components/shared";
 
 export default function LinksFilters() {
   return (
@@ -37,12 +36,7 @@ const SearchField = () => {
 
   return (
     <div className="relative">
-      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-        <Search className="h-4 w-4 text-gray-500 dark:text-neutral-500" />
-      </div>
-      <input
-        type="text"
-        className="w-full rounded-md pl-10 text-sm focus:ring-0 bg-gray-200 border-gray-300 text-gray-800 placeholder-gray-500 focus:border-gray-500 focus:ring-gray-500 dark:bg-neutral-700 dark:border-neutral-600 dark:text-gray-50 dark:placeholder:text-neutral-500 dark:focus:border-neutral-500 dark:focus:ring-neutral-500"
+      <SearchInput
         placeholder="Search the links..."
         defaultValue={searchParams.get("search") ?? ""}
         onChange={(ev) => debounced(ev.target.value)}
