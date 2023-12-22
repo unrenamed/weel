@@ -4,8 +4,8 @@ import "react-virtualized/styles.css";
 
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { Toaster } from "sonner";
 import { Providers } from "./providers";
+import Toaster from "@/components/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,8 +27,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <Toaster />
-        <Providers>{children}</Providers>
+        <Providers>
+          <Toaster />
+          {children}
+        </Providers>
       </body>
     </html>
   );
