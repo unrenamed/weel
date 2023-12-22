@@ -1,9 +1,9 @@
 import { useState } from "react";
 import {
-  Control,
-  FieldErrors,
-  UseFormRegister,
-  useFieldArray,
+    Control,
+    FieldErrors,
+    UseFormRegister,
+    useFieldArray,
 } from "react-hook-form";
 import { FormData } from "./schema";
 import { COUNTRIES } from "@/lib/constants";
@@ -76,7 +76,7 @@ export function GeoTargetingSection({
               </motion.div>
             ))}
           </AnimatePresence>
-          <p className="text-xs text-red-500">{errors?.geo?.root?.message}</p>
+          <p className="text-xs text-red-500 font-semibold">{errors?.geo?.root?.message}</p>
           <Button
             type="button"
             text="Add location"
@@ -154,7 +154,7 @@ function GeoLink({
           </button>
         )}
       </div>
-      {!!errorMessage && <p className="text-xs text-red-500">{errorMessage}</p>}
+      {!!errorMessage && <p className="text-xs text-red-500 font-semibold">{errorMessage}</p>}
     </div>
   );
 }

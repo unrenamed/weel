@@ -146,7 +146,7 @@ export function CreateEditLinkForm(props: Props) {
               isError={!!errors?.url?.message}
             />
             {errors?.url?.message && (
-              <p className="text-red-500 text-xs">{errors?.url?.message}</p>
+              <p className="text-red-500 font-semibold text-xs">{errors?.url?.message}</p>
             )}
           </div>
           <div className="flex flex-col space-y-2">
@@ -211,7 +211,7 @@ export function CreateEditLinkForm(props: Props) {
               </div>
             </div>
             {errors?.key?.message && (
-              <p className="text-red-500 text-xs">{errors.key.message}</p>
+              <p className="text-red-500 font-semibold text-xs">{errors.key.message}</p>
             )}
           </div>
         </div>

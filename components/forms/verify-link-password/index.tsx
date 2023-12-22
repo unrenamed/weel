@@ -52,7 +52,7 @@ export function VerifyLinkPasswordForm() {
           isError={!!errors.password}
         />
         {!!errors.password?.message && (
-          <p className="text-xs text-red-500">{errors.password?.message}</p>
+          <p className="text-xs text-red-500 font-semibold">{errors.password?.message}</p>
         )}
       </div>
       <LoadingButton
