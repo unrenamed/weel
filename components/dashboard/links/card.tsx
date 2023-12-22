@@ -163,10 +163,10 @@ function LinkCard({
       className={classNames(
         "relative transition-all duration-75",
         isCardSelected &&
-          "before:absolute before:left-0 before:top-0 before:z-10 before:h-full before:w-full before:bg-gradient-to-r before:from-[#ffbe0b] before:to-[#f42b03] dark:before:from-[#b621fe] dark:before:to-[#1fd1f9] sm:before:blur-[7px] before:blur-[5px]"
+          "before:absolute before:left-0 before:top-0 before:z-10 before:h-full before:w-full before:bg-gradient-to-r before:from-link-card-backlight-from before:to-link-card-backlight-to sm:before:blur-[7px] before:blur-[5px]"
       )}
     >
-      <div className="relative z-10 flex justify-between items-center rounded-lg bg-white dark:bg-neutral-800 p-3 shadow transition-all hover:shadow-md sm:p-4">
+      <div className="relative z-10 flex justify-between items-center rounded-lg bg-content p-3 shadow transition-all hover:shadow-md sm:p-4">
         {isCardInViewport && (
           <>
             <ArchiveModal />
@@ -178,8 +178,8 @@ function LinkCard({
         )}
         <div className="flex gap-3 items-center">
           {link.archived ? (
-            <div className="h-8 w-8 rounded-full sm:h-10 sm:w-10 bg-gray-300 dark:bg-neutral-600 flex items-center justify-center">
-              <ArchiveIcon className="h-6 w-6 text-gray-500 dark:text-neutral-400" />
+            <div className="h-8 w-8 rounded-full sm:h-10 sm:w-10 bg-border flex items-center justify-center">
+              <ArchiveIcon className="h-6 w-6 text-secondary" />
             </div>
           ) : (
             <LinkAvatar url={link.url} />
@@ -192,10 +192,9 @@ function LinkCard({
                 target="_blank"
                 rel="noreferrer"
                 className={classNames(
-                  "w-full truncate font-semibold text-sm sm:text-base max-w-[140px] sm:max-w-[300px] md:max-w-[360px] xl:max-w-[400px]",
-                  link.archived
-                    ? "text-gray-500"
-                    : "text-blue-800 dark:text-blue-500"
+                  "w-full truncate font-semibold text-sm sm:text-base",
+                  "max-w-[140px] sm:max-w-[300px] md:max-w-[360px] xl:max-w-[400px]",
+                  link.archived ? "text-secondary" : "text-link"
                 )}
               >
                 {domainKey}
@@ -206,7 +205,7 @@ function LinkCard({
               )}
             </div>
             <div className="flex items-center space-x-2 max-w-[140px] sm:max-w-[300px] md:max-w-[360px] xl:max-w-[400px]">
-              <p className="text-sm text-gray-500 dark:text-gray-100 whitespace-nowrap">
+              <p className="text-sm text-secondary whitespace-nowrap">
                 {capitalize(dateTimeAgo(link.createdAt))}
               </p>
               <p className="hidden xs:block">•</p>
@@ -215,7 +214,7 @@ function LinkCard({
                 title={link.url}
                 target="_blank"
                 rel="noreferrer"
-                className="xs:block hidden truncate text-sm font-medium text-gray-700 dark:text-white underline-offset-2 hover:underline"
+                className="xs:block hidden truncate text-sm font-medium underline-offset-2 hover:underline"
               >
                 {link.url}
               </a>
@@ -234,7 +233,7 @@ function LinkCard({
             <NextLink
               onClick={(e) => e.stopPropagation()}
               href={`/analytics?domain=${link.domain}&key=${link.key}`}
-              className="flex items-center space-x-1 rounded-md bg-gray-100 dark:bg-neutral-700 px-2 py-0.5 transition-all duration-75 hover:scale-105 active:scale-100 text-gray-500 dark:text-white"
+              className="flex items-center space-x-1 rounded-md bg-skeleton/70 text-primary/85 px-2 py-0.5 transition-all duration-75 hover:scale-105 active:scale-100"
             >
               <BarChart strokeWidth={1.5} className="h-4 w-4" />
               {pluralizeJSX(
@@ -282,7 +281,7 @@ function LinkCard({
                     showLinkQrModal();
                   }}
                 />
-                <Separator.Root className="bg-gray-200 dark:bg-neutral-700 h-px w-full px-2 my-2" />
+                <Separator.Root className="bg-skeleton h-px w-full px-2 my-2" />
                 <PopoverItem
                   text={link.archived ? "Unarchive" : "Archive"}
                   kbd="a"
@@ -311,7 +310,7 @@ function LinkCard({
               </div>
             }
           >
-            <button className="m-0 px-1 py-2 rounded-md hover:bg-gray-100 active:bg-gray-200 hover:dark:bg-neutral-700 active:dark:bg-neutral-700">
+            <button className="m-0 px-1 py-2 rounded-md hover:bg-skeleton/70 active:bg-skeleton/70">
               <ThreeDots className="h-5 w-5" />
             </button>
           </Popover>
@@ -336,13 +335,15 @@ function PopoverItem({
 }) {
   const variantColors = {
     normal: {
-      button:
-        "text-gray-500 hover:bg-gray-100 dark:text-gray-50 hover:dark:bg-neutral-700",
-      kbd: "text-gray-500 bg-gray-100 group-hover:bg-gray-200 border-zinc-500/40 dark:bg-neutral-700 dark:text-gray-50 group-hover:dark:bg-neutral-600",
+      button: "text-primary/80 hover:bg-skeleton/70",
+      kbd: "text-primary/80 bg-skeleton/40 group-hover:bg-skeleton border-zinc-500/40",
     },
     danger: {
-      button: "text-red-500 hover:bg-red-500 hover:text-white",
-      kbd: "bg-red-100 text-red-400 group-hover:bg-red-400 group-hover:text-white border-red-500/40 dark:bg-red-500 dark:text-white",
+      button: "text-danger hover:bg-danger hover:text-white",
+      kbd: classNames(
+        "bg-danger/10 text-danger border-danger/40",
+        "group-hover:text-white group-hover:bg-content/20"
+      ),
     },
   };
 
@@ -374,7 +375,12 @@ function CopyToClipboard({ value }: { value: string }) {
   const [copied, copyToClipboard] = useCopyToClipboard();
   return (
     <button
-      className="p-1.5 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-700 dark:bg-neutral-700 hover:dark:bg-neutral-600 dark:text-gray-200 hover:dark:text-gray-100 hover:scale-110 transition-all duration-75 active:scale-90"
+      className={classNames(
+        "p-1.5 rounded-full transition-all duration-75",
+        "hover:scale-110 active:scale-90",
+        "bg-skeleton/75 text-primary/75",
+        "hover:bg-skeleton hover:text-primary"
+      )}
       onClick={(event) => {
         event.stopPropagation();
         toast.promise(copyToClipboard(value), {
@@ -438,11 +444,11 @@ function LinkTotalClicks({
   if (totalClicks === 0) return null;
   return (
     <div className="block max-w-xs px-4 py-2 text-center">
-      <p className="text-sm font-semibold text-gray-700 dark:text-gray-100">
+      <p className="text-sm font-semibold text-primary">
         {pluralize(totalClicks, "total click")}
       </p>
       {lastClicked && (
-        <p className="mt-1 text-xs text-gray-500 dark:text-gray-200">
+        <p className="mt-1 text-xs text-secondary">
           Last clicked {dateTimeAgo(lastClicked)}
         </p>
       )}

@@ -103,12 +103,11 @@ export default function BarChart({
   const yMax = Math.max(height - margin.top - margin.bottom, 0);
 
   // colors
+  const axisStrokeColor = theme === "dark" ? colors.neutral[300] : colors.gray[600];
+  const axisFillColor = theme === "dark" ? colors.neutral[300] : colors.gray[600];
+  const gridFillColor = theme === "dark" ? colors.neutral[600] : colors.gray[300];
   const rectBgColor = theme === "dark" ? colors.neutral[700] : colors.gray[50];
-  const gridFillColor =
-    theme === "dark" ? colors.neutral[600] : colors.gray[300];
-  const axisFillColor = theme === "dark" ? colors.white : colors.gray[800];
-  const axisStrokeColor = theme === "dark" ? colors.gray[50] : colors.gray[500];
-  const tooltipBgColor = theme === "dark" ? colors.neutral[800] : colors.white;
+  const tooltipBgColor = theme === "dark" ? colors.neutral[800] : colors.gray[50];
 
   const formatDate = useCallback(
     (e: Date) => {
@@ -260,7 +259,7 @@ export default function BarChart({
           <div className="text-center px-1 py-1 sm:px-2">
             {pluralizeJSX(
               (count, noun) => (
-                <h3>
+                <h3 className="text-primary">
                   <span className="text-xl sm:text-2xl font-semibold">
                     {nFormatter(count)}
                   </span>{" "}
@@ -270,7 +269,7 @@ export default function BarChart({
               tooltipData.value,
               unit
             )}
-            <p className="text-xs text-gray-600 dark:text-gray-100">
+            <p className="text-xs text-secondary">
               {formatDate(tooltipData.start)} -{" "}
               {interval === "24h"
                 ? format(tooltipData.end, "h a")

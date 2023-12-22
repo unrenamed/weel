@@ -13,6 +13,7 @@ import {
 } from "react";
 import { classNames } from "../utils";
 import { useMediaQuery } from "@/hooks";
+import { DrawerIsland } from "../shared";
 
 type Props = {
   isOpen: boolean;
@@ -46,16 +47,14 @@ const BaseModal = memo(function BaseModal({
         }}
       >
         <Drawer.Portal>
-          <Drawer.Overlay className="fixed inset-0 bg-gray-100/20 dark:bg-neutral-900/20 backdrop-blur" />
+          <Drawer.Overlay className="fixed inset-0 bg-overlay/20 backdrop-blur" />
           <Drawer.Content
             className={classNames(
-              "fixed bottom-0 left-0 right-0 z-50 rounded-t-[10px] max-h-[85dvh] min-h-[5dvh] bg-white dark:bg-neutral-900 border-t border-zinc-200 dark:border-neutral-700",
+              "fixed bottom-0 left-0 right-0 z-50 rounded-t-[10px] max-h-[85dvh] min-h-[5dvh] bg-content border-t border-border",
               contentClassName
             )}
           >
-            <div className="sticky my-3 top-0 z-20 rounded-t-[10px] bg-inherit">
-              <div className="mx-auto h-1.5 w-12 rounded-full bg-zinc-300 flex-shrink-0" />
-            </div>
+            <DrawerIsland />
             {children}
           </Drawer.Content>
         </Drawer.Portal>
@@ -75,13 +74,13 @@ const BaseModal = memo(function BaseModal({
       <Dialog.Portal>
         <Dialog.Overlay
           id="modal-backdrop"
-          className="animate-fade-in fixed inset-0 z-40 bg-gray-100/50 dark:bg-neutral-900/50 backdrop-blur-md"
+          className="animate-fade-in fixed inset-0 z-40 bg-overlay/50 backdrop-blur-md"
         />
         <Dialog.Content
           onOpenAutoFocus={(e) => e.preventDefault()}
           onCloseAutoFocus={(e) => e.preventDefault()}
           className={classNames(
-            `animate-scale-in fixed inset-0 z-40 m-auto max-h-fit w-full max-w-md overflow-hidden border border-gray-200 bg-white dark:bg-neutral-900 dark:border-neutral-800 p-0 shadow-xl sm:rounded-xl`,
+            `animate-scale-in fixed inset-0 z-40 m-auto max-h-fit w-full max-w-md overflow-hidden border border-border bg-content p-0 shadow-xl sm:rounded-xl`,
             contentClassName
           )}
         >

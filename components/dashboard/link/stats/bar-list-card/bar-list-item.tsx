@@ -27,7 +27,7 @@ export default function BarListItem({
       <div className="relative flex items-center w-full max-w-[calc(100%-3rem)]">
         <div className="z-10 flex space-x-2 px-2 items-center">
           {icon}
-          <p className="max-w-[200px] truncate text-gray-700 dark:text-gray-100">{title}</p>
+          <p className="max-w-[200px] truncate text-primary">{title}</p>
         </div>
         <motion.div
           style={{ width: `${(clicks / maxClicks) * 100}%` }}

@@ -4,6 +4,7 @@ import VirtualizedList from "react-virtualized/dist/es/List";
 import AutoSizer from "react-virtualized/dist/es/AutoSizer";
 import { round } from "@/lib/utils";
 import { useMediaQuery } from "@/hooks";
+import { classNames } from "@/components/utils";
 
 export default function BarList({
   data,
@@ -49,7 +50,12 @@ export default function BarList({
     <AutoSizer>
       {({ width }) => (
         <VirtualizedList
-          className="overflow-auto scrollbar scrollbar-w-1.5 scrollbar-track-gray-100 scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-500 dark:scrollbar-track-neutral-600 dark:scrollbar-thumb-neutral-700 hover:dark:scrollbar-thumb-neutral-400 scrollbar-track-rounded-xl scrollbar-thumb-rounded-xl"
+          className={classNames(
+            "overflow-auto",
+            "scrollbar scrollbar-w-1.5 scrollbar-track-rounded-xl scrollbar-thumb-rounded-xl",
+            "scrollbar-track-gray-100 scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-500",
+            "dark:scrollbar-track-neutral-600 dark:scrollbar-thumb-neutral-700 hover:dark:scrollbar-thumb-neutral-400"
+          )}
           onScroll={({ clientHeight, scrollHeight, scrollTop }) => {
             onScroll(round(scrollTop / (scrollHeight - clientHeight), 4) > 0);
           }}

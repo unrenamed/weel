@@ -109,7 +109,7 @@ function CreateEditLinkModalContent({
       className="scrollbar-hide overflow-auto max-h-[80dvh] bg-inherit"
     >
       <div className="flex flex-col bg-inherit">
-        <div className="z-10 flex justify-center border-b border-gray-200 dark:border-neutral-700 px-4 py-3 sm:py-4 md:px-16 md:py-6 transition-all md:sticky md:top-0 bg-inherit">
+        <div className="z-10 flex justify-center border-b border-border px-4 py-3 sm:py-4 md:px-16 md:py-6 transition-all md:sticky md:top-0 bg-inherit">
           <h3 className="text-lg font-medium">
             {isEditMode ? "Edit Link" : "Create Link"}
           </h3>

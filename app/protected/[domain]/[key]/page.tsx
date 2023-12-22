@@ -14,10 +14,10 @@ export default function PasswordProtectedLinkPage() {
       <div className="absolute right-0 top-0 sm:px-10 px-5 py-5">
         <ThemeSwitch />
       </div>
-      <div className="w-full max-w-md overflow-hidden rounded-2xl border border-gray-100 dark:border-neutral-800 shadow-xl mx-5 sm:mx-0">
-        <div className="flex flex-col items-center justify-center space-y-3 border-b border-gray-100 bg-white dark:bg-neutral-900 dark:border-neutral-800 px-4 py-6 pt-8 text-center sm:px-16">
+      <div className="w-full max-w-md overflow-hidden rounded-2xl border border-border shadow-xl mx-5 sm:mx-0">
+        <div className="flex flex-col items-center justify-center space-y-3 border-b border-border bg-content px-4 py-6 pt-8 text-center sm:px-16">
           <h3 className="text-xl font-semibold">Password Required</h3>
-          <p className="text-sm text-gray-500 dark:text-neutral-400">
+          <p className="text-sm text-secondary">
             This link is password protected. Please enter the password to view
             it
           </p>

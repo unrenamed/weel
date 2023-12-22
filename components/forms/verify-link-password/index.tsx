@@ -39,7 +39,7 @@ export function VerifyLinkPasswordForm() {
 
   return (
     <form
-      className="flex flex-col space-y-4 bg-gray-50 dark:bg-neutral-800 px-4 py-8 sm:px-16"
+      className="flex flex-col space-y-4 bg-bkg px-4 py-8 sm:px-16"
       onSubmit={handleSubmit(onSubmit)}
     >
       <div className="space-y-2">
@@ -52,7 +52,7 @@ export function VerifyLinkPasswordForm() {
           isError={!!errors.password}
         />
         {!!errors.password?.message && (
-          <p className="text-xs text-red-500 font-semibold">{errors.password?.message}</p>
+          <p className="text-xs text-danger font-semibold">{errors.password?.message}</p>
         )}
       </div>
       <LoadingButton

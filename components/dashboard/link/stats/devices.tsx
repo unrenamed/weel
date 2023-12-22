@@ -30,7 +30,7 @@ export default function Devices() {
       selectedTab={tab}
       setTab={(tab) => setTab(tab as DeviceTab)}
       maxClicks={data?.[0]?.clicks ?? 0}
-      barBackground="bg-blue-100 dark:bg-blue-500"
+      barBackground="bg-devices-bar"
     />
   );
 }
@@ -57,7 +57,7 @@ function DeviceIcon({ tab, name }: { tab: DeviceTab; name: string }) {
   }, [iconURL]);
 
   return (
-    <div className={classNames({ "animate-pulse bg-gray-200 dark:bg-neutral-700": loading })}>
+    <div className={classNames({ "animate-pulse bg-skeleton": loading })}>
       <Image
         alt={name}
         src={src}

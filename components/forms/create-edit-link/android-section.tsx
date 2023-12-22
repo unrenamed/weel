@@ -45,7 +45,7 @@ export function AndroidTargetingSection({
             placeholder="https://play.google.com/store/apps/details?id=com.twitter.android"
             isError={!!error}
           />
-          {!!error && <p className="text-xs text-red-500 font-semibold">{error}</p>}
+          {!!error && <p className="text-xs text-danger font-semibold">{error}</p>}
         </motion.div>
       )}
     </div>

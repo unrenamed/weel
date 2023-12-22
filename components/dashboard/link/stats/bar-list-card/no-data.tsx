@@ -1,7 +1,7 @@
 export default function NoData({ search }: { search: string }) {
   return (
     <div className="px-7 pb-5 w-full h-full flex place-content-center justify-center items-center">
-      <p className="flex items-center justify-center flex-wrap text-sm font-light text-gray-500 dark:text-gray-100">
+      <p className="flex items-center justify-center flex-wrap text-sm font-light text-secondary">
         {search.length > 0 ? (
           <>
             No results found for&nbsp;

@@ -12,21 +12,19 @@ export type ButtonProps = {
 
 const variantColors = {
   primary: classNames(
-    "border-black bg-black text-white hover:bg-white hover:text-black",
-    "dark:border-gray-50 dark:bg-gray-50 dark:text-neutral-900 dark:hover:bg-neutral-800 dark:hover:text-gray-50",
-    "disabled:border-neutral-600 disabled:bg-neutral-700 disabled:text-gray-500",
-    "dark:disabled:border-gray-400 dark:disabled:bg-gray-300 dark:disabled:text-gray-500"
+    "border-primary-btn-b bg-primary-btn text-primary-btn-txt",
+    "hover:bg-content hover:text-primary-btn-txt-hover",
+    "disabled:border-primary-btn-b-disabled disabled:bg-primary-btn-disabled disabled:text-primary-btn-txt-disabled"
   ),
   secondary: classNames(
-    "border-gray-300 bg-gray-200 text-black hover:bg-white hover:text-gray-900",
-    "dark:border-neutral-600 dark:text-gray-50 dark:bg-neutral-700 dark:hover:bg-neutral-800 dark:hover:text-gray-200",
-    "disabled:border-gray-200 disabled:bg-gray-100 disabled:text-gray-500",
-    "dark:disabled:border-neutral-600 dark:disabled:bg-neutral-500 dark:disabled:text-gray-300"
+    "border-secondary-btn-b bg-secondary-btn text-secondary-btn-txt",
+    "hover:bg-content hover:text-secondary-btn-txt-hover",
+    "disabled:border-secondary-btn-b-disabled disabled:bg-secondary-btn-disabled disabled:text-secondary-btn-txt-disabled"
   ),
   error: classNames(
-    "border-red-500 bg-red-500 text-white hover:bg-white hover:text-red-500",
-    "dark:hover:bg-neutral-800",
-    "disabled:border-red-300 disabled:bg-red-200"
+    "border-error-btn-b bg-error-btn text-error-btn-txt",
+    "hover:bg-content hover:text-error-btn-txt-hover",
+    "disabled:border-error-btn-b-disabled disabled:bg-error-btn-disabled disabled:text-error-btn-txt-disabled"
   ),
 };
 
@@ -47,11 +45,11 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
       {...props}
       ref={ref}
       className={classNames(
-        "group flex rounded-md border text-sm focus:outline-none font-medium duration-75 transition-all items-center justify-center px-4",
-        {
-          "pointer-events-none": disabled,
-          "hover:shadow-md active:scale-95": !disabled,
-        },
+        "group rounded-md border focus:outline-none px-4",
+        "flex items-center justify-center",
+        "text-sm font-medium",
+        "duration-75 transition-all",
+        disabled ? "pointer-events-none" : "hover:shadow-md active:scale-95",
         variantColors[variant],
         className
       )}

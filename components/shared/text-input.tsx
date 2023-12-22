@@ -13,8 +13,8 @@ const TextInput = forwardRef<HTMLInputElement, InputProps>(function TextInput(
       ref={ref}
       className={classNames(
         "w-full rounded-md focus:outline-none text-sm",
-        "bg-gray-200 border-gray-300 text-gray-900 placeholder-gray-500 focus:border-gray-500 focus:ring-gray-500",
-        "dark:bg-neutral-700 dark:border-neutral-600 dark:text-gray-50 dark:placeholder:text-neutral-500 dark:focus:border-neutral-500 dark:focus:ring-neutral-500",
+        "bg-input border-input-border text-primary placeholder-input-placeholder",
+        "focus:border-input-border focus:ring-input-border",
         className
       )}
       {...props}

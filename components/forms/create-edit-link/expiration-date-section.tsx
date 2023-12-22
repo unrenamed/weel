@@ -45,7 +45,7 @@ export function ExpirationDateSection({
             step={60}
             isError={!!error}
           />
-          {!!error && <p className="text-xs text-red-500 font-semibold">{error}</p>}
+          {!!error && <p className="text-xs text-danger font-semibold">{error}</p>}
         </motion.div>
       )}
     </div>

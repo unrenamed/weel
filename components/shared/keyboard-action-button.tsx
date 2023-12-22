@@ -8,24 +8,23 @@ type KeyboardActionButtonProps = {
 
 const variantColors = {
   primary: classNames(
-    "bg-zinc-700 text-gray-500 border-zinc-500/40 group-hover:bg-gray-100 group-hover:text-gray-500",
-    "dark:group-hover:bg-zinc-700 dark:group-hover:text-gray-500 dark:group-hover:border-zinc-500/40 dark:bg-gray-100 dark:text-gray-500"
+    "bg-primary-kbd text-primary-kbd-txt border-primary-kbd-b/60",
+    "group-hover:bg-primary-kbd-hover group-hover:text-primary-kbd-txt-hover"
   ),
   secondary: classNames(
-    "bg-gray-200 text-gray-500 border-gray-500/40 group-hover:bg-gray-100 group-hover:text-gray-600",
-    "dark:bg-neutral-600 dark:text-gray-300 dark:border-gray-500/40 dark:group-hover:bg-gray-200 dark:group-hover:text-gray-500"
+    "bg-secondary-kbd text-secondary-kbd-txt border-secondary-kbd-b/60",
+    "group-hover:bg-secondary-kbd-hover group-hover:text-secondary-kbd-txt-hover"
   ),
   error: classNames(
-    "bg-red-400 text-white border-red-500/40 group-hover:bg-red-100 group-hover:text-red-600",
-    "dark:group-hover:bg-red-400 dark:group-hover:text-white dark:group-hover:border-red-500 dark:bg-red-100 dark:text-red-600"
+    "bg-error-kbd text-error-kbd-txt border-error-kbd-b/60",
+    "group-hover:bg-error-kbd-hover group-hover:text-error-kbd-txt-hover"
   ),
 };
 
 const disabledVariantColors = {
-  primary: "bg-zinc-600 border-gray-400/40 dark:bg-zinc-400 dark:text-gray-200",
-  secondary:
-    "bg-gray-200 border-gray-400/40 dark:bg-gray-300 dark:text-gray-500",
-  error: "bg-red-300 border-red-400/40 dark:text-red-300",
+  primary: "bg-primary-kbd/50 border-primary-kbd-b/50 text-primary-kbd-txt/50",
+  secondary: "bg-secondary-kbd/50 border-secondary-kbd-b/50 text-secondary-kbd-txt/50",
+  error: "bg-error-kbd/50 border-error-kbd-b/50 text-error-kbd-txt/50",
 };
 
 const KeyboardActionButton = forwardRef<
@@ -45,7 +44,8 @@ const KeyboardActionButton = forwardRef<
       <p>{props.text}</p>
       <kbd
         className={classNames(
-          "hidden sm:inline-block transition-all duration-75 px-2 py-0.5 rounded-md text-xs border shadow-kbd",
+          "hidden sm:inline-block px-2 py-0.5 rounded-md text-xs border shadow-kbd",
+          "transition-all duration-75",
           variantColors[variant],
           props.disabled && disabledVariantColors[variant]
         )}

@@ -20,7 +20,7 @@ export default function LinkAvatar({ url }: { url: string }) {
       className={classNames(
         "h-8 w-8 rounded-full sm:h-10 sm:w-10 duration-700 ease-in-out",
         loading
-          ? "scale-110 blur-sm grayscale bg-gray-200 dark:bg-neutral-700"
+          ? "scale-110 blur-sm grayscale bg-skeleton"
           : "scale-100 blur-0 grayscale-0"
       )}
       quality={100}

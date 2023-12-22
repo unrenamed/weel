@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 import { Drawer } from "vaul";
 import { useMediaQuery } from "@/hooks";
+import { DrawerIsland } from ".";
 
 type Props = {
   children: ReactNode;
@@ -25,11 +26,9 @@ export default function Popover({
       <Drawer.Root open={isOpen} onOpenChange={onOpenChange}>
         <Drawer.Trigger asChild>{children}</Drawer.Trigger>
         <Drawer.Portal>
-          <Drawer.Overlay className="fixed inset-0 z-50 bg-gray-100/20 dark:bg-neutral-900/20 backdrop-blur" />
-          <Drawer.Content className="fixed bottom-0 left-0 right-0 z-50 rounded-t-[10px] bg-white dark:bg-neutral-900 border-t border-zinc-200 dark:border-neutral-700">
-            <div className="sticky my-3 top-0 z-20 rounded-t-[10px] bg-inherit">
-              <div className="mx-auto h-1.5 w-12 rounded-full bg-zinc-300 flex-shrink-0" />
-            </div>
+          <Drawer.Overlay className="fixed inset-0 z-50 bg-overlay/20 backdrop-blur" />
+          <Drawer.Content className="fixed bottom-0 left-0 right-0 z-50 rounded-t-[10px] bg-content border-t border-border">
+            <DrawerIsland />
             <div className="max-w-md">{content}</div>
           </Drawer.Content>
         </Drawer.Portal>
@@ -43,7 +42,7 @@ export default function Popover({
       <PopoverPrimitive.Portal>
         <PopoverPrimitive.Content
           align={align}
-          className="animate-slide-up-fade z-50 items-center rounded-md border border-gray-200 bg-white dark:bg-neutral-900 dark:border-neutral-700 drop-shadow-lg sm:block mt-2"
+          className="animate-slide-up-fade z-50 items-center rounded-md border border-border bg-content drop-shadow-lg sm:block mt-2"
         >
           {content}
         </PopoverPrimitive.Content>

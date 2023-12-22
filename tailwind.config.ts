@@ -2,7 +2,7 @@ import plugin from "tailwindcss/plugin";
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: 'class',
+  darkMode: "class",
   content: [
     "./app/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
@@ -148,30 +148,99 @@ module.exports = {
           "100%": { transform: "translateY(0)", opacity: 1 },
         },
       },
-      colors: {
-        brown: {
-          50: "#fdf8f6",
-          100: "#f2e8e5",
-          200: "#eaddd7",
-          300: "#e0cec7",
-          400: "#d2bab0",
-          500: "#bfa094",
-          600: "#a18072",
-          700: "#977669",
-          800: "#846358",
-          900: "#43302b",
-        },
-      },
       boxShadow: {
-        'kbd': 'inset 0 -1px 0 rgba(110, 118, 129, 0.4)',
-      }
+        kbd: "inset 0 -1px 0 rgba(110, 118, 129, 0.4)",
+      },
+      colors: {
+        bkg: "hsl(var(--color-bkg) / <alpha-value>)",
+        content: "hsl(var(--color-content) / <alpha-value>)",
+        border: "hsl(var(--color-border) / <alpha-value>)",
+        accent: "hsl(var(--color-accent) / <alpha-value>)",
+        skeleton: "hsl(var(--color-skeleton) / <alpha-value>)",
+        overlay: "hsl(var(--color-overlay) / <alpha-value>)",
+        danger: "hsl(var(--color-danger) / <alpha-value>)",
+        primary: "hsl(var(--color-primary) / <alpha-value>)",
+        secondary: "hsl(var(--color-secondary) / <alpha-value>)",
+        link: "hsl(var(--color-link) / <alpha-value>)",
+        input: "hsl(var(--color-input) / <alpha-value>)",
+        "input-border": "hsl(var(--color-input-border) / <alpha-value>)",
+        "input-placeholder":
+          "hsl(var(--color-input-placeholder) / <alpha-value>)",
+        "primary-btn": "hsl(var(--color-primary-btn) / <alpha-value>)",
+        "primary-btn-disabled":
+          "hsl(var(--color-primary-btn-disabled) / <alpha-value>)",
+        "primary-btn-b": "hsl(var(--color-primary-btn-b) / <alpha-value>)",
+        "primary-btn-b-disabled":
+          "hsl(var(--color-primary-btn-b-disabled) / <alpha-value>)",
+        "primary-btn-txt": "hsl(var(--color-primary-btn-txt) / <alpha-value>)",
+        "primary-btn-txt-disabled":
+          "hsl(var(--color-primary-btn-txt-disabled) / <alpha-value>)",
+        "primary-btn-txt-hover":
+          "hsl(var(--color-primary-btn-txt-hover) / <alpha-value>)",
+        "secondary-btn": "hsl(var(--color-secondary-btn) / <alpha-value>)",
+        "secondary-btn-disabled":
+          "hsl(var(--color-secondary-btn-disabled) / <alpha-value>)",
+        "secondary-btn-b": "hsl(var(--color-secondary-btn-b) / <alpha-value>)",
+        "secondary-btn-b-disabled":
+          "hsl(var(--color-secondary-btn-b-disabled) / <alpha-value>)",
+        "secondary-btn-txt":
+          "hsl(var(--color-secondary-btn-txt) / <alpha-value>)",
+        "secondary-btn-txt-disabled":
+          "hsl(var(--color-secondary-btn-txt-disabled) / <alpha-value>)",
+        "secondary-btn-txt-hover":
+          "hsl(var(--color-secondary-btn-txt-hover) / <alpha-value>)",
+        "error-btn": "hsl(var(--color-error-btn) / <alpha-value>)",
+        "error-btn-disabled":
+          "hsl(var(--color-error-btn-disabled) / <alpha-value>)",
+        "error-btn-b": "hsl(var(--color-error-btn-b) / <alpha-value>)",
+        "error-btn-b-disabled":
+          "hsl(var(--color-error-btn-b-disabled) / <alpha-value>)",
+        "error-btn-txt": "hsl(var(--color-error-btn-txt) / <alpha-value>)",
+        "error-btn-txt-disabled":
+          "hsl(var(--color-error-btn-txt-disabled) / <alpha-value>)",
+        "error-btn-txt-hover":
+          "hsl(var(--color-error-btn-txt-hover) / <alpha-value>)",
+        "primary-kbd": "hsl(var(--color-primary-kbd) / <alpha-value>)",
+        "primary-kbd-hover":
+          "hsl(var(--color-primary-kbd-hover) / <alpha-value>)",
+        "primary-kbd-b": "hsl(var(--color-primary-kbd-b) / <alpha-value>)",
+        "primary-kbd-txt": "hsl(var(--color-primary-kbd-txt) / <alpha-value>)",
+        "primary-kbd-txt-hover":
+          "hsl(var(--color-primary-kbd-txt-hover) / <alpha-value>)",
+        "secondary-kbd": "hsl(var(--color-secondary-kbd) / <alpha-value>)",
+        "secondary-kbd-hover":
+          "hsl(var(--color-secondary-kbd-hover) / <alpha-value>)",
+        "secondary-kbd-b": "hsl(var(--color-secondary-kbd-b) / <alpha-value>)",
+        "secondary-kbd-txt":
+          "hsl(var(--color-secondary-kbd-txt) / <alpha-value>)",
+        "secondary-kbd-txt-hover":
+          "hsl(var(--color-secondary-kbd-txt-hover) / <alpha-value>)",
+        "error-kbd": "hsl(var(--color-error-kbd) / <alpha-value>)",
+        "error-kbd-hover": "hsl(var(--color-error-kbd-hover) / <alpha-value>)",
+        "error-kbd-b": "hsl(var(--color-error-kbd-b) / <alpha-value>)",
+        "error-kbd-txt": "hsl(var(--color-error-kbd-txt) / <alpha-value>)",
+        "error-kbd-txt-hover":
+          "hsl(var(--color-error-kbd-txt-hover) / <alpha-value>)",
+        "devices-bar": "hsl(var(--color-devices-bar) / <alpha-value>)",
+        "locations-bar": "hsl(var(--color-locations-bar) / <alpha-value>)",
+        "referrers-bar": "hsl(var(--color-referrers-bar) / <alpha-value>)",
+        "bar-list-tab": "hsl(var(--color-bar-list-tab) / <alpha-value>)",
+        "selected-bar-list-tab":
+          "hsl(var(--color-selected-bar-list-tab) / <alpha-value>)",
+        "link-card-backlight-from":
+          "hsl(var(--color-link-card-backlight-from) / <alpha-value>)",
+        "link-card-backlight-to":
+          "hsl(var(--color-link-card-backlight-to) / <alpha-value>)",
+        "tooltip-secondary":
+          "hsl(var(--color-tooltip-secondary) / <alpha-value>)",
+      },
     },
   },
   plugins: [
     require("@tailwindcss/forms"),
     require("@tailwindcss/typography"),
     require("tailwind-scrollbar-hide"),
-    require('tailwind-scrollbar')({ nocompatible: true }),
+    require("tailwind-scrollbar")({ nocompatible: true }),
     plugin(({ addUtilities }) => {
       addUtilities({
         ".inset-center": {

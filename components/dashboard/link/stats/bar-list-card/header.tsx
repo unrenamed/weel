@@ -44,14 +44,14 @@ export default function BarListCardHeader({
         <div className="flex space-x-2 items-center relative">
           <h2 className="text-md font-medium sm:text-lg">{title}</h2>
           <button
-            className="group rounded-full p-2 hover:bg-gray-200 hover:dark:bg-neutral-700 active:scale-95 transition-all duration-75"
+            className="group rounded-full p-2 hover:bg-skeleton active:scale-95 transition-all duration-75"
             onClick={() => {
               setShowInput(true);
               inputRef.current?.focus();
             }}
           >
             <Search
-              className="h-4 w-4 text-gray-500 group-hover:text-gray-700 dark:text-gray-200 group-hover:dark:text-gray-100"
+              className="h-4 w-4 text-secondary/80 group-hover:text-secondary"
               strokeWidth={1.5}
             />
           </button>
@@ -62,9 +62,10 @@ export default function BarListCardHeader({
               key={tab}
               onClick={() => setTab?.(tab)}
               className={classNames(
-                "rounded-md bg-gray-100 hover:bg-gray-200 text-gray-500 dark:bg-neutral-700 hover:dark:bg-neutral-500 dark:text-gray-50 transition duration-75 active:scale-95 text-xs sm:text-sm font-medium py-1 px-2",
+                "rounded-md text-primary/70 transition duration-75 active:scale-95 text-xs sm:text-sm font-medium py-1 px-2",
                 {
-                  "bg-gray-200 dark:bg-neutral-500": selectedTab === tab,
+                  "bg-selected-bar-list-tab": selectedTab === tab,
+                  "bg-bar-list-tab": selectedTab !== tab,
                 }
               )}
             >

@@ -1,3 +1,141 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    /* background */
+    --color-bkg: 210deg 20% 98%;
+    --color-content: 0deg 0% 100%;
+    --color-border: 216deg 12% 84%;
+    --color-accent: 44deg 100% 52%;
+    --color-skeleton: 220deg 13% 91%;
+    --color-overlay: 220deg 14% 96%;
+    --color-devices-bar: 214deg 95% 93%;
+    --color-locations-bar: 34deg 100% 92%;
+    --color-referrers-bar: 251deg 91% 95%;
+    --color-bar-list-tab: 220deg 14% 96%;
+    --color-selected-bar-list-tab: 220deg 13% 91%;
+    --color-link-card-backlight-from: 44deg 100% 52%;
+    --color-link-card-backlight-to: 10deg 98% 48%;
+    /* inputs */
+    --color-input: 220deg 13% 91%;
+    --color-input-border: 220deg 9% 46%;
+    --color-input-placeholder: 220deg 9% 46%;
+    /* primary button */
+    --color-primary-btn: 0deg 0% 0%;
+    --color-primary-btn-disabled: 0deg 0% 25%;
+    --color-primary-btn-b: 0deg 0% 0%;
+    --color-primary-btn-b-disabled: 0deg 0% 32%;
+    --color-primary-btn-txt: 0deg 0% 100%;
+    --color-primary-btn-txt-disabled: 220deg 9% 46%;
+    --color-primary-btn-txt-hover: 0deg 0% 0%;
+    /* secondary button */
+    --color-secondary-btn: 220deg 13% 91%;
+    --color-secondary-btn-disabled: 220deg 14% 96%;
+    --color-secondary-btn-b: 216deg 12% 84%;
+    --color-secondary-btn-b-disabled: 216deg 12% 84%;
+    --color-secondary-btn-txt: 0deg 0% 15%;
+    --color-secondary-btn-txt-disabled: 220deg 9% 46%;
+    --color-secondary-btn-txt-hover: 0deg 0% 0%;
+    /* error button */
+    --color-error-btn: 0deg 84% 60%;
+    --color-error-btn-disabled: 0deg 96% 89%;
+    --color-error-btn-b: 0deg 84% 60%;
+    --color-error-btn-b-disabled: 0deg 94% 82%;
+    --color-error-btn-txt: 0deg 0% 100%;
+    --color-error-btn-txt-disabled: 0deg 0% 100%;
+    --color-error-btn-txt-hover: 0deg 84% 60%;
+    /* primary kbd */
+    --color-primary-kbd: 240deg 5% 26%;
+    --color-primary-kbd-hover: 220deg 14% 96%;
+    --color-primary-kbd-b: 240deg 4% 46%;
+    --color-primary-kbd-txt: 218deg 11% 65%;
+    --color-primary-kbd-txt-hover: 220deg 9% 46%;
+    /* secondary kbd */
+    --color-secondary-kbd: 220deg 13% 91%;
+    --color-secondary-kbd-hover: 220deg 14% 96%;
+    --color-secondary-kbd-b: 240deg 4% 46%;
+    --color-secondary-kbd-txt: 220deg 9% 46%;
+    --color-secondary-kbd-txt-hover: 215deg 14% 34%;
+    /* error kbd */
+    --color-error-kbd: 0deg 91% 71%;
+    --color-error-kbd-hover: 0deg 93% 94%;
+    --color-error-kbd-b: 0deg 84% 60%;
+    --color-error-kbd-txt: 0deg 0% 100%;
+    --color-error-kbd-txt-hover: 0deg 72% 51%;
+    /* text */
+    --color-primary: 0deg 0% 15%;
+    --color-secondary: 0deg 0% 25%;
+    --color-link: 226deg 71% 40%;
+    --color-danger: 0deg 84% 60%;
+  }
+
+  :root.dark {
+    /* background */
+    --color-bkg: 0deg 0% 9%;
+    --color-content: 0deg 0% 13%;
+    --color-border: 0deg 0% 20%;
+    --color-accent: 217deg 91% 60%;
+    --color-skeleton: 0deg 0% 25%;
+    --color-overlay: 0deg 0% 20%;
+    --color-devices-bar: 217deg 91% 60%;
+    --color-locations-bar: 25deg 95% 53%;
+    --color-referrers-bar: 258deg 90% 66%;
+    --color-bar-list-tab: 0deg 0% 25%;
+    --color-selected-bar-list-tab: 0deg 0% 45%;
+    --color-link-card-backlight-from: 280deg 99% 56%;
+    --color-link-card-backlight-to: 217deg 91% 60%;
+    /* inputs */
+    --color-input: 0deg 0% 25%;
+    --color-input-border: 0deg 0% 32%;
+    --color-input-placeholder: 0deg 0% 45%;
+    /* primary button */
+    --color-primary-btn: 210deg 20% 98%;
+    --color-primary-btn-disabled: 216deg 12% 84%;
+    --color-primary-btn-b: 210deg 20% 98%;
+    --color-primary-btn-b-disabled: 218deg 11% 65%;
+    --color-primary-btn-txt: 0deg 0% 9%;
+    --color-primary-btn-txt-disabled: 220deg 9% 46%;
+    --color-primary-btn-txt-hover: 210deg 20% 98%;
+    /* secondary button */
+    --color-secondary-btn: 0deg 0% 25%;
+    --color-secondary-btn-disabled: 0deg 0% 45%;
+    --color-secondary-btn-b: 0deg 0% 32%;
+    --color-secondary-btn-b-disabled: 0deg 0% 32%;
+    --color-secondary-btn-txt: 210deg 20% 98%;
+    --color-secondary-btn-txt-disabled: 216deg 12% 84%;
+    --color-secondary-btn-txt-hover: 220deg 13% 91%;
+    /* error button */
+    --color-error-btn: 0deg 84% 60%;
+    --color-error-btn-disabled: 0deg 96% 89%;
+    --color-error-btn-b: 0deg 84% 60%;
+    --color-error-btn-b-disabled: 0deg 94% 82%;
+    --color-error-btn-txt: 0deg 0% 100%;
+    --color-error-btn-txt-disabled: 0deg 0% 100%;
+    --color-error-btn-txt-hover: 0deg 84% 60%;
+    /* primary kbd */
+    --color-primary-kbd: 220deg 14% 96%;
+    --color-primary-kbd-hover: 240deg 5% 26%;
+    --color-primary-kbd-b: 240deg 4% 46%;
+    --color-primary-kbd-txt: 220deg 9% 46%;
+    --color-primary-kbd-txt-hover: 218deg 11% 65%;
+    /* secondary kbd */
+    --color-secondary-kbd: 0deg 0% 32%;
+    --color-secondary-kbd-hover: 220deg 13% 91%;
+    --color-secondary-kbd-b: 220deg 9% 46%;
+    --color-secondary-kbd-txt: 216deg 12% 84%;
+    --color-secondary-kbd-txt-hover: 220deg 9% 46%;
+    /* error kbd */
+    --color-error-kbd: 0deg 91% 71%;
+    --color-error-kbd-hover: 0deg 93% 94%;
+    --color-error-kbd-b: 0deg 84% 60%;
+    --color-error-kbd-txt: 0deg 0% 100%;
+    --color-error-kbd-txt-hover: 0deg 72% 51%;
+    /* text */
+    --color-primary: 210deg 20% 98%;
+    --color-secondary: 0deg 0% 64%;
+    --color-link: 217deg 91% 60%;
+    --color-danger: 0deg 84% 60%;
+  }
+}

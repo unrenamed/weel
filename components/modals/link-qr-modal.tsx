@@ -32,12 +32,12 @@ function LinkQrModalContent({ link }: { link: Link }) {
 
   return (
     <div className="flex flex-col">
-      <div className="flex flex-col space-y-3 sm:px-12 px-4 sm:pt-8 pt-4 pb-4 text-center items-center border-b bg-white border-gray-200 dark:bg-neutral-900 dark:border-neutral-800">
+      <div className="flex flex-col space-y-3 sm:px-12 px-4 sm:pt-8 pt-4 pb-4 text-center items-center bg-content border-b border-border">
       <LinkAvatar url={link.url} />
         <h3 className="text-lg font-medium">Download QR code</h3>
       </div>
-      <div className="flex flex-col items-center space-y-6 sm:px-12 px-4 sm:py-8 py-4 bg-gray-50 dark:bg-neutral-800">
-        <div className="flex rounded-md border-2 border-gray-200 dark:border-neutral-900 bg-white p-3">
+      <div className="flex flex-col items-center space-y-6 sm:px-12 px-4 sm:py-8 py-4 bg-bkg">
+        <div className="flex rounded-md border-2 border-border bg-content p-3">
           <QRCodeSVG
             value={qrData.value}
             size={qrData.size / 8}
@@ -150,7 +150,7 @@ function ExportDropdown({
           setIsPopoverOpen(open);
         }}
         content={
-          <div className="flex flex-col p-2 sm:w-36 text-gray-500 text-sm font-medium pointer-events-auto">
+          <div className="flex flex-col p-2 sm:w-36 text-sm font-medium pointer-events-auto">
             {exportOptions.map(({ text, fileExtension, getImage }) => (
               <ExportOption
                 key={text}
@@ -187,7 +187,7 @@ function ExportOption({
   return (
     <button
       onClick={onClick}
-      className="p-2 flex items-center rounded-md transition-all duration-75 hover:bg-gray-100 dark:hover:bg-neutral-700 dark:text-gray-200"
+      className="p-2 flex items-center rounded-md transition-all duration-75 text-primary/80 hover:bg-skeleton/70"
     >
       {icon}
       {text}

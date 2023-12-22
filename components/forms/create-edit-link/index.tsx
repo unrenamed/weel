@@ -130,7 +130,7 @@ export function CreateEditLinkForm(props: Props) {
 
   return (
     <form
-      className="flex flex-col bg-gray-50 dark:bg-neutral-800 pt-6"
+      className="flex flex-col bg-bkg pt-6"
       onSubmit={handleSubmit(onSubmit)}
     >
       <div className="space-y-8">
@@ -146,7 +146,9 @@ export function CreateEditLinkForm(props: Props) {
               isError={!!errors?.url?.message}
             />
             {errors?.url?.message && (
-              <p className="text-red-500 font-semibold text-xs">{errors?.url?.message}</p>
+              <p className="text-danger font-semibold text-xs">
+                {errors?.url?.message}
+              </p>
             )}
           </div>
           <div className="flex flex-col space-y-2">
@@ -156,7 +158,10 @@ export function CreateEditLinkForm(props: Props) {
               </label>
               {!isEditMode && (
                 <button
-                  className="flex items-center space-x-2 text-sm text-gray-500 dark:text-neutral-400 transition-all duration-75 hover:text-black hover:dark:text-neutral-100 active:scale-95"
+                  className={classNames(
+                    "flex items-center space-x-2 text-sm transition-all duration-75 active:scale-95",
+                    "text-primary/70 hover:text-primary"
+                  )}
                   onClick={() => {
                     if (!loadingRandomKey) {
                       clearErrors("key");
@@ -180,7 +185,11 @@ export function CreateEditLinkForm(props: Props) {
               <select
                 {...register("domain", { onChange: uniqueKey.invalidate })}
                 id="domain"
-                className="flex w-48 items-center justify-center rounded-l-md bg-inherit pl-3 pr-7 text-sm border-gray-300 dark:border-neutral-600 text-gray-500 dark:text-gray-200 focus:border-gray-300 dark:focus:border-neutral-600 focus:outline-none focus:ring-0 border border-r-0 cursor-pointer"
+                className={classNames(
+                  "flex w-48 items-center justify-center rounded-l-md bg-inherit pl-3 pr-7 text-sm cursor-pointer border border-r-0",
+                  "focus:outline-none focus:ring-0",
+                  "bg-inherit text-secondary border-border focus:border-border"
+                )}
                 disabled={isEditMode}
               >
                 {LINK_DOMAINS.map((domain) => (
@@ -201,7 +210,7 @@ export function CreateEditLinkForm(props: Props) {
                 {isValidating && (
                   <span
                     className={classNames(
-                      "absolute inset-y-center text-gray-500",
+                      "absolute inset-y-center text-secondary",
                       errors?.key?.message ? "right-10" : "right-3"
                     )}
                   >
@@ -211,14 +220,16 @@ export function CreateEditLinkForm(props: Props) {
               </div>
             </div>
             {errors?.key?.message && (
-              <p className="text-red-500 font-semibold text-xs">{errors.key.message}</p>
+              <p className="text-danger font-semibold text-xs">
+                {errors.key.message}
+              </p>
             )}
           </div>
         </div>
         <div className="flex items-center justify-between w-full space-x-2 px-4 md:px-16">
-          <Separator className="bg-gray-300 h-px" size="4" />
-          <span className="text-sm text-gray-500">Optional</span>
-          <Separator className="bg-gray-300 h-px" size="4" />
+          <Separator className="bg-skeleton h-px" size="4" />
+          <span className="text-sm text-secondary">Optional</span>
+          <Separator className="bg-skeleton h-px" size="4" />
         </div>
         <div className="flex flex-col space-y-4 px-4 md:px-16 pb-4">
           {!isEditMode && (
@@ -236,7 +247,7 @@ export function CreateEditLinkForm(props: Props) {
                   resetField("password");
                 }}
               />
-              <Separator className="bg-gray-300 h-px" size="4" />
+              <Separator className="bg-skeleton h-px" size="4" />
             </>
           )}
           <ExpirationDateSection
@@ -252,7 +263,7 @@ export function CreateEditLinkForm(props: Props) {
               resetField("expiresAt");
             }}
           />
-          <Separator className="bg-gray-300 h-px" size="4" />
+          <Separator className="bg-skeleton h-px" size="4" />
           <IOSTargetingSection
             formProps={register("ios")}
             error={errors?.ios?.message}
@@ -266,7 +277,7 @@ export function CreateEditLinkForm(props: Props) {
               resetField("ios");
             }}
           />
-          <Separator className="bg-gray-300 h-px" size="4" />
+          <Separator className="bg-skeleton h-px" size="4" />
           <AndroidTargetingSection
             formProps={register("android")}
             error={errors?.android?.message}
@@ -280,7 +291,7 @@ export function CreateEditLinkForm(props: Props) {
               resetField("android");
             }}
           />
-          <Separator className="bg-gray-300 h-px" size="4" />
+          <Separator className="bg-skeleton h-px" size="4" />
           <GeoTargetingSection
             {...{ control, register, errors }}
             isOpen={switchStatuses.geo}

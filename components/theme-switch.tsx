@@ -18,7 +18,7 @@ const ThemeSwitch = () => {
   return (
     <button
       aria-label="Toggle theme"
-      className="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-neutral-800"
+      className="p-2 rounded-md hover:bg-skeleton/70"
       onClick={() =>
         setTheme(
           theme === "dark" || resolvedTheme === "dark" ? "light" : "dark"
@@ -26,9 +26,9 @@ const ThemeSwitch = () => {
       }
     >
       {mounted && (theme === "dark" || resolvedTheme === "dark") ? (
-        <Moon className="h-4 w-4 text-gray-900 dark:text-gray-100" />
+        <Moon className="h-4 w-4 text-primary" />
       ) : (
-        <Sun className="h-4 w-4 text-gray-900 dark:text-gray-100" />
+        <Sun className="h-4 w-4 text-primary" />
       )}
     </button>
   );

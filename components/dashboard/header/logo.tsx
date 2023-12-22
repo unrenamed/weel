@@ -18,7 +18,7 @@ export default function HeaderLogo() {
 
   if (!mounted) {
     return (
-      <div className="rounded-full animate-pulse bg-gray-200 dark:bg-neutral-700 w-[32px] h-[32px] sm:w-[40px] sm:h-[40px]" />
+      <div className="rounded-full animate-pulse bg-skeleton w-[32px] h-[32px] sm:w-[40px] sm:h-[40px]" />
     );
   }
 
@@ -26,9 +26,7 @@ export default function HeaderLogo() {
     <Image
       className={classNames(
         "rounded-full transition-all duration-75 ease-in-out",
-        loading
-          ? "bg-gray-200 dark:bg-neutral-700 animate-pulse"
-          : "active:scale-95"
+        loading ? "bg-skeleton animate-pulse" : "active:scale-95"
       )}
       src={`/_static/${theme === "dark" ? "light-logo" : "dark-logo"}.png`}
       alt="App logo"

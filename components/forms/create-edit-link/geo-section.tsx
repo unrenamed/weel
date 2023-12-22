@@ -1,9 +1,9 @@
 import { useState } from "react";
 import {
-    Control,
-    FieldErrors,
-    UseFormRegister,
-    useFieldArray,
+  Control,
+  FieldErrors,
+  UseFormRegister,
+  useFieldArray,
 } from "react-hook-form";
 import { FormData } from "./schema";
 import { COUNTRIES } from "@/lib/constants";
@@ -11,6 +11,7 @@ import { uncapitalize } from "@/lib/utils";
 import { Trash2 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Button, Switch, FormTextInput } from "@/components/shared";
+import { classNames } from "@/components/utils";
 
 export function GeoTargetingSection({
   control,
@@ -76,7 +77,9 @@ export function GeoTargetingSection({
               </motion.div>
             ))}
           </AnimatePresence>
-          <p className="text-xs text-red-500 font-semibold">{errors?.geo?.root?.message}</p>
+          <p className="text-xs text-danger font-semibold">
+            {errors?.geo?.root?.message}
+          </p>
           <Button
             type="button"
             text="Add location"
@@ -122,7 +125,11 @@ function GeoLink({
           <select
             {...register(`geo.${index}.country` as const)}
             id={`geo.${index}.country`}
-            className="flex w-32 items-center justify-center rounded-l-md pl-3 pr-7 text-center text-sm focus:outline-none focus:ring-0 border border-r-0 bg-inherit border-gray-300 dark:border-neutral-600 text-gray-500 dark:text-gray-200 focus:border-gray-300 dark:focus:border-neutral-600 cursor-pointer"
+            className={classNames(
+              "flex w-32 items-center justify-center rounded-l-md pl-3 pr-7 text-center text-sm cursor-pointer border border-r-0",
+              "focus:outline-none focus:ring-0",
+              "bg-inherit text-secondary border-border focus:border-border"
+            )}
             defaultValue=""
           >
             <option value="" disabled>
@@ -154,7 +161,9 @@ function GeoLink({
           </button>
         )}
       </div>
-      {!!errorMessage && <p className="text-xs text-red-500 font-semibold">{errorMessage}</p>}
+      {!!errorMessage && (
+        <p className="text-xs text-danger font-semibold">{errorMessage}</p>
+      )}
     </div>
   );
 }

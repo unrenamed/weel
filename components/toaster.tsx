@@ -8,7 +8,7 @@ export default function Toaster() {
   return (
     <SonnerToaster
       theme={theme as "dark" | "light" | undefined}
-      toastOptions={{ className: "dark:!bg-neutral-800" }}
+      toastOptions={{ className: "!bg-content" }}
     />
   );
 }

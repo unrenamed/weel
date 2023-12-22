@@ -32,7 +32,7 @@ export default function Locations() {
       selectedTab={tab}
       setTab={(tab) => setTab(tab as LocationTab)}
       maxClicks={data?.[0]?.clicks ?? 0}
-      barBackground="bg-orange-100 dark:bg-orange-500"
+      barBackground="bg-locations-bar"
     />
   );
 }
@@ -40,7 +40,7 @@ export default function Locations() {
 function CountryFlag({ code }: { code: string }) {
   const [loading, setLoading] = useState(true);
   return (
-    <div className={classNames({ "animate-pulse bg-gray-200 dark:bg-neutral-700": loading })}>
+    <div className={classNames({ "animate-pulse bg-skeleton": loading })}>
       <Image
         alt={code}
         src={code}

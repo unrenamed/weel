@@ -10,7 +10,7 @@ const SearchInput = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="w-full">
         <div className="pointer-events-none absolute inset-y-0 flex items-center pl-3">
-          <Search className="h-4 w-4 text-gray-500 dark:text-neutral-400" />
+          <Search className="h-4 w-4 text-secondary/80" />
         </div>
         <TextInput
           ref={ref}
