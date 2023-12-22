@@ -8,8 +8,8 @@ type KeyboardActionButtonProps = {
 
 const variantColors = {
   primary: classNames(
-    "bg-zinc-700 text-gray-400 border-zinc-500/40 group-hover:bg-gray-100 group-hover:text-gray-500",
-    "dark:group-hover:bg-zinc-700 dark:group-hover:text-gray-400 dark:group-hover:border-zinc-500/40 dark:bg-gray-100 dark:text-gray-500"
+    "bg-zinc-700 text-gray-500 border-zinc-500/40 group-hover:bg-gray-100 group-hover:text-gray-500",
+    "dark:group-hover:bg-zinc-700 dark:group-hover:text-gray-500 dark:group-hover:border-zinc-500/40 dark:bg-gray-100 dark:text-gray-500"
   ),
   secondary: classNames(
     "bg-gray-200 text-gray-500 border-gray-500/40 group-hover:bg-gray-100 group-hover:text-gray-600",
@@ -24,7 +24,7 @@ const variantColors = {
 const disabledVariantColors = {
   primary: "bg-zinc-600 border-gray-400/40 dark:bg-zinc-400 dark:text-gray-200",
   secondary:
-    "bg-gray-200 border-gray-400/40 dark:bg-gray-300 dark:text-gray-400",
+    "bg-gray-200 border-gray-400/40 dark:bg-gray-300 dark:text-gray-500",
   error: "bg-red-300 border-red-400/40 dark:text-red-300",
 };
 

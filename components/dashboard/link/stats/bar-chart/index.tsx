@@ -260,7 +260,7 @@ export default function BarChart({
           <div className="text-center px-1 py-1 sm:px-2">
             {pluralizeJSX(
               (count, noun) => (
-                <h3 className="text-black dark:text-white">
+                <h3>
                   <span className="text-xl sm:text-2xl font-semibold">
                     {nFormatter(count)}
                   </span>{" "}

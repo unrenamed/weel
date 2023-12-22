@@ -69,7 +69,7 @@ function ArchiveLinkModalContent({ link, hideModal, onSubmit }: Props) {
         <h3 className="text-lg font-medium">
           {link.archived ? "Unarchive" : "Archive"} {domainKey}
         </h3>
-        <p className="text-sm text-gray-500 dark:text-neutral-500">
+        <p className="text-sm text-gray-500 dark:text-neutral-400">
           {link.archived
             ? "Unarchiving this link will make it accessible and functional again."
             : "Archived links are not accessible and will redirect users to the home page."}

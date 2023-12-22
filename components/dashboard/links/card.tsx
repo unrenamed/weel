@@ -7,7 +7,14 @@ import {
 } from "@/components/modals";
 import { LinkAvatar, Popover, Tooltip } from "@/components/shared";
 import { classNames } from "@/components/utils";
-import { dateTimeAgo, capitalize, pluralize, pluralizeJSX, dateTimeSoon, nFormatter } from "@/lib/utils";
+import {
+  dateTimeAgo,
+  capitalize,
+  pluralize,
+  pluralizeJSX,
+  dateTimeSoon,
+  nFormatter,
+} from "@/lib/utils";
 import { Link } from "@prisma/client";
 import * as Separator from "@radix-ui/react-separator";
 import NextLink from "next/link";
@@ -171,8 +178,8 @@ function LinkCard({
         )}
         <div className="flex gap-3 items-center">
           {link.archived ? (
-            <div className="h-8 w-8 rounded-full sm:h-10 sm:w-10 bg-gray-200 flex items-center justify-center">
-              <ArchiveIcon className="h-6 w-6 text-gray-400" />
+            <div className="h-8 w-8 rounded-full sm:h-10 sm:w-10 bg-gray-300 dark:bg-neutral-600 flex items-center justify-center">
+              <ArchiveIcon className="h-6 w-6 text-gray-500 dark:text-neutral-400" />
             </div>
           ) : (
             <LinkAvatar url={link.url} />

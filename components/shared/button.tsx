@@ -14,13 +14,13 @@ const variantColors = {
   primary: classNames(
     "border-black bg-black text-white hover:bg-white hover:text-black",
     "dark:border-gray-50 dark:bg-gray-50 dark:text-neutral-900 dark:hover:bg-neutral-800 dark:hover:text-gray-50",
-    "disabled:border-neutral-600 disabled:bg-neutral-700 disabled:text-gray-400",
+    "disabled:border-neutral-600 disabled:bg-neutral-700 disabled:text-gray-500",
     "dark:disabled:border-gray-400 dark:disabled:bg-gray-300 dark:disabled:text-gray-500"
   ),
   secondary: classNames(
     "border-gray-300 bg-gray-200 text-black hover:bg-white hover:text-gray-900",
     "dark:border-neutral-600 dark:text-gray-50 dark:bg-neutral-700 dark:hover:bg-neutral-800 dark:hover:text-gray-200",
-    "disabled:border-gray-200 disabled:bg-gray-100 disabled:text-gray-400",
+    "disabled:border-gray-200 disabled:bg-gray-100 disabled:text-gray-500",
     "dark:disabled:border-neutral-600 dark:disabled:bg-neutral-500 dark:disabled:text-gray-300"
   ),
   error: classNames(

@@ -49,7 +49,7 @@ function DeleteLinkModalContent({ link, hideModal, onSubmit }: Props) {
       <div className="flex flex-col space-y-3 sm:px-12 px-4 sm:pt-8 pt-4 pb-4 text-center items-center border-b bg-white border-gray-200 dark:bg-neutral-900 dark:border-neutral-800">
         <LinkAvatar url={link.url} />
         <h3 className="text-lg font-medium">Delete {domainKey}</h3>
-        <p className="text-sm text-gray-500 dark:text-neutral-500">
+        <p className="text-sm text-gray-500 dark:text-neutral-400">
           Warning: Deleting this link will permanently remove all of its stats.
           This action cannot be undone.
         </p>
