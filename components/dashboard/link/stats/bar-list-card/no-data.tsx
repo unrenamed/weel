@@ -4,15 +4,17 @@ export default function NoData({ search }: { search: string }) {
       <p className="flex items-center justify-center flex-wrap text-sm font-light text-secondary">
         {search.length > 0 ? (
           <>
-            No results found for&nbsp;
+            No results found for&nbsp;{""}
             <span className="flex items-center">
               &quot;
+              {""}
               <span className="block max-w-[130px] font-semibold truncate">
                 {search}
               </span>
+              {""}
               &quot;
             </span>
-            &nbsp; search criteria
+            {""}&nbsp;search criteria
           </>
         ) : (
           <>No data available</>

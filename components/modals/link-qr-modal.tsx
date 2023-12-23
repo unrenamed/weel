@@ -33,7 +33,7 @@ function LinkQrModalContent({ link }: { link: Link }) {
   return (
     <div className="flex flex-col">
       <div className="flex flex-col space-y-3 sm:px-12 px-4 sm:pt-8 pt-4 pb-4 text-center items-center bg-content border-b border-border">
-      <LinkAvatar url={link.url} />
+        <LinkAvatar url={link.url} />
         <h3 className="text-lg font-medium">Download QR code</h3>
       </div>
       <div className="flex flex-col items-center space-y-6 sm:px-12 px-4 sm:py-8 py-4 bg-bkg">
@@ -170,7 +170,7 @@ function ExportDropdown({
           className="w-32 px-5 py-1.5 font-normal"
         />
       </Popover>
-      <a ref={downloadAnchorRef} className="hidden" />
+      <a ref={downloadAnchorRef} href="/" className="hidden" />
     </div>
   );
 }
