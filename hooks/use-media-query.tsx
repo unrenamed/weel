@@ -18,7 +18,7 @@ export const useMediaQuery = (query: string) => {
   };
 
   const getServerSnapshot = () => {
-    return false; // Media query should not run for server-generated HTML 
+    return false; // Media query should not run for server-generated HTML
   };
 
   return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);

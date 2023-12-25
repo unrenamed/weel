@@ -1,6 +1,5 @@
 TOKEN "user token" APPEND
 
-
 SCHEMA >
     `bot` UInt8 `json:$.bot`,
     `browser` String `json:$.browser`,
@@ -24,6 +23,6 @@ SCHEMA >
     `timestamp` DateTime `json:$.timestamp`,
     `ua` String `json:$.ua`
 
-ENGINE "MergeTree"
-ENGINE_PARTITION_KEY "toYear(timestamp)"
-ENGINE_SORTING_KEY "bot, region, timestamp, ua"
+ENGINE MergeTree
+ENGINE_PARTITION_KEY toYear(timestamp)
+ENGINE_SORTING_KEY bot, region, timestamp, ua
