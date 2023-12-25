@@ -10,7 +10,7 @@ import { useSearchParams } from "next/navigation";
 
 export default function Referrers() {
   const searchParams = useSearchParams();
-  
+
   const { data, isLoading, isValidating } = useSWR<
     { referrer: string; clicks: number }[]
   >(`/api/links/stats/referrer?${searchParams}`, fetcher);

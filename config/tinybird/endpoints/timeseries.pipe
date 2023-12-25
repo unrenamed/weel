@@ -1,6 +1,5 @@
 DESCRIPTION >
-	Calculates timeseries data of a given link clicks over time for the given period, filling the blanks. Works great for the realtime chart
-
+    Calculates timeseries data of a given link clicks over time for the given period, filling the blanks. Works great for the realtime chart
 
 TOKEN "user token" READ
 
@@ -9,19 +8,15 @@ DESCRIPTION >
     Generate a timeseries between given start and end dates with granularity, so we can fill empty data points
 
 SQL >
-
     %
     select
         {% if granularity == 'minute' %}
             addMinutes(toStartOfMinute(toDateTime({{ start }})), period.unit)
-        {% elif granularity == 'hour' %}
-            addHours(toStartOfHour(toDateTime({{ start }})), period.unit)
-        {% elif granularity == 'day' %}
-            addDays(toStartOfDay(toDateTime({{ start }})), period.unit)
+        {% elif granularity == 'hour' %} addHours(toStartOfHour(toDateTime({{ start }})), period.unit)
+        {% elif granularity == 'day' %} addDays(toStartOfDay(toDateTime({{ start }})), period.unit)
         {% elif granularity == 'month' %}
             addMonths(toStartOfMonth(toDateTime({{ start }})), period.unit)
-        {% elif granularity == 'year' %}
-            addYears(toStartOfYear(toDateTime({{ start }})), period.unit)
+        {% elif granularity == 'year' %} addYears(toStartOfYear(toDateTime({{ start }})), period.unit)
         {% else %} addHours(toStartOfHour(now() - interval 1 day), period.unit)
         {% end %} AS t,
         0 as clicks
@@ -36,14 +31,11 @@ SQL >
                 arrayJoin(range(0, toUInt64(range_end + 1))) as unit
         ) as period
 
-
-
 NODE filter_by_timestamp_interval
 DESCRIPTION >
     Filter clicks by given domain, key and timestamp interval if defined
 
 SQL >
-
     %
     select *
     from link_clicks
@@ -52,14 +44,11 @@ SQL >
         and key = {{ String(key) }}
         and timestamp between {{ DateTime(start) }} and {{ DateTime(end) }}
 
-
-
 NODE timeseries_with_granularity
 DESCRIPTION >
     Group timeseries data with given granularity and order by time
 
 SQL >
-
     %
     select
         {% if granularity == 'minute' %} toDateTime(toStartOfMinute(timestamp))
@@ -74,27 +63,21 @@ SQL >
     group by t
     order by t
 
-
-
 NODE result_data
 DESCRIPTION >
     Join and generate timeseries data, filling the blanks
 
 SQL >
-
     select p.t as t, tg.clicks as clicks
     from empty_data_points as p
     left join timeseries_with_granularity as tg on p.t = tg.t
     order by p.t
-
-
 
 NODE endpoint
 DESCRIPTION >
     Return pipeline result data with API documentation and errors for dynamic parameters
 
 SQL >
-
     %
     with
         {{
@@ -139,5 +122,3 @@ SQL >
         }}
     select formatDateTime(t, '%FT%T.000Z') as t, clicks
     from result_data
-
-

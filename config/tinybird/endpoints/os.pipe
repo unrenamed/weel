@@ -1,6 +1,5 @@
 DESCRIPTION >
-	Link clicks per OS for a given period
-
+    Link clicks per OS for a given period
 
 TOKEN "user token" READ
 
@@ -9,7 +8,6 @@ DESCRIPTION >
     Filter clicks by given domain, key and timestamp interval if defined
 
 SQL >
-
     %
     select *
     from link_clicks
@@ -19,41 +17,28 @@ SQL >
             and timestamp between {{ DateTime(start) }} and {{ DateTime(end) }}
         {% end %}
 
-
-
 NODE count_clicks_by_os
 DESCRIPTION >
     Group clicks by os column and count a total number of clicks
 
 SQL >
-
     %
     select count(*) as clicks, os as os
     from filter_by_timestamp_interval
     group by os
     order by clicks DESC
 
-
 NODE endpoint
 DESCRIPTION >
     Return pipeline result data with API documentation and errors for dynamic parameters
 
 SQL >
-
     %
     {% if defined(start) and not defined(end) %}
-        {{
-            error(
-                'You need to provide both start and end dates to filter by datetime interval'
-            )
-        }}
+        {{ error('You need to provide both start and end dates to filter by datetime interval') }}
     {% end %}
     {% if defined(end) and not defined(start) %}
-        {{
-            error(
-                'You need to provide both start and end dates to filter by datetime interval'
-            )
-        }}
+        {{ error('You need to provide both start and end dates to filter by datetime interval') }}
     {% end %}
     with
         {{
@@ -90,5 +75,3 @@ SQL >
         }}
     select *
     from count_clicks_by_os
-
-
