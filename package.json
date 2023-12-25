@@ -9,6 +9,7 @@
     "lint": "next lint",
     "db:migrate": "dotenv -e .env.local -- npx prisma db push",
     "db:studio": "dotenv -e .env.studio -- npx prisma studio",
+    "db:seed": "dotenv -e .env.local -- ts-node prisma/seed.ts",
     "postinstall": "prisma generate"
   },
   "dependencies": {
@@ -68,8 +69,10 @@
     "zod": "^3.22.2"
   },
   "devDependencies": {
+    "@commander-js/extra-typings": "^11.1.0",
     "@faker-js/faker": "^8.2.0",
     "@types/react-virtualized": "^9.21.28",
+    "commander": "^11.1.0",
     "csv": "^6.3.5",
     "prisma": "^5.4.1",
     "tailwind-scrollbar": "^3.0.5",

@@ -1,6 +1,14 @@
 import { faker } from "@faker-js/faker";
 import fs from "fs";
 import { stringify } from "csv-stringify";
+import { Command, InvalidArgumentError } from "@commander-js/extra-typings";
+
+const colors = {
+  red: "\x1b[31m",
+  yellow: "\x1b[33m",
+  blue: "\x1b[34m",
+  cyan: "\x1b[36m",
+};
 
 const COLUMNS = [
   "bot",
@@ -220,17 +228,16 @@ const genRandEvent = () => {
   };
 };
 
-function main() {
-  const filename = "link_clicks.csv";
+function create_and_write_clicks_to_file(filename: string, rows: number) {
   const writableStream = fs.createWriteStream(filename);
   const stringifier = stringify({ header: true, columns: COLUMNS });
 
   // Pipe the stringifier to the writable stream
   stringifier.pipe(writableStream);
 
-  console.log("Start generating 🌱");
-  console.log("Create events and write them to the CSV file...");
-  [...Array(100)].forEach(() => {
+  console.log(colors.yellow, "Start generating 🌱");
+  console.log(colors.blue, "Create events and write them to the CSV file ✍️");
+  [...Array(rows)].forEach(() => {
     const event = genRandEvent();
     stringifier.write(event);
   });
@@ -239,12 +246,36 @@ function main() {
   stringifier.end();
 
   writableStream.on("finish", () => {
-    console.log("Finished writting events to the file 🏁");
+    console.log(colors.cyan, "Finished writting events to the file 🏁");
   });
 
   writableStream.on("error", (err: Error) => {
-    console.error("Error writing to the CSV file: ", err);
+    console.error(colors.red, "Error writing to the CSV file: ", err);
   });
 }
 
-main();
+function parseIntOption(value: string) {
+  const parsedValue = parseInt(value, 10);
+  if (isNaN(parsedValue)) {
+    throw new InvalidArgumentError("Not a number.");
+  }
+  return parsedValue;
+}
+
+const commander = new Command()
+  .option(
+    "-f, --filename <value>",
+    "A name of a file to write fixture data to.",
+    "link_clicks.csv"
+  )
+  .option(
+    "-r, --rows <value>",
+    "A number of rows, i.e. click events, to generate.",
+    parseIntOption,
+    100
+  )
+  .parse(process.argv);
+
+const options = commander.opts();
+
+create_and_write_clicks_to_file(options.filename, options.rows);

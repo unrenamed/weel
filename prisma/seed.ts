@@ -4,14 +4,14 @@ import { faker } from "@faker-js/faker";
 const prisma = new PrismaClient();
 
 const generateLinks = () =>
-  [...Array(1000)].map((_) => {
+  [...Array(10_000)].map((_) => {
     const lastClicked = faker.date.past();
     const updatedAt = faker.date.past({ refDate: lastClicked });
     const createdAt = faker.date.past({ refDate: updatedAt });
 
     return {
       id: faker.string.nanoid({ min: 25, max: 35 }),
-      domain: "link.localhost:3000",
+      domain: "weel.vercel.app",
       key: faker.string.alphanumeric({ length: { min: 5, max: 10 } }),
       url: faker.internet.url(),
       ios: faker.internet.url(),
@@ -27,7 +27,7 @@ const generateLinks = () =>
         }) ?? null,
       title: faker.commerce.productName(),
       description: faker.commerce.productDescription(),
-      totalClicks: faker.number.int({ min: 1, max: 1000 }),
+      totalClicks: faker.number.int({ min: 1, max: 100000 }),
       geo:
         (faker.helpers.maybe(
           () => {
