@@ -1,7 +1,9 @@
-import { useState } from "react";
 import {
   Control,
+  FieldError,
   FieldErrors,
+  FieldErrorsImpl,
+  Merge,
   UseFormRegister,
   useFieldArray,
 } from "react-hook-form";
@@ -10,13 +12,27 @@ import { COUNTRIES } from "@/lib/constants";
 import { uncapitalize } from "@/lib/utils";
 import { Trash2 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
-import {
-  Button,
-  Switch,
-  FormTextInput,
-  FormInputError,
-} from "@/components/shared";
+import { Button, FormTextInput, FormInputError } from "@/components/shared";
 import { classNames } from "@/components/utils";
+import { CreateEditFormSection } from "./section";
+import { ReactNode } from "react";
+
+type Props = {
+  control: Control<FormData>;
+  register: UseFormRegister<FormData>;
+  errors: FieldErrors<FormData>;
+  isOpen: boolean;
+  onClose: () => void;
+  onOpen: () => void;
+};
+
+type GeoFieldError = Merge<
+  FieldError,
+  FieldErrorsImpl<{
+    url: string;
+    country: string;
+  }>
+>;
 
 export function GeoTargetingSection({
   control,
@@ -25,126 +41,90 @@ export function GeoTargetingSection({
   onOpen,
   onClose,
   isOpen,
-}: {
-  control: Control<FormData>;
-  register: UseFormRegister<FormData>;
-  errors: FieldErrors<FormData>;
-  isOpen: boolean;
-  onClose: () => void;
-  onOpen: () => void;
-}) {
-  const [open, setOpen] = useState(isOpen);
-
+}: Props) {
   const { fields, append, remove, replace } = useFieldArray({
     control,
     name: "geo",
   });
 
-  const handleCheckedChange = (checked: boolean) => {
-    setOpen(checked);
-    if (checked) {
-      onOpen();
-      if (!fields.length) replace([{ country: "", url: "" }]);
-    } else {
-      onClose();
+  const handleOpen = () => {
+    if (!fields.length) {
+      replace([{ country: "", url: "" }]);
     }
+    onOpen();
   };
 
   return (
-    <div>
-      <div className="flex justify-between items-center">
-        <span className="text-sm font-medium">Geo Targeting</span>
-        <Switch checked={isOpen} onCheckedChange={handleCheckedChange} />
-      </div>
-      {open && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.5 }}
-          className="flex flex-col space-y-2 mt-4"
-        >
-          <AnimatePresence initial={false}>
-            {fields.map(({ id }, index) => (
-              <motion.div
-                key={id}
-                layout
-                initial={{ opacity: 0, x: -40 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -40 }}
-                transition={{ duration: 0.3 }}
-              >
-                <GeoLink
-                  removable={fields.length > 1}
-                  onRemove={() => remove(index)}
-                  {...{ index, register, errors }}
-                />
-              </motion.div>
-            ))}
-          </AnimatePresence>
-          <FormInputError message={errors?.geo?.root?.message} />
-          <Button
-            type="button"
-            text="Add location"
-            variant="secondary"
-            className="mt-2 p-1"
-            onClick={() => append({ country: "", url: "" })}
-          />
-        </motion.div>
-      )}
-    </div>
+    <CreateEditFormSection
+      title="Geo Targeting"
+      isOpen={isOpen}
+      onOpen={handleOpen}
+      onClose={onClose}
+    >
+      <AnimatePresence initial={false}>
+        {fields.map(({ id }, index) => (
+          <AnimatedContainer key={id} id={id}>
+            <GeoLink
+              removable={fields.length > 1}
+              onRemove={() => remove(index)}
+              error={errors?.geo?.[index]}
+              {...{ index, register }}
+            />
+          </AnimatedContainer>
+        ))}
+      </AnimatePresence>
+      <FormInputError message={errors?.geo?.root?.message} />
+      <Button
+        type="button"
+        text="Add location"
+        variant="secondary"
+        className="mt-2 p-1"
+        onClick={() => append({ country: "", url: "" })}
+      />
+    </CreateEditFormSection>
+  );
+}
+
+function AnimatedContainer({
+  id,
+  children,
+}: {
+  id: string;
+  children: ReactNode;
+}) {
+  return (
+    <motion.div
+      key={id}
+      layout
+      initial={{ opacity: 0, x: -40 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -40 }}
+      transition={{ duration: 0.3 }}
+    >
+      {children}
+    </motion.div>
   );
 }
 
 function GeoLink({
   index,
-  errors,
+  error,
   register,
   removable,
   onRemove,
 }: {
   index: number;
-  errors: FieldErrors<FormData>;
+  error?: GeoFieldError;
   register: UseFormRegister<FormData>;
   removable: boolean;
   onRemove: () => void;
 }) {
-  const errorParts = [];
-  const error = errors?.geo?.[index];
-  if (error?.country?.message) {
-    errorParts.push(uncapitalize(error.country.message));
-  }
-  if (error?.url?.message) {
-    errorParts.push(uncapitalize(error.url.message));
-  }
-  const errorMessage = errorParts.length
-    ? `Please ${errorParts.join(" and ")}`
-    : "";
-
   return (
     <div className="flex flex-col space-y-2">
       <div className="flex justify-between items-center space-x-2">
         <div className="flex w-full">
-          <select
-            {...register(`geo.${index}.country` as const)}
-            id={`geo.${index}.country`}
-            className={classNames(
-              "flex w-32 items-center justify-center rounded-l-md pl-3 pr-7 text-center text-sm cursor-pointer border border-r-0",
-              "focus:outline-none focus:ring-0",
-              "bg-inherit text-secondary border-border focus:border-border"
-            )}
-            defaultValue=""
-          >
-            <option value="" disabled>
-              Country
-            </option>
-            {Object.entries(COUNTRIES).map(([code, name]) => (
-              <option key={code} value={code}>
-                {name}
-              </option>
-            ))}
-          </select>
-          <div className="w-full">
+          <CountrySelect register={register} index={index} />
+          <div className="w-full ">
             <FormTextInput
               {...register(`geo.${index}.url` as const)}
               id={`geo.${index}.url`}
@@ -154,17 +134,65 @@ function GeoLink({
             />
           </div>
         </div>
-        {removable && (
-          <button
-            type="button"
-            className="p-2 active:scale-95 transition-all duration-75"
-            onClick={onRemove}
-          >
-            <Trash2 size={20} className="text-red-400" strokeWidth={1.5} />
-          </button>
-        )}
+        {removable && <RemoveLinkButton onRemove={onRemove} />}
       </div>
-      <FormInputError message={errorMessage} />
+      <GeoLinkInputError error={error} />
     </div>
   );
+}
+
+function CountrySelect({
+  register,
+  index,
+}: {
+  index: number;
+  register: UseFormRegister<FormData>;
+}) {
+  return (
+    <select
+      {...register(`geo.${index}.country` as const)}
+      id={`geo.${index}.country`}
+      className={classNames(
+        "flex w-32 items-center justify-center rounded-l-md pl-3 pr-7 text-center text-sm cursor-pointer border border-r-0",
+        "focus:outline-none focus:ring-0",
+        "bg-inherit text-secondary border-border focus:border-border"
+      )}
+      defaultValue=""
+    >
+      <option value="" disabled>
+        Country
+      </option>
+      {Object.entries(COUNTRIES).map(([code, name]) => (
+        <option key={code} value={code}>
+          {name}
+        </option>
+      ))}
+    </select>
+  );
+}
+
+function RemoveLinkButton({ onRemove }: { onRemove: () => void }) {
+  return (
+    <button
+      type="button"
+      className="p-2 active:scale-95 transition-all duration-75"
+      onClick={onRemove}
+    >
+      <Trash2 size={20} className="text-red-400" strokeWidth={1.5} />
+    </button>
+  );
+}
+
+function GeoLinkInputError({ error }: { error?: GeoFieldError }) {
+  const parts = [];
+
+  if (error?.country?.message) {
+    parts.push(uncapitalize(error.country.message));
+  }
+  if (error?.url?.message) {
+    parts.push(uncapitalize(error.url.message));
+  }
+
+  const errorMessage = parts.length ? `Please ${parts.join(" and ")}` : "";
+  return <FormInputError message={errorMessage} />;
 }

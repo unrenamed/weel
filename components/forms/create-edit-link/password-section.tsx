@@ -1,7 +1,14 @@
-import { useState } from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
-import { Switch, FormPasswordInput, FormInputError } from "@/components/shared";
-import { motion } from "framer-motion";
+import { FormPasswordInput, FormInputError } from "@/components/shared";
+import { CreateEditFormSection } from "./section";
+
+type Props = {
+  formProps: UseFormRegisterReturn;
+  error?: string
+  isOpen: boolean;
+  onClose: () => void;
+  onOpen: () => void;
+};
 
 export function PasswordSection({
   formProps,
@@ -9,45 +16,22 @@ export function PasswordSection({
   onOpen,
   onClose,
   isOpen,
-}: {
-  formProps: UseFormRegisterReturn;
-  error: string | undefined;
-  isOpen: boolean;
-  onClose: () => void;
-  onOpen: () => void;
-}) {
-  const [open, setOpen] = useState(isOpen);
-
-  const handleCheckedChange = (checked: boolean) => {
-    setOpen(checked);
-    checked ? onOpen() : onClose();
-  };
-
+}: Props) {
   return (
-    <div className="flex flex-col space-y-3">
-      <div className="flex justify-between items-center">
-        <span className="text-sm font-medium">Password Protection</span>
-        <Switch checked={isOpen} onCheckedChange={handleCheckedChange} />
-      </div>
-      {open && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.5 }}
-          className="flex flex-col space-y-2"
-        >
-          <FormPasswordInput
-            {...formProps}
-            id="password"
-            placeholder="Enter password"
-            isError={!!error}
-            passwordVisibilityEnabled
-          />
-
-          <FormInputError message={error} />
-        </motion.div>
-      )}
-    </div>
+    <CreateEditFormSection
+      title="Password Protection"
+      isOpen={isOpen}
+      onOpen={onOpen}
+      onClose={onClose}
+    >
+      <FormPasswordInput
+        {...formProps}
+        id="password"
+        placeholder="Enter password"
+        isError={!!error}
+        passwordVisibilityEnabled
+      />
+      <FormInputError message={error} />
+    </CreateEditFormSection>
   );
 }
