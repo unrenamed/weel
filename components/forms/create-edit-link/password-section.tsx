@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
-import { Switch, FormPasswordInput } from "@/components/shared";
+import { Switch, FormPasswordInput, FormInputError } from "@/components/shared";
 import { motion } from "framer-motion";
 
 export function PasswordSection({
@@ -26,9 +26,7 @@ export function PasswordSection({
   return (
     <div className="flex flex-col space-y-3">
       <div className="flex justify-between items-center">
-        <span className="text-sm font-medium">
-          Password Protection
-        </span>
+        <span className="text-sm font-medium">Password Protection</span>
         <Switch checked={isOpen} onCheckedChange={handleCheckedChange} />
       </div>
       {open && (
@@ -46,7 +44,8 @@ export function PasswordSection({
             isError={!!error}
             passwordVisibilityEnabled
           />
-          {!!error && <p className="text-xs text-danger font-semibold">{error}</p>}
+
+          <FormInputError message={error} />
         </motion.div>
       )}
     </div>

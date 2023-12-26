@@ -16,3 +16,4 @@ export { default as LinkAvatar } from "./link-avatar";
 export { default as TextInput } from "./text-input";
 export { default as SearchInput } from "./search-input";
 export { default as DrawerIsland } from "./drawer-island";
+export { default as FormInputError } from "./form-input-error";

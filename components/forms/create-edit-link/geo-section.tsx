@@ -10,7 +10,12 @@ import { COUNTRIES } from "@/lib/constants";
 import { uncapitalize } from "@/lib/utils";
 import { Trash2 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Button, Switch, FormTextInput } from "@/components/shared";
+import {
+  Button,
+  Switch,
+  FormTextInput,
+  FormInputError,
+} from "@/components/shared";
 import { classNames } from "@/components/utils";
 
 export function GeoTargetingSection({
@@ -77,9 +82,7 @@ export function GeoTargetingSection({
               </motion.div>
             ))}
           </AnimatePresence>
-          <p className="text-xs text-danger font-semibold">
-            {errors?.geo?.root?.message}
-          </p>
+          <FormInputError message={errors?.geo?.root?.message} />
           <Button
             type="button"
             text="Add location"
@@ -161,9 +164,7 @@ function GeoLink({
           </button>
         )}
       </div>
-      {!!errorMessage && (
-        <p className="text-xs text-danger font-semibold">{errorMessage}</p>
-      )}
+      <FormInputError message={errorMessage} />
     </div>
   );
 }

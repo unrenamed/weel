@@ -1,7 +1,7 @@
 import { UseFormRegisterReturn } from "react-hook-form";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { FormDatetimeInput, Switch } from "@/components/shared";
+import { FormDatetimeInput, FormInputError, Switch } from "@/components/shared";
 
 export function ExpirationDateSection({
   formProps,
@@ -26,9 +26,7 @@ export function ExpirationDateSection({
   return (
     <div className="flex flex-col space-y-3">
       <div className="flex justify-between items-center">
-        <span className="text-sm font-medium">
-          Expiration Date
-        </span>
+        <span className="text-sm font-medium">Expiration Date</span>
         <Switch checked={isOpen} onCheckedChange={handleCheckedChange} />
       </div>
       {open && (
@@ -45,7 +43,7 @@ export function ExpirationDateSection({
             step={60}
             isError={!!error}
           />
-          {!!error && <p className="text-xs text-danger font-semibold">{error}</p>}
+          <FormInputError message={error} />
         </motion.div>
       )}
     </div>

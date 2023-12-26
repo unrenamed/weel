@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
-import { Switch, FormTextInput } from "@/components/shared";
+import { Switch, FormTextInput, FormInputError } from "@/components/shared";
 import { motion } from "framer-motion";
 
 export function IOSTargetingSection({
@@ -42,7 +42,7 @@ export function IOSTargetingSection({
             placeholder="https://apps.apple.com/us/app/x/id333903271"
             isError={!!error}
           />
-          {!!error && <p className="text-xs text-danger font-semibold">{error}</p>}
+          <FormInputError message={error} />
         </motion.div>
       )}
     </div>

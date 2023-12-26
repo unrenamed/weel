@@ -5,7 +5,11 @@ import { useForm } from "react-hook-form";
 import { FormData, linkPasswordSchema } from "./schema";
 import { useParams, useRouter } from "next/navigation";
 import { verifyPassword } from "./actions";
-import { LoadingButton, FormPasswordInput } from "@/components/shared";
+import {
+  LoadingButton,
+  FormPasswordInput,
+  FormInputError,
+} from "@/components/shared";
 
 export function VerifyLinkPasswordForm() {
   const { domain, key } = useParams<{
@@ -51,9 +55,7 @@ export function VerifyLinkPasswordForm() {
           id="password"
           isError={!!errors.password}
         />
-        {!!errors.password?.message && (
-          <p className="text-xs text-danger font-semibold">{errors.password?.message}</p>
-        )}
+        <FormInputError message={errors.password?.message} />
       </div>
       <LoadingButton
         text="Authenticate"

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
-import { Switch, FormTextInput } from "@/components/shared";
+import { Switch, FormTextInput, FormInputError } from "@/components/shared";
 import { motion } from "framer-motion";
 
 export function AndroidTargetingSection({
@@ -26,9 +26,7 @@ export function AndroidTargetingSection({
   return (
     <div className="flex flex-col space-y-3">
       <div className="flex justify-between items-center">
-        <span className="text-sm font-medium">
-          Android Targeting
-        </span>
+        <span className="text-sm font-medium">Android Targeting</span>
         <Switch checked={isOpen} onCheckedChange={handleCheckedChange} />
       </div>
       {open && (
@@ -45,7 +43,7 @@ export function AndroidTargetingSection({
             placeholder="https://play.google.com/store/apps/details?id=com.twitter.android"
             isError={!!error}
           />
-          {!!error && <p className="text-xs text-danger font-semibold">{error}</p>}
+          <FormInputError message={error} />
         </motion.div>
       )}
     </div>
