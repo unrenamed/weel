@@ -11,7 +11,11 @@ import {
   FormInputError,
 } from "@/components/shared";
 
-export function VerifyLinkPasswordForm() {
+export function VerifyLinkPasswordForm({
+  redirectUrl,
+}: {
+  redirectUrl: string;
+}) {
   const { domain, key } = useParams<{
     domain: string;
     key: string;
@@ -29,13 +33,13 @@ export function VerifyLinkPasswordForm() {
   });
 
   const onSubmit = async (data: FormData) => {
-    const { error, url } =
+    const { error } =
       (await verifyPassword({ domain, key, password: data.password })) || {};
 
     if (error) {
       setError("password", { type: "custom", message: error });
     } else {
-      router.push(url!);
+      router.push(redirectUrl);
     }
   };
 

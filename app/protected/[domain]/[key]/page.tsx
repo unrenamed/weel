@@ -8,7 +8,15 @@ export const metadata: Metadata = {
     "Unlock protected content on our secured page — enter the password to access a password-protected short link.",
 };
 
-export default function PasswordProtectedLinkPage() {
+type SearchParams = {
+  redirectUrl: string;
+};
+
+export default function PasswordProtectedLinkPage({
+  searchParams,
+}: {
+  searchParams: SearchParams;
+}) {
   return (
     <div className="flex h-screen w-screen items-center justify-center">
       <div className="absolute right-0 top-0 sm:px-10 px-5 py-5">
@@ -22,7 +30,7 @@ export default function PasswordProtectedLinkPage() {
             it
           </p>
         </div>
-        <VerifyLinkPasswordForm />
+        <VerifyLinkPasswordForm redirectUrl={searchParams.redirectUrl} />
       </div>
     </div>
   );

@@ -50,35 +50,40 @@ export const LinkMiddleware = async (req: NextRequest, ev: NextFetchEvent) => {
 
   ev.waitUntil(recordClick(req));
 
+  const linkUrl = getRedirectUrl(link, req);
+
   // If link is password-protected
   if (link.password) {
     return NextResponse.rewrite(
-      new URL(`/protected/${domain}/${key}`, req.url)
+      new URL(`/protected/${domain}/${key}?redirectUrl=${linkUrl}`, req.url)
     );
   }
 
-  // If device targeting is enabled
+  return NextResponse.redirect(new URL(linkUrl), { headers: APP_HEADERS });
+};
+
+const getRedirectUrl = (link: RedisLink, req: NextRequest) => {
+  let url = new URL(link.url);
+
+  // If IOS device targeting is enabled
   const { os } = userAgent(req);
 
   if (link.ios && os?.name === "iOS") {
-    return NextResponse.redirect(new URL(link.ios), { headers: APP_HEADERS });
+    url = new URL(link.ios);
   }
 
+  // If Android device targeting is enabled
   if (link.android && os?.name === "Android") {
-    return NextResponse.redirect(new URL(link.android), {
-      headers: APP_HEADERS,
-    });
+    url = new URL(link.android);
   }
 
-  // If geo targeting is enabled
   const { country } =
     req.geo && "country" in req.geo ? req.geo : LOCALHOST_GEO_DATA;
 
+  // If geo targeting is enabled
   if (link.geo && country && country in link.geo) {
-    return NextResponse.redirect(new URL(link.geo[country]), {
-      headers: APP_HEADERS,
-    });
+    url = new URL(link.geo[country]);
   }
 
-  return NextResponse.redirect(new URL(link.url), { headers: APP_HEADERS });
+  return url;
 };
