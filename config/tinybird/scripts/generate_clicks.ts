@@ -218,7 +218,7 @@ const genRandEvent = () => {
     latitude: faker.location.latitude(),
     longitude: faker.location.longitude(),
     timestamp: faker.date.between({
-      from: new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
+      from: new Date("2023-09-01"),
       to: new Date(),
     }),
     referrer:
