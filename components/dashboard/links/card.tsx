@@ -1,35 +1,35 @@
 import { ThreeDots } from "@/components/icons";
 import {
-    useArchiveLinkModal,
-    useDeleteLinkModal,
-    useLinkQrModal,
-    useCreateEditLinkModal,
+  useArchiveLinkModal,
+  useDeleteLinkModal,
+  useLinkQrModal,
+  useCreateEditLinkModal,
 } from "@/components/modals";
 import { LinkAvatar, Popover, Tooltip } from "@/components/shared";
 import { cn } from "@/components/utils";
 import {
-    dateTimeAgo,
-    capitalize,
-    pluralize,
-    pluralizeJSX,
-    dateTimeSoon,
-    nFormatter,
+  dateTimeAgo,
+  capitalize,
+  pluralize,
+  pluralizeJSX,
+  dateTimeSoon,
+  nFormatter,
 } from "@/lib/utils";
 import { Link } from "@prisma/client";
 import * as Separator from "@radix-ui/react-separator";
 import NextLink from "next/link";
 import {
-    Archive,
-    ArchiveIcon,
-    ArchiveRestore,
-    BarChart,
-    CalendarClock,
-    Check,
-    Copy,
-    Edit3,
-    PlusSquare,
-    QrCode,
-    Trash2,
+  Archive,
+  ArchiveIcon,
+  ArchiveRestore,
+  BarChart,
+  CalendarClock,
+  Check,
+  Copy,
+  Edit3,
+  PlusSquare,
+  QrCode,
+  Trash2,
 } from "lucide-react";
 import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -455,39 +455,5 @@ function LinkTotalClicks({
     </div>
   );
 }
-
-// function areEqual(prevProps: LinkCardProps, nextProps: LinkCardProps) {
-//   let areGeoDataEqual = prevProps.link === null && nextProps.link === null;
-//   if (
-//     prevProps.link.geo &&
-//     typeof prevProps.link.geo === "object" &&
-//     nextProps.link.geo &&
-//     typeof nextProps.link.geo === "object"
-//   ) {
-//     const prevGeo = prevProps.link.geo as Prisma.JsonObject;
-//     const nextGeo = prevProps.link.geo as Prisma.JsonObject;
-//     areGeoDataEqual = Object.entries(prevGeo).every(
-//       ([country, url]) => url === nextGeo[country]
-//     );
-//   }
-
-//   return (
-//     prevProps.link.id === nextProps.link.id &&
-//     prevProps.link.domain === nextProps.link.domain &&
-//     prevProps.link.key === nextProps.link.key &&
-//     prevProps.link.url === nextProps.link.url &&
-//     prevProps.link.archived === nextProps.link.archived &&
-//     prevProps.link.expiresAt === nextProps.link.expiresAt &&
-//     prevProps.link.createdAt === nextProps.link.createdAt &&
-//     prevProps.link.updatedAt === nextProps.link.updatedAt &&
-//     prevProps.link.title === nextProps.link.title &&
-//     prevProps.link.description === nextProps.link.description &&
-//     prevProps.link.ios === nextProps.link.ios &&
-//     prevProps.link.android === nextProps.link.android &&
-//     prevProps.link.totalClicks === nextProps.link.totalClicks &&
-//     prevProps.link.lastClicked === nextProps.link.lastClicked &&
-//     areGeoDataEqual
-//   );
-// }
 
 export default LinkCard;

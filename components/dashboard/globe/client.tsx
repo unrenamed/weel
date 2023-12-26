@@ -97,7 +97,7 @@ function GlobeCanvas({ markers }: Props) {
       globe.destroy();
       window.removeEventListener("resize", onResize);
     };
-  }, []);
+  }, [r, markers]);
 
   const handlePointerDown = (e: MouseEvent<HTMLCanvasElement>) => {
     pointerInteracting.current = e.clientX - pointerInteractionMovement.current;

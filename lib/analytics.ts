@@ -45,10 +45,6 @@ const intervalData: IntervalData = {
   },
 };
 
-const isTinybirdPipe = (response: Object): response is TinybirdPipe => {
-  return !response.hasOwnProperty("error");
-};
-
 export const isTinybirdApiEndpoint = (
   endpoint: string
 ): endpoint is TinybirdApiEndpoint => {
@@ -70,36 +66,11 @@ export const recordClick = async (req: NextRequest) => {
   const { success } = await clicksRateLimit.limit(`${ip}:${domain}:${key}`);
   if (!success) return;
 
-  const ua = userAgent(req);
-  const geo = req.geo ?? LOCALHOST_GEO_DATA;
-  const referrer = req.headers.get("referrer");
+  const eventBody = buildClickEventBody(key, domain, req);
 
   await fetch("https://api.tinybird.co/v0/events?name=link_clicks", {
     method: "POST",
-    body: JSON.stringify({
-      timestamp: new Date(),
-      domain,
-      key: decodeURIComponent(key),
-      country: geo?.country ?? "Unknown",
-      city: geo?.city ?? "Unknown",
-      region: geo?.region ?? "Unknown",
-      latitude: geo?.latitude ?? "Unknown",
-      longitude: geo?.longitude ?? "Unknown",
-      ua: ua.ua || "Unknown",
-      browser: ua.browser.name ?? "Unknown",
-      browser_version: ua.browser.version ?? "Unknown",
-      engine: ua.engine.name ?? "Unknown",
-      engine_version: ua.engine.version ?? "Unknown",
-      os: ua.os.name ?? "Unknown",
-      os_version: ua.os.version ?? "Unknown",
-      device: ua.device.type ? capitalize(ua.device.type) : "Desktop",
-      device_vendor: ua.device.vendor ?? "Unknown",
-      device_model: ua.device.model ?? "Unknown",
-      cpu_architecture: ua.cpu?.architecture ?? "Unknown",
-      bot: ua.isBot,
-      referrer: referrer ?? "(direct)",
-      referrer_url: referrer ?? "(direct)",
-    }),
+    body: JSON.stringify(eventBody),
     headers: {
       Authorization: `Bearer ${process.env.TINYBIRD_API_TOKEN}`,
     },
@@ -203,4 +174,51 @@ export const getCoordinates = async (
   } else {
     return Promise.reject(new Error(json.error));
   }
+};
+
+const buildClickEventBody = (key: string, domain: string, req: NextRequest) => {
+  const ua = userAgent(req);
+  const geo = req.geo ?? LOCALHOST_GEO_DATA;
+  const referrer = req.headers.get("referrer");
+
+  return {
+    timestamp: new Date(),
+    domain,
+    key: decodeURIComponent(key),
+    country: getValueOrUnknown(geo?.country),
+    city: getValueOrUnknown(geo?.city),
+    region: getValueOrUnknown(geo?.region),
+    latitude: getValueOrUnknown(geo?.latitude),
+    longitude: getValueOrUnknown(geo?.longitude),
+    ua: getValueOrUnknown(ua.ua),
+    browser: getValueOrUnknown(ua.browser.name),
+    browser_version: getValueOrUnknown(ua.browser.version),
+    engine: getValueOrUnknown(ua.engine.name),
+    engine_version: getValueOrUnknown(ua.engine.version),
+    os: getValueOrUnknown(ua.os.name),
+    os_version: getValueOrUnknown(ua.os.version),
+    device: getDeviceType(ua.device.type),
+    device_vendor: getValueOrUnknown(ua.device.vendor),
+    device_model: getValueOrUnknown(ua.device.model),
+    cpu_architecture: getValueOrUnknown(ua.cpu?.architecture),
+    bot: ua.isBot,
+    referrer: getReferrerValue(referrer),
+    referrer_url: getReferrerValue(referrer),
+  };
+};
+
+const getValueOrUnknown = (value?: string) => {
+  return value ?? "Unknown";
+};
+
+const getReferrerValue = (referrer: string | null) => {
+  return referrer ?? "(direct)";
+};
+
+const getDeviceType = (type?: string) => {
+  return type ? capitalize(type) : "Desktop";
+};
+
+const isTinybirdPipe = (response: Object): response is TinybirdPipe => {
+  return !response.hasOwnProperty("error");
 };

@@ -5,9 +5,9 @@ import { prismaLocalClient } from "@/lib/prisma";
 import { nanoid } from "../utils";
 import { isBefore } from "date-fns";
 import {
-    DuplicateKeyError,
-    InvalidExpirationTimeError,
-    LinkNotFoundError,
+  DuplicateKeyError,
+  InvalidExpirationTimeError,
+  LinkNotFoundError,
 } from "../error";
 import { Link } from "@prisma/client";
 
@@ -19,18 +19,9 @@ export const createLink = async (link: CreateLink) => {
     throw new DuplicateKeyError("Key already exists in this domain");
   }
 
-  // we are not interested in secs and millis of a key expiration time
-  const expiresAt = link.expiresAt
-    ? link.expiresAt.substring(0, 17) + "00.000Z"
-    : null;
-
-  if (expiresAt && isBefore(new Date(expiresAt), new Date())) {
-    throw new InvalidExpirationTimeError(
-      "Expiration time must be in the future"
-    );
-  }
-
-  const exat = expiresAt ? new Date(expiresAt).getTime() / 1000 : null;
+  const expiresAt = cutMillisOff(link.expiresAt);
+  validateExpirationTime(expiresAt);
+  const exat = getUnixTimeSeconds(expiresAt);
   const password = rawPassword ? await bcrypt.hash(rawPassword, 10) : null;
 
   const value = {
@@ -87,16 +78,8 @@ export const editLink = async (id: string, newData: EditLink) => {
     }
   }
 
-  // we are not interested in secs and millis of a key expiration time
-  const expiresAt = newData.expiresAt
-    ? newData.expiresAt.substring(0, 17) + "00.000Z"
-    : null;
-
-  if (expiresAt && isBefore(new Date(expiresAt), new Date())) {
-    throw new InvalidExpirationTimeError(
-      "Expiration time must be in the future"
-    );
-  }
+  const expiresAt = cutMillisOff(newData.expiresAt);
+  validateExpirationTime(expiresAt);
 
   const redisValue = {
     url,
@@ -108,7 +91,7 @@ export const editLink = async (id: string, newData: EditLink) => {
     ...(link.password && { password: link.password }),
   };
 
-  const exat = expiresAt ? new Date(expiresAt).getTime() / 1000 : null;
+  const exat = getUnixTimeSeconds(expiresAt);
   const opts = {
     ...(exat && ({ exat } as any)), // expiration timestamp, in seconds
   };
@@ -213,4 +196,20 @@ export const setArchiveStatus = async (
         ]
       : []),
   ]);
+};
+
+const cutMillisOff = (timestamp: string | null) => {
+  return timestamp ? timestamp.substring(0, 17) + "00.000Z" : null;
+};
+
+const getUnixTimeSeconds = (timestamp: string | null) => {
+  return timestamp ? new Date(timestamp).getTime() / 1000 : null;
+};
+
+const validateExpirationTime = (expiresAt: string | null) => {
+  if (expiresAt && isBefore(new Date(expiresAt), new Date())) {
+    throw new InvalidExpirationTimeError(
+      "Expiration time must be in the future"
+    );
+  }
 };
