@@ -1,5 +1,5 @@
 import { ButtonHTMLAttributes, ReactNode, forwardRef } from "react";
-import { classNames } from "../utils";
+import { cn } from "../utils";
 
 export type ButtonProps = {
   text?: string;
@@ -11,17 +11,17 @@ export type ButtonProps = {
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
 const variantColors = {
-  primary: classNames(
+  primary: cn(
     "border-primary-btn-b bg-primary-btn text-primary-btn-txt",
     "hover:bg-content hover:text-primary-btn-txt-hover",
     "disabled:border-primary-btn-b-disabled disabled:bg-primary-btn-disabled disabled:text-primary-btn-txt-disabled"
   ),
-  secondary: classNames(
+  secondary: cn(
     "border-secondary-btn-b bg-secondary-btn text-secondary-btn-txt",
     "hover:bg-content hover:text-secondary-btn-txt-hover",
     "disabled:border-secondary-btn-b-disabled disabled:bg-secondary-btn-disabled disabled:text-secondary-btn-txt-disabled"
   ),
-  error: classNames(
+  error: cn(
     "border-error-btn-b bg-error-btn text-error-btn-txt",
     "hover:bg-content hover:text-error-btn-txt-hover",
     "disabled:border-error-btn-b-disabled disabled:bg-error-btn-disabled disabled:text-error-btn-txt-disabled"
@@ -44,7 +44,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
     <button
       {...props}
       ref={ref}
-      className={classNames(
+      className={cn(
         "group rounded-md border focus:outline-none px-4",
         "flex items-center justify-center",
         "text-sm font-medium",

@@ -4,7 +4,7 @@ import { Drawer } from "vaul";
 import { useMediaQuery } from "@/hooks";
 import { Check } from "lucide-react";
 import { DrawerIsland } from ".";
-import { classNames } from "../utils";
+import { cn } from "../utils";
 
 type Props = {
   children: ReactNode;
@@ -38,7 +38,7 @@ export default function DropdownMenu({
                 <button
                   key={value}
                   onClick={() => onSelect(value)}
-                  className={classNames(
+                  className={cn(
                     "flex w-full items-center justify-between px-2 py-2 outline-0 rounded-md",
                     "hover:bg-skeleton/70",
                     "active:bg-skeleton/70",
@@ -68,7 +68,7 @@ export default function DropdownMenu({
               <DropdownMenuPrimitive.Item
                 key={value}
                 onClick={() => onSelect(value)}
-                className={classNames(
+                className={cn(
                   "flex w-full items-center justify-between px-2 py-2 outline-0 rounded-md",
                   "hover:bg-skeleton/70",
                   "active:bg-skeleton/70",

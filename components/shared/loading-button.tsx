@@ -1,7 +1,7 @@
 import { forwardRef } from "react";
 import Button, { ButtonProps } from "./button";
 import LoadingSpinner from "./loading-spinner";
-import { classNames } from "../utils";
+import { cn } from "../utils";
 
 type LoadingButtonProps = {
   loading?: boolean;
@@ -16,7 +16,7 @@ const LoadingButton = forwardRef<HTMLButtonElement, LoadingButtonProps>(
       <Button
         {...props}
         ref={ref}
-        className={classNames("space-x-2", className)}
+        className={cn("space-x-2", className)}
         disabled={loading || disabled}
       >
         {loading && <LoadingSpinner />}

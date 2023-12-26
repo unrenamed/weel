@@ -6,7 +6,7 @@ import { FormData } from "../forms/create-edit-link/schema";
 import { toast } from "sonner";
 import { CreateEditLink } from "@/lib/types";
 import { LoadingButton } from "../shared";
-import { classNames } from "../utils";
+import { cn } from "../utils";
 import { useCopyToClipboard } from "@/hooks";
 
 type Props = {
@@ -124,7 +124,7 @@ function CreateEditLinkModalContent({
             const loading = isLoading || isSubmitting;
             return (
               <div
-                className={classNames(
+                className={cn(
                   "z-10 px-4 py-8 transition-all md:sticky md:bottom-0 md:px-16 m-0",
                   {
                     "bg-inherit md:shadow-[0_-20px_30px_-10px_rgba(0,0,0,0.1)]":

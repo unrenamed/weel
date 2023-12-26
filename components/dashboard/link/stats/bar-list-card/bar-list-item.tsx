@@ -1,5 +1,5 @@
 import { NumberTooltip } from "@/components/shared";
-import { classNames } from "@/components/utils";
+import { cn } from "@/components/utils";
 import { nFormatter } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { CSSProperties, ReactNode } from "react";
@@ -31,7 +31,7 @@ export default function BarListItem({
         </div>
         <motion.div
           style={{ width: `${(clicks / maxClicks) * 100}%` }}
-          className={classNames(
+          className={cn(
             "absolute h-full py-4 rounded-md origin-left",
             barBackground
           )}

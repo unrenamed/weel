@@ -4,7 +4,7 @@ import VirtualizedList from "react-virtualized/dist/es/List";
 import AutoSizer from "react-virtualized/dist/es/AutoSizer";
 import { round } from "@/lib/utils";
 import { useMediaQuery } from "@/hooks";
-import { classNames } from "@/components/utils";
+import { cn } from "@/components/utils";
 
 export default function BarList({
   data,
@@ -50,7 +50,7 @@ export default function BarList({
     <AutoSizer>
       {({ width }) => (
         <VirtualizedList
-          className={classNames(
+          className={cn(
             "overflow-auto",
             "scrollbar scrollbar-w-1.5 scrollbar-track-rounded-xl scrollbar-thumb-rounded-xl",
             "scrollbar-track-gray-100 scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-500",

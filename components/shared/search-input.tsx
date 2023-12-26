@@ -1,7 +1,7 @@
 import { Search } from "lucide-react";
 import { InputHTMLAttributes, forwardRef } from "react";
 import { TextInput } from ".";
-import { classNames } from "../utils";
+import { cn } from "../utils";
 
 type InputProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type">;
 
@@ -15,7 +15,7 @@ const SearchInput = forwardRef<HTMLInputElement, InputProps>(
         <TextInput
           ref={ref}
           placeholder={placeholder ?? "Search..."}
-          className={classNames("pl-10", className)}
+          className={cn("pl-10", className)}
           {...props}
         />
       </div>

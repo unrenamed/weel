@@ -1,35 +1,35 @@
 import { ThreeDots } from "@/components/icons";
 import {
-  useArchiveLinkModal,
-  useDeleteLinkModal,
-  useLinkQrModal,
-  useCreateEditLinkModal,
+    useArchiveLinkModal,
+    useDeleteLinkModal,
+    useLinkQrModal,
+    useCreateEditLinkModal,
 } from "@/components/modals";
 import { LinkAvatar, Popover, Tooltip } from "@/components/shared";
-import { classNames } from "@/components/utils";
+import { cn } from "@/components/utils";
 import {
-  dateTimeAgo,
-  capitalize,
-  pluralize,
-  pluralizeJSX,
-  dateTimeSoon,
-  nFormatter,
+    dateTimeAgo,
+    capitalize,
+    pluralize,
+    pluralizeJSX,
+    dateTimeSoon,
+    nFormatter,
 } from "@/lib/utils";
 import { Link } from "@prisma/client";
 import * as Separator from "@radix-ui/react-separator";
 import NextLink from "next/link";
 import {
-  Archive,
-  ArchiveIcon,
-  ArchiveRestore,
-  BarChart,
-  CalendarClock,
-  Check,
-  Copy,
-  Edit3,
-  PlusSquare,
-  QrCode,
-  Trash2,
+    Archive,
+    ArchiveIcon,
+    ArchiveRestore,
+    BarChart,
+    CalendarClock,
+    Check,
+    Copy,
+    Edit3,
+    PlusSquare,
+    QrCode,
+    Trash2,
 } from "lucide-react";
 import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -160,7 +160,7 @@ function LinkCard({
   return (
     <div
       ref={cardRef}
-      className={classNames(
+      className={cn(
         "relative transition-all duration-75",
         isCardSelected &&
           "before:absolute before:left-0 before:top-0 before:z-10 before:h-full before:w-full before:bg-gradient-to-r before:from-link-card-backlight-from before:to-link-card-backlight-to sm:before:blur-[7px] before:blur-[5px]"
@@ -191,7 +191,7 @@ function LinkCard({
                 title={href}
                 target="_blank"
                 rel="noreferrer"
-                className={classNames(
+                className={cn(
                   "w-full truncate font-semibold text-sm sm:text-base",
                   "max-w-[140px] sm:max-w-[300px] md:max-w-[360px] xl:max-w-[400px]",
                   link.archived ? "text-secondary" : "text-link"
@@ -340,7 +340,7 @@ function PopoverItem({
     },
     danger: {
       button: "text-danger hover:bg-danger hover:text-white",
-      kbd: classNames(
+      kbd: cn(
         "bg-danger/10 text-danger border-danger/40",
         "group-hover:text-white group-hover:bg-content/20"
       ),
@@ -349,7 +349,7 @@ function PopoverItem({
 
   return (
     <button
-      className={classNames(
+      className={cn(
         "group w-full flex justify-between items-center p-2 rounded-md transition-all duration-75",
         variantColors[variant].button
       )}
@@ -360,7 +360,7 @@ function PopoverItem({
         <p>{text}</p>
       </div>
       <kbd
-        className={classNames(
+        className={cn(
           "hidden sm:inline-block transition-all duration-75 px-2 py-0.5 rounded-md text-xs font-light border shadow-kbd",
           variantColors[variant].kbd
         )}
@@ -375,7 +375,7 @@ function CopyToClipboard({ value }: { value: string }) {
   const [copied, copyToClipboard] = useCopyToClipboard();
   return (
     <button
-      className={classNames(
+      className={cn(
         "p-1.5 rounded-full transition-all duration-75",
         "hover:scale-110 active:scale-90",
         "bg-skeleton/75 text-primary/75",

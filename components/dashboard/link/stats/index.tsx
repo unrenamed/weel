@@ -1,4 +1,4 @@
-import { classNames } from "@/components/utils";
+import { cn } from "@/components/utils";
 import { useScroll } from "@/hooks";
 import { Link } from "@prisma/client";
 import { useState } from "react";
@@ -19,7 +19,7 @@ export default function LinkStats({ link }: Params) {
   return (
     <div className="w-full grid grid-cols-1 place-content-center">
       <div
-        className={classNames(
+        className={cn(
           "sticky md:py-5 py-3 top-[4rem] bg-bkg z-20",
           {
             "shadow-md": scrolled,

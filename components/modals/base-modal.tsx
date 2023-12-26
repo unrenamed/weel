@@ -3,15 +3,15 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { Drawer } from "vaul";
 import {
-  Dispatch,
-  ReactNode,
-  SetStateAction,
-  memo,
-  useCallback,
-  useMemo,
-  useState,
+    Dispatch,
+    ReactNode,
+    SetStateAction,
+    memo,
+    useCallback,
+    useMemo,
+    useState,
 } from "react";
-import { classNames } from "../utils";
+import { cn } from "../utils";
 import { useMediaQuery } from "@/hooks";
 import { DrawerIsland } from "../shared";
 
@@ -49,7 +49,7 @@ const BaseModal = memo(function BaseModal({
         <Drawer.Portal>
           <Drawer.Overlay className="fixed inset-0 bg-overlay/20 backdrop-blur" />
           <Drawer.Content
-            className={classNames(
+            className={cn(
               "fixed bottom-0 left-0 right-0 z-50 rounded-t-[10px] max-h-[85dvh] min-h-[5dvh] bg-content border-t border-border",
               contentClassName
             )}
@@ -79,7 +79,7 @@ const BaseModal = memo(function BaseModal({
         <Dialog.Content
           onOpenAutoFocus={(e) => e.preventDefault()}
           onCloseAutoFocus={(e) => e.preventDefault()}
-          className={classNames(
+          className={cn(
             `animate-scale-in fixed inset-0 z-40 m-auto max-h-fit w-full max-w-md overflow-hidden border border-border bg-content p-0 shadow-xl sm:rounded-xl`,
             contentClassName
           )}

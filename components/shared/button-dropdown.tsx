@@ -1,7 +1,7 @@
 import { ReactNode, useState } from "react";
 import { DropdownMenu } from "./";
 import { ChevronDown } from "lucide-react";
-import { classNames } from "../utils";
+import { cn } from "../utils";
 
 type Props = {
   icon: ReactNode;
@@ -37,7 +37,7 @@ export default function ButtonDropdown({
           <p className="text-sm">{text}</p>
         </div>
         <ChevronDown
-          className={classNames(
+          className={cn(
             "h-4 w-4 text-secondary transition duration-75",
             open ? "rotate-180 transform" : ""
           )}

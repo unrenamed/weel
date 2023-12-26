@@ -1,6 +1,6 @@
 import BarListCard from "./bar-list-card/card";
 import { useState } from "react";
-import { classNames } from "@/components/utils";
+import { cn } from "@/components/utils";
 import Image from "next/image";
 import useSWR from "swr";
 import { fetcher } from "@/lib/utils";
@@ -40,7 +40,7 @@ export default function Locations() {
 function CountryFlag({ code }: { code: string }) {
   const [loading, setLoading] = useState(true);
   return (
-    <div className={classNames({ "animate-pulse bg-skeleton": loading })}>
+    <div className={cn({ "animate-pulse bg-skeleton": loading })}>
       <Image
         alt={code}
         src={code}

@@ -1,4 +1,4 @@
-import { classNames } from "@/components/utils";
+import { cn } from "@/components/utils";
 import { Search } from "lucide-react";
 import { useRef, useState } from "react";
 import BardListCardSearch from "./search";
@@ -26,7 +26,7 @@ export default function BarListCardHeader({
 
   return (
     <div
-      className={classNames(
+      className={cn(
         "z-10 rounded-t-md sticky top-0 px-5 py-3 sm:px-7 sm:py-5 w-full flex flex-col",
         {
           "shadow-md": scrolled,
@@ -61,7 +61,7 @@ export default function BarListCardHeader({
             <button
               key={tab}
               onClick={() => setTab?.(tab)}
-              className={classNames(
+              className={cn(
                 "rounded-md text-primary/70 transition duration-75 active:scale-95 text-xs sm:text-sm font-medium py-1 px-2",
                 {
                   "bg-selected-bar-list-tab": selectedTab === tab,

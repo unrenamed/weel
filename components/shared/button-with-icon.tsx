@@ -1,6 +1,6 @@
 import { ReactNode, forwardRef } from "react";
 import Button, { ButtonProps } from "./button";
-import { classNames } from "../utils";
+import { cn } from "../utils";
 
 type ButtonWithIconProps = {
   icon: ReactNode;
@@ -12,7 +12,7 @@ const ButtonWithIcon = forwardRef<HTMLButtonElement, ButtonWithIconProps>(
       <Button
         {...props}
         ref={ref}
-        className={classNames("space-x-2", className)}
+        className={cn("space-x-2", className)}
       >
         {icon}
         <p>{props.text}</p>

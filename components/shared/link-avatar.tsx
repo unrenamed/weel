@@ -1,4 +1,4 @@
-import { classNames } from "@/components/utils";
+import { cn } from "@/components/utils";
 import { getApexDomain } from "@/lib/utils";
 import { useState } from "react";
 import Image from "next/image";
@@ -17,7 +17,7 @@ export default function LinkAvatar({ url }: { url: string }) {
     <Image
       src={src}
       alt={apexDomain}
-      className={classNames(
+      className={cn(
         "h-8 w-8 rounded-full sm:h-10 sm:w-10 duration-700 ease-in-out",
         loading
           ? "scale-110 blur-sm grayscale bg-skeleton"

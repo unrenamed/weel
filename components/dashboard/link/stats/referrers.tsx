@@ -2,7 +2,7 @@ import BarListCard from "./bar-list-card/card";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { fetcher } from "@/lib/utils";
-import { classNames } from "@/components/utils";
+import { cn } from "@/components/utils";
 import Image from "next/image";
 import { Globe } from "lucide-react";
 import { faviconLoader } from "@/lib/image-loaders";
@@ -40,7 +40,7 @@ function ReferrerIcon({ referrer }: { referrer: string }) {
   }, [referrer]);
 
   return (
-    <div className={classNames({ "animate-pulse bg-skeleton": loading })}>
+    <div className={cn({ "animate-pulse bg-skeleton": loading })}>
       {isError ? (
         <Globe className="h-4 w-4 text-secondary" />
       ) : (

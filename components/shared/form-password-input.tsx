@@ -1,5 +1,5 @@
 import { forwardRef, useState } from "react";
-import { classNames } from "../utils";
+import { cn } from "../utils";
 import { Eye, EyeOff } from "lucide-react";
 import FormInput, { FormInputProps } from "./form-input";
 
@@ -17,7 +17,7 @@ const FormPasswordInput = forwardRef<HTMLInputElement, Props>(
       <FormInput {...props} type={showPassword ? "text" : "password"} ref={ref}>
         {passwordVisibilityEnabled && (
           <button
-            className={classNames(
+            className={cn(
               "absolute inset-y-0 flex items-center",
               props.isError ? "right-10" : "right-3"
             )}

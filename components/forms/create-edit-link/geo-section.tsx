@@ -13,7 +13,7 @@ import { uncapitalize } from "@/lib/utils";
 import { Trash2 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Button, FormTextInput, FormInputError } from "@/components/shared";
-import { classNames } from "@/components/utils";
+import { cn } from "@/components/utils";
 import { CreateEditFormSection } from "./section";
 import { ReactNode } from "react";
 
@@ -152,7 +152,7 @@ function CountrySelect({
     <select
       {...register(`geo.${index}.country` as const)}
       id={`geo.${index}.country`}
-      className={classNames(
+      className={cn(
         "flex w-32 items-center justify-center rounded-l-md pl-3 pr-7 text-center text-sm cursor-pointer border border-r-0",
         "focus:outline-none focus:ring-0",
         "bg-inherit text-secondary border-border focus:border-border"

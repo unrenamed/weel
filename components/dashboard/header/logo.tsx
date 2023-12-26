@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { classNames } from "@/components/utils";
+import { cn } from "@/components/utils";
 import { useTheme } from "next-themes";
 import { useMediaQuery } from "@/hooks";
 
@@ -24,7 +24,7 @@ export default function HeaderLogo() {
 
   return (
     <Image
-      className={classNames(
+      className={cn(
         "rounded-full transition-all duration-75 ease-in-out",
         loading ? "bg-skeleton animate-pulse" : "active:scale-95"
       )}

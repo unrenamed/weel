@@ -1,5 +1,5 @@
 import { UseFormRegisterReturn } from "react-hook-form";
-import { classNames } from "../utils";
+import { cn } from "../utils";
 import { InputHTMLAttributes, ReactNode, forwardRef } from "react";
 import { AlertCircle } from "lucide-react";
 
@@ -23,7 +23,7 @@ const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
           {...props}
           ref={ref}
           autoComplete="off"
-          className={classNames(
+          className={cn(
             "w-full rounded-md focus:outline-none text-sm",
             {
               "pr-10 border-danger/70 text-danger placeholder-danger/70 focus:border-danger focus:ring-danger":

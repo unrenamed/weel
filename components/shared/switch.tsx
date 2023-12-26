@@ -1,5 +1,5 @@
 import * as SwitchPrimitive from "@radix-ui/react-switch";
-import { classNames } from "../utils";
+import { cn } from "../utils";
 
 type Props = {
   className?: string;
@@ -8,7 +8,7 @@ type Props = {
 export default function Switch({ className, ...rootProps }: Props) {
   return (
     <SwitchPrimitive.Root
-      className={classNames(
+      className={cn(
         "w-9 h-5 rounded-full relative cursor-pointer border-2 border-transparent outline-none",
         "transition-colors duration-200 ease-in-out",
         "data-[state=unchecked]:bg-skeleton data-[state=checked]:bg-accent",

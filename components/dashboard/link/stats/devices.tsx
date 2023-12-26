@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { fetcher } from "@/lib/utils";
 import Image from "next/image";
-import { classNames } from "@/components/utils";
+import { cn } from "@/components/utils";
 import { deviceIconLoader } from "@/lib/image-loaders";
 import { useSearchParams } from "next/navigation";
 
@@ -57,7 +57,7 @@ function DeviceIcon({ tab, name }: { tab: DeviceTab; name: string }) {
   }, [iconURL]);
 
   return (
-    <div className={classNames({ "animate-pulse bg-skeleton": loading })}>
+    <div className={cn({ "animate-pulse bg-skeleton": loading })}>
       <Image
         alt={name}
         src={src}

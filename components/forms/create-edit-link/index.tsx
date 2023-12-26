@@ -13,7 +13,7 @@ import { getDateTimeLocal } from "@/lib/utils";
 import { FormTextInput } from "@/components/shared";
 import { Dices, Loader } from "lucide-react";
 import { useRefinement, usePrevious } from "@/hooks";
-import { classNames } from "@/components/utils";
+import { cn } from "@/components/utils";
 
 const LINK_DOMAINS = process.env.NEXT_PUBLIC_APP_LINK_DOMAINS.split(",");
 
@@ -158,7 +158,7 @@ export function CreateEditLinkForm(props: Props) {
               </label>
               {!isEditMode && (
                 <button
-                  className={classNames(
+                  className={cn(
                     "flex items-center space-x-2 text-sm transition-all duration-75 active:scale-95",
                     "text-primary/70 hover:text-primary"
                   )}
@@ -185,7 +185,7 @@ export function CreateEditLinkForm(props: Props) {
               <select
                 {...register("domain", { onChange: uniqueKey.invalidate })}
                 id="domain"
-                className={classNames(
+                className={cn(
                   "flex w-48 items-center justify-center rounded-l-md bg-inherit pl-3 pr-7 text-sm cursor-pointer border border-r-0",
                   "focus:outline-none focus:ring-0",
                   "bg-inherit text-secondary border-border focus:border-border"
@@ -209,7 +209,7 @@ export function CreateEditLinkForm(props: Props) {
                 />
                 {isValidating && (
                   <span
-                    className={classNames(
+                    className={cn(
                       "absolute inset-y-center text-secondary",
                       errors?.key?.message ? "right-10" : "right-3"
                     )}
