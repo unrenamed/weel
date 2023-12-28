@@ -228,7 +228,7 @@ const genRandEvent = () => {
   };
 };
 
-function create_and_write_clicks_to_file(filename: string, rows: number) {
+function createAndWriteClicksToFile(filename: string, rows: number) {
   const writableStream = fs.createWriteStream(filename);
   const stringifier = stringify({ header: true, columns: COLUMNS });
 
@@ -278,4 +278,4 @@ const commander = new Command()
 
 const options = commander.opts();
 
-create_and_write_clicks_to_file(options.filename, options.rows);
+createAndWriteClicksToFile(options.filename, options.rows);
