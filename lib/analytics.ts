@@ -92,6 +92,19 @@ export const recordClick = async (req: NextRequest) => {
   });
 };
 
+export const deleteClickEvents = async (domain: string, key: string) => {
+  await fetch("https://api.tinybird.co/v0/datasources/link_clicks/delete", {
+    method: "POST",
+    body: `delete_condition=(${encodeURIComponent(
+      `domain='${domain}' AND key='${key}'`
+    )})`,
+    headers: {
+      Authorization: `Bearer ${process.env.TINYBIRD_API_TOKEN}`,
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+  });
+};
+
 export const getStats = async (
   params: GetStatsParams
 ): Promise<TinybirdPipe["data"]> => {

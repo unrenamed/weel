@@ -10,6 +10,7 @@ import {
   LinkNotFoundError,
 } from "../error";
 import { Link } from "@prisma/client";
+import { deleteClickEvents } from "../analytics";
 
 export const createLink = async (link: CreateLink) => {
   const { url, domain, key, ios, android, geo, password: rawPassword } = link;
@@ -126,7 +127,8 @@ export const deleteLink = async (domain: string, key: string) => {
     where: { domain_key: { domain, key } },
   });
   const deleteFromRedis = redis.del(`${domain}:${key}`);
-  await Promise.all([deleteFromDB, deleteFromRedis]);
+  const deleteEventsFromTinybird = deleteClickEvents(domain, key);
+  await Promise.all([deleteFromDB, deleteFromRedis, deleteEventsFromTinybird]);
 };
 
 export const findLinks = async ({
