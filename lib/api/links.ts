@@ -1,8 +1,9 @@
 import {
   CreateLink,
+  DomainKey,
   EditLink,
   FindLinksParams,
-  GeoObject,
+  LinkProps,
   RedisLink,
   WithHasPassword,
   WithPassword,
@@ -12,131 +13,89 @@ import bcrypt from "bcrypt";
 import { prismaLocalClient } from "@/lib/prisma";
 import { exclude, nanoid } from "../utils";
 import { isBefore } from "date-fns";
-import {
-  DuplicateKeyError,
-  InvalidExpirationTimeError,
-  InvalidLinkPassword,
-  LinkNotFoundError,
-} from "../error";
+import { InvalidExpirationTimeError, LinkNotFoundError } from "../error";
 import { Link } from "@prisma/client";
 import { deleteClickEvents } from "../analytics";
 
-export const createLink = async (link: CreateLink) => {
-  const { url, domain, key, ios, android, geo, password: rawPassword } = link;
+export const createLink = async (payload: CreateLink) => {
+  const { domain, key, url, ios, android, geo, password, expiresAt } = payload;
+  const domainKey = { domain, key };
 
-  const exists = await findLinkByDomainKey(domain, key);
-  if (exists) {
-    throw new DuplicateKeyError("Key already exists in this domain");
-  }
-
-  const expiresAt = cutMillisOff(link.expiresAt);
-  validateExpirationTime(expiresAt);
-  const exat = getUnixTimeSeconds(expiresAt);
-  const password = rawPassword ? await bcrypt.hash(rawPassword, 10) : null;
-
-  const value = {
-    url,
-    archived: false,
-    ...(password && { password }),
-    ...(geo && { geo }),
-    ...(ios && { ios }),
-    ...(android && { android }),
-    ...(expiresAt && { expiresAt: new Date(expiresAt) }),
-  };
-
-  const opts = {
-    nx: true, // only create if the key does not yet exist
-    ...(exat && ({ exat } as any)), // expiration timestamp, in seconds
-  };
-
-  const addLinkToRedis = redis.set<RedisLink>(`${domain}:${key}`, value, opts);
-
-  const addLinkToDB = prismaLocalClient.link.create({
-    data: {
-      url,
+  const [dbLink, _] = await Promise.all([
+    addLinkToDb({
       key,
-      ios,
       domain,
+      url,
+      geo,
+      ios,
       android,
       password,
       expiresAt,
-      ...(geo && { geo }),
-    },
-  });
+      archived: false,
+    }),
+    upsertRedisLink(
+      domainKey,
+      {
+        url,
+        archived: false,
+        ios: ios ?? undefined,
+        android: android ?? undefined,
+        geo: geo ?? undefined,
+        password: password ?? undefined,
+        expiresAt: expiresAt ? new Date(expiresAt) : undefined,
+      },
+      { nx: true } // only create if the key does not yet exist
+    ),
+  ]);
 
-  const [dbLink, _] = await Promise.all([addLinkToDB, addLinkToRedis]);
   return dbLink;
 };
 
-export const editLink = async (id: string, newData: EditLink) => {
-  const { url, ios, android, geo, domain, key } = newData;
+export const editLink = async (
+  id: string,
+  prevDomainKey: DomainKey,
+  payload: EditLink
+) => {
+  const { domain, key, url, ios, android, geo, expiresAt } = payload;
+  const domainKey = { domain, key };
 
-  const link = await findLinkById(id);
-  if (!link) {
-    throw new LinkNotFoundError("Link is not found");
-  }
-
-  const oldDomain = link.domain;
-  const oldKey = link.key;
+  const oldDomain = prevDomainKey.domain;
+  const oldKey = prevDomainKey.key;
   const domainChanged = oldDomain !== domain;
   const keyChanged = oldKey !== key;
 
-  if (domainChanged || keyChanged) {
-    const otherExists = await findLinkByDomainKey(domain, key);
-    if (otherExists) {
-      throw new DuplicateKeyError("Key already exists in this domain");
-    }
-  }
-
-  const expiresAt = cutMillisOff(newData.expiresAt);
-  validateExpirationTime(expiresAt);
-
-  const redisValue = {
-    url,
-    archived: link.archived,
-    ...(geo && { geo }),
-    ...(ios && { ios }),
-    ...(android && { android }),
-    ...(expiresAt && { expiresAt: new Date(expiresAt) }),
-    ...(link.password && { password: link.password }),
-  };
-
-  const exat = getUnixTimeSeconds(expiresAt);
-  const opts = {
-    ...(exat && ({ exat } as any)), // expiration timestamp, in seconds
-  };
+  const prevRedisValue = await getRedisLink(domainKey);
 
   const [updatedLink, _] = await Promise.all([
-    // update link in SQL DB
-    prismaLocalClient.link.update({
-      where: { id },
-      data: {
-        url,
-        key,
-        ios,
-        domain,
-        android,
-        expiresAt,
-        ...(geo && { geo }),
-      },
+    updateDbLink(id, {
+      key,
+      domain,
+      url,
+      geo,
+      ios,
+      android,
+      expiresAt,
     }),
-    // upsert new link in Redis DB
-    redis.set<RedisLink>(`${domain}:${key}`, redisValue, opts),
+    upsertRedisLink(domainKey, {
+      url,
+      archived: prevRedisValue?.archived ?? false,
+      ios: ios ?? undefined,
+      geo: geo ?? undefined,
+      android: android ?? undefined,
+      password: prevRedisValue?.password,
+      expiresAt: expiresAt ? new Date(expiresAt) : undefined,
+    }),
     // delete old Redis record if domain or key changed
-    ...(domainChanged || keyChanged
-      ? [redis.del(`${oldDomain}:${oldKey}`)]
-      : []),
+    ...(domainChanged || keyChanged ? [deleteRedisLink(prevDomainKey)] : []),
   ]);
 
   return updatedLink;
 };
 
-export const deleteLink = async (domain: string, key: string) => {
-  const deleteFromDB = prismaLocalClient.link.delete({
-    where: { domain_key: { domain, key } },
-  });
-  const deleteFromRedis = redis.del(`${domain}:${key}`);
-  const deleteEventsFromTinybird = deleteClickEvents(domain, key);
+export const deleteLink = async (domainKey: DomainKey) => {
+  const deleteFromDB = deleteDbLink(domainKey);
+  const deleteFromRedis = deleteRedisLink(domainKey);
+  const deleteEventsFromTinybird = deleteClickEvents(domainKey);
   await Promise.all([deleteFromDB, deleteFromRedis, deleteEventsFromTinybird]);
 };
 
@@ -175,34 +134,45 @@ export const findLinks = async ({
 
 export const generateRandomKey = async (domain: string): Promise<string> => {
   const key = nanoid(7);
-  const link = await findLinkByDomainKey(domain, key);
+  const link = await findLinkByDomainKey({ domain, key });
   return link ? generateRandomKey(domain) : key;
 };
 
-export const findLinkByDomainKey = async (domain: string, key: string) => {
+export const findLinkByDomainKey = async (domainKey: DomainKey) => {
   return await prismaLocalClient.link.findUnique({
-    where: { domain_key: { domain, key } },
+    where: { domain_key: domainKey },
   });
 };
 
 export const findLinkById = async (id: string) => {
-  return await prismaLocalClient.link.findUnique({
-    where: { id },
-  });
+  return await prismaLocalClient.link.findUnique({ where: { id } });
 };
 
 export const setArchiveStatus = async (
   { id, domain, key }: Link,
   archived: boolean
 ) => {
-  const prevValue = await redis.get<RedisLink>(`${domain}:${key}`);
+  const domainKey = { domain, key };
+  const prev = await getRedisLink(domainKey);
   await Promise.all([
-    prismaLocalClient.link.update({ where: { id }, data: { archived } }),
-    ...(prevValue
+    updateDbLink(id, { archived }),
+    ...(prev ? [upsertRedisLink(domainKey, { ...prev, archived })] : []),
+  ]);
+};
+
+export const setNewPassword = async (
+  { id, domain, key }: Link,
+  password: string | null
+) => {
+  const domainKey = { domain, key };
+  const prev = await getRedisLink(domainKey);
+  await Promise.all([
+    updateDbLink(id, { password }),
+    ...(prev
       ? [
-          redis.set<RedisLink>(`${domain}:${key}`, {
-            ...prevValue,
-            archived,
+          upsertRedisLink(domainKey, {
+            ...prev,
+            password: password ?? undefined,
           }),
         ]
       : []),
@@ -210,58 +180,15 @@ export const setArchiveStatus = async (
 };
 
 export const verifyLinkPassword = async (
-  domain: string,
-  key: string,
+  domainKey: DomainKey,
   password: string
 ) => {
-  const link = await redis.get<RedisLink>(`${domain}:${key}`);
+  const link = await getRedisLink(domainKey);
   if (!link?.password) {
     throw new LinkNotFoundError("Link is not found");
   }
   const isValid = await bcrypt.compare(password, link.password);
   return isValid;
-};
-
-export const updateLinkPassword = async (
-  id: string,
-  oldPassword: string,
-  newPassword: string
-) => {
-  const link = await findLinkById(id);
-  if (!link) {
-    throw new LinkNotFoundError("Link is not found");
-  }
-
-  const isValid = await verifyLinkPassword(link.domain, link.key, oldPassword);
-  if (!isValid) {
-    throw new InvalidLinkPassword("Invalid password");
-  }
-
-  const password = newPassword ? await bcrypt.hash(newPassword, 10) : null;
-  const redisValue = {
-    url: link.url,
-    archived: link.archived,
-    ...(link.geo && { geo: link.geo as GeoObject }),
-    ...(link.ios && { ios: link.ios }),
-    ...(link.android && { android: link.android }),
-    ...(link.expiresAt && { expiresAt: link.expiresAt }),
-    ...(password && { password }),
-  };
-
-  const exat = getUnixTimeSeconds(link.expiresAt?.toISOString() ?? null);
-  const opts = {
-    ...(exat && ({ exat } as any)), // expiration timestamp, in seconds
-  };
-
-  await Promise.all([
-    // update password in SQL DB
-    prismaLocalClient.link.update({
-      where: { id },
-      data: { password },
-    }),
-    // upsert new password in Redis DB
-    redis.set<RedisLink>(`${link.domain}:${link.key}`, redisValue, opts),
-  ]);
 };
 
 export const excludePassword = (link: Link) => {
@@ -270,20 +197,104 @@ export const excludePassword = (link: Link) => {
   return linkWithoutPassword;
 };
 
-const cutMillisOff = (timestamp: string | null) => {
+export const hashLinkPassword = async (rawPassword: string) => {
+  return await bcrypt.hash(rawPassword, 10);
+};
+
+export const cutMillisOff = (timestamp: string | null) => {
   return timestamp ? timestamp.substring(0, 17) + "00.000Z" : null;
 };
 
-const getUnixTimeSeconds = (timestamp: string | null) => {
-  return timestamp ? new Date(timestamp).getTime() / 1000 : null;
-};
-
-const validateExpirationTime = (expiresAt: string | null) => {
+export const validateExpirationTime = (expiresAt: string | null) => {
   if (expiresAt && isBefore(new Date(expiresAt), new Date())) {
     throw new InvalidExpirationTimeError(
       "Expiration time must be in the future"
     );
   }
+};
+
+const addLinkToDb = async (data: LinkProps) => {
+  const { url, ios, android, archived, geo, password, expiresAt, domain, key } =
+    data;
+
+  return await prismaLocalClient.link.create({
+    data: {
+      url,
+      key,
+      ios,
+      domain,
+      android,
+      archived,
+      password,
+      expiresAt,
+      ...(geo && { geo }),
+    },
+  });
+};
+
+const updateDbLink = async (id: string, data: Partial<LinkProps>) => {
+  const { url, ios, android, geo, expiresAt, domain, key } = data;
+
+  return await prismaLocalClient.link.update({
+    where: { id },
+    data: {
+      ...(url && { url }),
+      ...(key && { key }),
+      ...(ios && { ios }),
+      ...(domain && { domain }),
+      ...(android && { android }),
+      ...(expiresAt && { expiresAt }),
+      ...(geo && { geo }),
+    },
+  });
+};
+
+const deleteDbLink = async (domainKey: DomainKey) => {
+  return prismaLocalClient.link.delete({
+    where: { domain_key: domainKey },
+  });
+};
+
+const getRedisLink = async (domainKey: DomainKey) => {
+  const { domain, key } = domainKey;
+  return redis.get<RedisLink>(`${domain}:${key}`);
+};
+
+const upsertRedisLink = async (
+  domainKey: DomainKey,
+  data: RedisLink,
+  opts?: { nx: boolean }
+) => {
+  const { domain, key } = domainKey;
+  const { url, archived, ios, android, geo, password, expiresAt } = data;
+
+  const exat = getUnixTimeSeconds(expiresAt?.toISOString() ?? null);
+
+  const redisKey = `${domain}:${key}`;
+  const redisValue = {
+    url,
+    archived,
+    ...(geo && { geo }),
+    ...(ios && { ios }),
+    ...(android && { android }),
+    ...(password && { password }),
+    ...(expiresAt && { expiresAt: new Date(expiresAt) }),
+  };
+  const redisOpts = {
+    ...(exat && ({ exat } as any)), // expiration timestamp, in seconds
+    ...opts,
+  };
+
+  return await redis.set<RedisLink>(redisKey, redisValue, redisOpts);
+};
+
+const deleteRedisLink = async (domainKey: DomainKey) => {
+  const { domain, key } = domainKey;
+  return await redis.del(`${domain}:${key}`);
+};
+
+const getUnixTimeSeconds = (timestamp: string | null) => {
+  return timestamp ? new Date(timestamp).getTime() / 1000 : null;
 };
 
 const computeHasPassword = <Link extends WithPassword>(

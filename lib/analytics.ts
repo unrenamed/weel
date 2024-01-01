@@ -7,6 +7,7 @@ import {
   TINYBIRD_API_ENDPOINTS,
 } from "./constants";
 import {
+  DomainKey,
   GetStatsParams,
   Interval,
   IntervalData,
@@ -92,7 +93,8 @@ export const recordClick = async (req: NextRequest) => {
   });
 };
 
-export const deleteClickEvents = async (domain: string, key: string) => {
+export const deleteClickEvents = async (domainKey: DomainKey) => {
+  const { domain, key } = domainKey;
   await fetch("https://api.tinybird.co/v0/datasources/link_clicks/delete", {
     method: "POST",
     body: `delete_condition=(${encodeURIComponent(

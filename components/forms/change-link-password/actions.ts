@@ -1,6 +1,7 @@
 "use server";
 
-import { updateLinkPassword } from "@/lib/api/links";
+import { findLinkById, hashLinkPassword, setNewPassword, verifyLinkPassword } from "@/lib/api/links";
+import { InvalidLinkPassword, LinkNotFoundError } from "@/lib/error";
 import { BaseError } from "@/lib/error/base-error";
 
 type Params = {
@@ -15,7 +16,20 @@ export const changePassword = async ({
   newPassword,
 }: Params) => {
   try {
-    await updateLinkPassword(id, oldPassword, newPassword);
+    const link = await findLinkById(id);
+    if (!link) {
+      throw new LinkNotFoundError("Link is not found");
+    }
+
+    const domainKey = { domain: link.domain, key: link.key };
+    const isValid = await verifyLinkPassword(domainKey, oldPassword);
+    if (!isValid) {
+      throw new InvalidLinkPassword("Invalid password");
+    }
+
+    const password = newPassword ? await hashLinkPassword(newPassword) : null;
+    await setNewPassword(link, password);
+
     return { error: null };
   } catch (err) {
     if (err instanceof BaseError) {
