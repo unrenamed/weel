@@ -24,11 +24,11 @@ const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
           ref={ref}
           autoComplete="off"
           className={cn(
-            "w-full rounded-md focus:outline-none text-sm",
+            "w-full rounded-md focus:outline-none text-sm bg-input",
             {
               "pr-10 border-danger/70 text-danger placeholder-danger/70 focus:border-danger focus:ring-danger":
                 isError,
-              "bg-input border-input-border text-primary placeholder-input-placeholder focus:border-input-border focus:ring-input-border":
+              "border-input-border text-primary placeholder-input-placeholder focus:border-input-border focus:ring-input-border":
                 !isError,
               "cursor-not-allowed border-border bg-skeleton/70 text-secondary":
                 props.disabled,

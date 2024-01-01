@@ -40,3 +40,13 @@ export class LinkStatsLoadingError extends BaseError {
     });
   }
 }
+
+export class InvalidLinkPassword extends BaseError {
+  constructor(message: string) {
+    super({
+      name: "Invalid link password",
+      statusCode: HttpStatusCode.BAD_REQUEST,
+      message,
+    });
+  }
+}

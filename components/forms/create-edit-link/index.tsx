@@ -8,12 +8,12 @@ import { IOSTargetingSection } from "./ios-section";
 import { ExpirationDateSection } from "./expiration-date-section";
 import { PasswordSection } from "./password-section";
 import { GeoTargetingSection } from "./geo-section";
-import { Link } from "@prisma/client";
 import { getDateTimeLocal } from "@/lib/utils";
 import { FormTextInput } from "@/components/shared";
 import { Dices, Loader } from "lucide-react";
 import { useRefinement, usePrevious } from "@/hooks";
 import { cn } from "@/components/utils";
+import { CreateEditLink } from "@/lib/types";
 
 const LINK_DOMAINS = process.env.NEXT_PUBLIC_APP_LINK_DOMAINS.split(",");
 
@@ -29,7 +29,7 @@ type Props = {
   onFormHeightIncrease: () => void;
   onSave: (data: FormData) => Promise<void>;
   mode: "create" | "edit";
-  link?: Link;
+  link?: CreateEditLink;
 };
 
 export function CreateEditLinkForm(props: Props) {

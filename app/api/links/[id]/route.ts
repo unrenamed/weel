@@ -1,7 +1,12 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { deleteLink, editLink, findLinkById } from "@/lib/api/links";
+import {
+  deleteLink,
+  editLink,
+  findLinkById,
+  excludePassword,
+} from "@/lib/api/links";
 import { EditLink } from "@/lib/types";
-import { exclude, pipe } from "@/lib/utils";
+import { pipe } from "@/lib/utils";
 import { LinkNotFoundError } from "@/lib/error";
 import { withError, withSchema } from "@/lib/handlers";
 import { editLinkSchema } from "@/lib/schemas";
@@ -17,7 +22,7 @@ export const GET = withError(
     if (!link) {
       throw new LinkNotFoundError("Link is not found");
     }
-    return NextResponse.json(exclude(link, ["password"]));
+    return NextResponse.json(excludePassword(link));
   }
 );
 
@@ -40,7 +45,7 @@ export const PUT = pipe(
   const { id } = params;
   const updatedLink = await editLink(id, linkDetails);
   return NextResponse.json(
-    { message: "Link edited", data: exclude(updatedLink, ["password"]) },
+    { message: "Link edited", data: excludePassword(updatedLink) },
     { status: 200 }
   );
 });

@@ -1,12 +1,12 @@
 import useSWRInfinite from "swr/infinite";
 import { fetcher } from "../utils";
-import { Link } from "@prisma/client";
 import { useSearchParams } from "next/navigation";
+import { TLink } from "../types";
 
 const PER_PAGE = 10;
 
 function getKey(searchParams: URLSearchParams) {
-  return (pageIndex: number, previousPageData: Link[]) => {
+  return (pageIndex: number, previousPageData: TLink[]) => {
     if (previousPageData && !previousPageData.length) return null;
 
     searchParams.set("page", (pageIndex + 1).toString());
@@ -20,11 +20,15 @@ export const useLinks = () => {
   const searchParams = useSearchParams();
 
   const { data, error, isLoading, isValidating, size, setSize, mutate } =
-    useSWRInfinite<Link[]>(getKey(new URLSearchParams(searchParams)), fetcher, {
-      revalidateOnFocus: false,
-    });
+    useSWRInfinite<TLink[]>(
+      getKey(new URLSearchParams(searchParams)),
+      fetcher,
+      {
+        revalidateOnFocus: false,
+      }
+    );
 
-  const links: Link[] = data ? ([] as Link[]).concat(...data) : [];
+  const links: TLink[] = data ? ([] as TLink[]).concat(...data) : [];
   const isLoadingMore =
     isLoading || (size > 0 && data && typeof data[size - 1] === "undefined");
   const isEmpty = data?.[0]?.length === 0;

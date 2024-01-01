@@ -1,7 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { LinkNotFoundError } from "@/lib/error";
-import { findLinkByDomainKey } from "@/lib/api/links";
-import { exclude } from "@/lib/utils";
+import { findLinkByDomainKey, excludePassword } from "@/lib/api/links";
 import { withError } from "@/lib/handlers";
 
 export const GET = withError(async (request: NextRequest) => {
@@ -20,5 +19,5 @@ export const GET = withError(async (request: NextRequest) => {
   if (!link) {
     throw new LinkNotFoundError("Link is not found");
   }
-  return NextResponse.json(exclude(link, ["password"]));
+  return NextResponse.json(excludePassword(link));
 });

@@ -1,19 +1,19 @@
 import { ReactNode, useCallback, useRef, useState } from "react";
-import { Link } from "@prisma/client";
 import { useModal } from "./base-modal";
 import {
-  QRCodeSVG,
-  QRProps,
-  buildQRCodeCanvas,
-  buildQRCodeSVG,
-  getPathToQRCodeImage,
+    QRCodeSVG,
+    QRProps,
+    buildQRCodeCanvas,
+    buildQRCodeSVG,
+    getPathToQRCodeImage,
 } from "@/lib/qr";
 import { Clipboard, ClipboardCheck, Download, ImageIcon } from "lucide-react";
 import { toast } from "sonner";
 import { ButtonWithIcon, LinkAvatar, Popover } from "../shared";
 import { useCopyToClipboard } from "@/hooks";
+import { TLink } from "@/lib/types";
 
-function LinkQrModalContent({ link }: { link: Link }) {
+function LinkQrModalContent({ link }: { link: TLink }) {
   const linkAppURL = `https://${link.domain}/${link.key}`;
 
   const qrData = {
@@ -37,7 +37,7 @@ function LinkQrModalContent({ link }: { link: Link }) {
         <h3 className="text-lg font-medium">Download QR code</h3>
       </div>
       <div className="flex flex-col items-center space-y-6 sm:px-12 px-4 sm:py-8 py-4 bg-bkg">
-        <div className="flex rounded-md border-2 border-border bg-content p-3">
+        <div className="flex rounded-md border-2 border-border bg-white p-3">
           <QRCodeSVG
             value={qrData.value}
             size={qrData.size / 8}
@@ -195,7 +195,7 @@ function ExportOption({
   );
 }
 
-export const useLinkQrModal = ({ link }: { link: Link }) => {
+export const useLinkQrModal = ({ link }: { link: TLink }) => {
   const { show, hide, isOpen, Modal: LinkQrModal } = useModal();
 
   const Modal = useCallback(() => {

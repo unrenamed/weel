@@ -1,16 +1,16 @@
 import { useCallback, useState } from "react";
-import { Link } from "@prisma/client";
 import { useModal } from "./base-modal";
 import { toast } from "sonner";
 import { Button, LinkAvatar, LoadingButton } from "../shared";
+import { TLink } from "@/lib/types";
 
 type Props = {
-  link: Link;
+  link: TLink;
   hideModal: () => void;
   onSubmit: () => void;
 };
 
-const sendArchiveRequest = (link: Link, archived: boolean) => {
+const sendArchiveRequest = (link: TLink, archived: boolean) => {
   return fetch(`/api/links/${link.id}/archive`, {
     method: "PUT",
     body: JSON.stringify({
@@ -97,7 +97,7 @@ export const useArchiveLinkModal = ({
   link,
   onSubmit,
 }: {
-  link: Link;
+  link: TLink;
   onSubmit: () => void;
 }) => {
   const { show, hide, isOpen, Modal: ArchiveModal } = useModal();

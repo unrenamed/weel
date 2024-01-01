@@ -1,6 +1,6 @@
-import { createLink, findLinks } from "@/lib/api/links";
+import { createLink, findLinks, excludePassword } from "@/lib/api/links";
 import { CreateLink } from "@/lib/types";
-import { exclude, pipe } from "@/lib/utils";
+import { pipe } from "@/lib/utils";
 import { type NextRequest, NextResponse } from "next/server";
 import { createLinkSchema } from "@/lib/schemas/create-link";
 import { withError, withSchema } from "@/lib/handlers";
@@ -23,7 +23,7 @@ export const GET = withError(async (request: NextRequest) => {
     ...(showArchived && { showArchived: showArchived === "true" }),
   });
 
-  const linksWithoutPassword = links.map((link) => exclude(link, ["password"]));
+  const linksWithoutPassword = links.map(excludePassword);
   return NextResponse.json(linksWithoutPassword);
 });
 
@@ -32,5 +32,7 @@ export const POST = pipe(
   withError
 )(async (_, linkDetails: CreateLink) => {
   const link = await createLink(linkDetails);
-  return NextResponse.json(exclude(link, ["password"]), { status: 201 });
+  return NextResponse.json(excludePassword(link), {
+    status: 201,
+  });
 });

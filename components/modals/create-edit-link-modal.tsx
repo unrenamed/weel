@@ -1,16 +1,22 @@
-import { UIEvent, useCallback, useEffect, useRef, useState } from "react";
-import { Link } from "@prisma/client";
+import {
+    UIEvent,
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from "react";
 import { useModal } from "./base-modal";
 import { CreateEditLinkForm } from "../forms/create-edit-link";
 import { FormData } from "../forms/create-edit-link/schema";
 import { toast } from "sonner";
-import { CreateEditLink } from "@/lib/types";
+import { CreateEditLink, TLink } from "@/lib/types";
 import { LoadingButton } from "../shared";
 import { cn } from "../utils";
 import { useCopyToClipboard } from "@/hooks";
 
 type Props = {
-  link?: Link;
+  link?: TLink;
   mode?: "create" | "edit";
   hideModal: () => void;
   onSubmit: () => void;
@@ -45,6 +51,15 @@ function CreateEditLinkModalContent({
     if (!containerRef.current) return;
     updateSubmitButtonPosition(containerRef.current);
   }, []);
+
+  const linkFormObject = useMemo(
+    () =>
+      ({
+        ...link,
+        password: null,
+      } as CreateEditLink),
+    [link]
+  );
 
   const sendAPIRequest = async (rawData: FormData) => {
     setIsLoading(true);
@@ -115,7 +130,7 @@ function CreateEditLinkModalContent({
           </h3>
         </div>
         <CreateEditLinkForm
-          link={link}
+          link={linkFormObject}
           mode={mode}
           onSectionOpen={handleContainerScroll}
           onFormHeightIncrease={scrollToBottom}
@@ -151,7 +166,7 @@ export const useCreateEditLinkModal = ({
   onSubmit,
   mode,
 }: {
-  link?: Link;
+  link?: TLink;
   mode?: "create" | "edit";
   onSubmit: () => void;
 }) => {

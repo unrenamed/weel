@@ -1,12 +1,21 @@
-import { CreateLink, EditLink, FindLinksParams, RedisLink } from "../types";
+import {
+  CreateLink,
+  EditLink,
+  FindLinksParams,
+  GeoObject,
+  RedisLink,
+  WithHasPassword,
+  WithPassword,
+} from "../types";
 import { redis } from "../upstash";
 import bcrypt from "bcrypt";
 import { prismaLocalClient } from "@/lib/prisma";
-import { nanoid } from "../utils";
+import { exclude, nanoid } from "../utils";
 import { isBefore } from "date-fns";
 import {
   DuplicateKeyError,
   InvalidExpirationTimeError,
+  InvalidLinkPassword,
   LinkNotFoundError,
 } from "../error";
 import { Link } from "@prisma/client";
@@ -200,6 +209,67 @@ export const setArchiveStatus = async (
   ]);
 };
 
+export const verifyLinkPassword = async (
+  domain: string,
+  key: string,
+  password: string
+) => {
+  const link = await redis.get<RedisLink>(`${domain}:${key}`);
+  if (!link?.password) {
+    throw new LinkNotFoundError("Link is not found");
+  }
+  const isValid = await bcrypt.compare(password, link.password);
+  return isValid;
+};
+
+export const updateLinkPassword = async (
+  id: string,
+  oldPassword: string,
+  newPassword: string
+) => {
+  const link = await findLinkById(id);
+  if (!link) {
+    throw new LinkNotFoundError("Link is not found");
+  }
+
+  const isValid = await verifyLinkPassword(link.domain, link.key, oldPassword);
+  if (!isValid) {
+    throw new InvalidLinkPassword("Invalid password");
+  }
+
+  const password = newPassword ? await bcrypt.hash(newPassword, 10) : null;
+  const redisValue = {
+    url: link.url,
+    archived: link.archived,
+    ...(link.geo && { geo: link.geo as GeoObject }),
+    ...(link.ios && { ios: link.ios }),
+    ...(link.android && { android: link.android }),
+    ...(link.expiresAt && { expiresAt: link.expiresAt }),
+    ...(password && { password }),
+  };
+
+  const exat = getUnixTimeSeconds(link.expiresAt?.toISOString() ?? null);
+  const opts = {
+    ...(exat && ({ exat } as any)), // expiration timestamp, in seconds
+  };
+
+  await Promise.all([
+    // update password in SQL DB
+    prismaLocalClient.link.update({
+      where: { id },
+      data: { password },
+    }),
+    // upsert new password in Redis DB
+    redis.set<RedisLink>(`${link.domain}:${link.key}`, redisValue, opts),
+  ]);
+};
+
+export const excludePassword = (link: Link) => {
+  const linkWithHasPassword = computeHasPassword(link);
+  const linkWithoutPassword = exclude(linkWithHasPassword, ["password"]);
+  return linkWithoutPassword;
+};
+
 const cutMillisOff = (timestamp: string | null) => {
   return timestamp ? timestamp.substring(0, 17) + "00.000Z" : null;
 };
@@ -214,4 +284,13 @@ const validateExpirationTime = (expiresAt: string | null) => {
       "Expiration time must be in the future"
     );
   }
+};
+
+const computeHasPassword = <Link extends WithPassword>(
+  link: Link
+): WithHasPassword<Link> => {
+  return {
+    ...link,
+    hasPassword: !!link.password,
+  };
 };

@@ -1,16 +1,16 @@
 import { ChangeEvent, useCallback, useState } from "react";
-import { Link } from "@prisma/client";
 import { useModal } from "./base-modal";
 import { toast } from "sonner";
 import { LinkAvatar, LoadingButton, TextInput } from "../shared";
+import { TLink } from "@/lib/types";
 
 type Props = {
-  link: Link;
+  link: TLink;
   hideModal: () => void;
   onSubmit: () => void;
 };
 
-const deleteLink = (link: Link) => {
+const deleteLink = (link: TLink) => {
   return fetch(`/api/links/${link.id}`, {
     method: "DELETE",
   });
@@ -78,7 +78,7 @@ export const useDeleteLinkModal = ({
   link,
   onSubmit,
 }: {
-  link: Link;
+  link: TLink;
   onSubmit: () => void;
 }) => {
   const { show, hide, isOpen, Modal: DeleteModal } = useModal();

@@ -1,3 +1,4 @@
+import { Link } from "@prisma/client";
 import { INTERVALS, TINYBIRD_API_ENDPOINTS } from "./constants";
 
 export interface ParsedURL {
@@ -11,35 +12,6 @@ export interface ParsedURL {
 export type GeoObject = {
   [country: string]: string;
 };
-
-export interface RedisLink {
-  url: string;
-  archived: boolean;
-  password?: string;
-  expiresAt?: Date;
-  ios?: string;
-  android?: string;
-  geo?: GeoObject;
-}
-
-export interface CreateEditLink {
-  key: string;
-  domain: string;
-  url: string;
-  password: string | null;
-  expiresAt: string | null;
-  ios: string | null;
-  android: string | null;
-  geo: GeoObject | null;
-}
-
-export interface CreateLink extends CreateEditLink {}
-export interface EditLink extends CreateEditLink {}
-
-export interface DeleteLink {
-  domain: string;
-  key: string;
-}
 
 export type TimeUnit = "ms" | "s" | "m" | "h" | "d";
 export type Duration = `${number} ${TimeUnit}` | `${number}${TimeUnit}`;
@@ -84,4 +56,45 @@ export interface FindLinksParams {
 export interface SWRError extends Error {
   status: number;
   info: string;
+}
+
+export type WithPassword = {
+  password: string | null;
+};
+
+export type WithHasPassword<T> = T & {
+  hasPassword: boolean;
+};
+
+export type WithoutPassword<T> = Omit<T, "password">;
+
+export type TLink = WithoutPassword<WithHasPassword<Link>>;
+
+export interface RedisLink {
+  url: string;
+  archived: boolean;
+  password?: string;
+  expiresAt?: Date;
+  ios?: string;
+  android?: string;
+  geo?: GeoObject;
+}
+
+export interface CreateEditLink {
+  key: string;
+  domain: string;
+  url: string;
+  password: string | null;
+  expiresAt: string | null;
+  ios: string | null;
+  android: string | null;
+  geo: GeoObject | null;
+}
+
+export interface CreateLink extends CreateEditLink {}
+export interface EditLink extends CreateEditLink {}
+
+export interface DeleteLink {
+  domain: string;
+  key: string;
 }
