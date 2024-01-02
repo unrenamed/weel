@@ -3,12 +3,11 @@ import {
   findLinks,
   excludePassword,
   findLinkByDomainKey,
-  cutMillisOff,
   validateExpirationTime,
   hashLinkPassword,
 } from "@/lib/api/links";
 import { CreateLink } from "@/lib/types";
-import { pipe } from "@/lib/utils";
+import { cutMillisOff, pipe } from "@/lib/utils";
 import { type NextRequest, NextResponse } from "next/server";
 import { createLinkSchema } from "@/lib/schemas/create-link";
 import { withError, withSchema } from "@/lib/handlers";

@@ -1,11 +1,11 @@
 import {
-  Control,
-  FieldError,
-  FieldErrors,
-  FieldErrorsImpl,
-  Merge,
-  UseFormRegister,
-  useFieldArray,
+    Control,
+    FieldError,
+    FieldErrors,
+    FieldErrorsImpl,
+    Merge,
+    UseFormRegister,
+    useFieldArray,
 } from "react-hook-form";
 import { FormData } from "./schema";
 import { COUNTRIES } from "@/lib/constants";

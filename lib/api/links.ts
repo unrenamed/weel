@@ -11,7 +11,7 @@ import {
 import { redis } from "../upstash";
 import bcrypt from "bcrypt";
 import { prismaLocalClient } from "@/lib/prisma";
-import { exclude, nanoid } from "../utils";
+import { exclude, getUnixTimeSeconds, nanoid } from "../utils";
 import { isBefore } from "date-fns";
 import { InvalidExpirationTimeError, LinkNotFoundError } from "../error";
 import { Link } from "@prisma/client";
@@ -162,20 +162,14 @@ export const setArchiveStatus = async (
 
 export const setNewPassword = async (
   { id, domain, key }: Link,
-  password: string | null
+  newPassword: string | null
 ) => {
+  const password = newPassword ?? undefined;
   const domainKey = { domain, key };
   const prev = await getRedisLink(domainKey);
   await Promise.all([
     updateDbLink(id, { password }),
-    ...(prev
-      ? [
-          upsertRedisLink(domainKey, {
-            ...prev,
-            password: password ?? undefined,
-          }),
-        ]
-      : []),
+    ...(prev ? [upsertRedisLink(domainKey, { ...prev, password })] : []),
   ]);
 };
 
@@ -199,10 +193,6 @@ export const excludePassword = (link: Link) => {
 
 export const hashLinkPassword = async (rawPassword: string) => {
   return await bcrypt.hash(rawPassword, 10);
-};
-
-export const cutMillisOff = (timestamp: string | null) => {
-  return timestamp ? timestamp.substring(0, 17) + "00.000Z" : null;
 };
 
 export const validateExpirationTime = (expiresAt: string | null) => {
@@ -291,10 +281,6 @@ const upsertRedisLink = async (
 const deleteRedisLink = async (domainKey: DomainKey) => {
   const { domain, key } = domainKey;
   return await redis.del(`${domain}:${key}`);
-};
-
-const getUnixTimeSeconds = (timestamp: string | null) => {
-  return timestamp ? new Date(timestamp).getTime() / 1000 : null;
 };
 
 const computeHasPassword = <Link extends WithPassword>(

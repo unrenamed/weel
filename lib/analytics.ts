@@ -19,6 +19,8 @@ import { clicksRateLimit } from "./upstash";
 import { prismaEdgeClient } from "./prisma";
 import { ipAddress } from "@vercel/edge";
 
+const TINYBIRD_BASE_URL = "https://api.tinybird.co/v0";
+
 const intervalData: IntervalData = {
   "1h": {
     startDate: new Date(Date.now() - 60 * 60 * 1000),
@@ -69,7 +71,7 @@ export const recordClick = async (req: NextRequest) => {
 
   const eventBody = buildClickEventBody(key, domain, req);
 
-  await fetch("https://api.tinybird.co/v0/events?name=link_clicks", {
+  await fetch(`${TINYBIRD_BASE_URL}/events?name=link_clicks`, {
     method: "POST",
     body: JSON.stringify(eventBody),
     headers: {
@@ -95,7 +97,7 @@ export const recordClick = async (req: NextRequest) => {
 
 export const deleteClickEvents = async (domainKey: DomainKey) => {
   const { domain, key } = domainKey;
-  await fetch("https://api.tinybird.co/v0/datasources/link_clicks/delete", {
+  await fetch(`${TINYBIRD_BASE_URL}/datasources/link_clicks/delete`, {
     method: "POST",
     body: `delete_condition=(${encodeURIComponent(
       `domain='${domain}' AND key='${key}'`
@@ -112,7 +114,7 @@ export const getStats = async (
 ): Promise<TinybirdPipe["data"]> => {
   const { domain, key, endpoint, interval } = params;
 
-  const url = new URL(`https://api.tinybird.co/v0/pipes/${endpoint}.json`);
+  const url = new URL(`${TINYBIRD_BASE_URL}/pipes/${endpoint}.json`);
   url.searchParams.append("domain", domain);
   url.searchParams.append("key", decodeURIComponent(key));
 
@@ -155,7 +157,7 @@ export const getCoordinates = async (
     longitude: number;
   }[]
 > => {
-  const url = new URL(`https://api.tinybird.co/v0/pipes/top_coordinates.json`);
+  const url = new URL(`${TINYBIRD_BASE_URL}/pipes/top_coordinates.json`);
   if (interval && intervalData[interval]) {
     url.searchParams.append(
       "start",
@@ -193,7 +195,7 @@ export const getCoordinates = async (
 
 const buildClickEventBody = (key: string, domain: string, req: NextRequest) => {
   const ua = userAgent(req);
-  const geo = req.geo ?? LOCALHOST_GEO_DATA;
+  const geo = getGeoData(req);
   const referrer = req.headers.get("referrer");
 
   return {
@@ -220,6 +222,11 @@ const buildClickEventBody = (key: string, domain: string, req: NextRequest) => {
     referrer: getReferrerValue(referrer),
     referrer_url: getReferrerValue(referrer),
   };
+};
+
+const getGeoData = (req: NextRequest) => {
+  if (process.env.NODE_ENV === "development") return LOCALHOST_GEO_DATA;
+  return req.geo;
 };
 
 const getValueOrUnknown = (value?: string) => {

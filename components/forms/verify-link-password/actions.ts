@@ -1,4 +1,5 @@
 "use server";
+
 import { verifyLinkPassword } from "@/lib/api/links";
 import { BaseError } from "@/lib/error/base-error";
 
@@ -11,10 +12,12 @@ type Params = {
 export const verifyPassword = async (params: Params) => {
   const domain = decodeURIComponent(params.domain);
   const key = decodeURIComponent(params.key);
+
+  const domainKey = { domain, key };
   const password = params.password;
 
   try {
-    const isValid = await verifyLinkPassword(domain, key, password);
+    const isValid = await verifyLinkPassword(domainKey, password);
     if (!isValid) {
       return { error: "Invalid password" };
     }

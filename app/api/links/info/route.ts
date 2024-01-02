@@ -15,7 +15,8 @@ export const GET = withError(async (request: NextRequest) => {
     );
   }
 
-  const link = await findLinkByDomainKey(domain, key);
+  const domainKey = { domain, key };
+  const link = await findLinkByDomainKey(domainKey);
   if (!link) {
     throw new LinkNotFoundError("Link is not found");
   }

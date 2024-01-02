@@ -14,6 +14,7 @@ export const GET = withError(async (request: NextRequest) => {
     );
   }
 
-  const link = await findLinkByDomainKey(domain, key);
+  const domainKey = { domain, key };
+  const link = await findLinkByDomainKey(domainKey);
   return NextResponse.json(!!link);
 });

@@ -5,11 +5,10 @@ import {
   findLinkById,
   excludePassword,
   findLinkByDomainKey,
-  cutMillisOff,
   validateExpirationTime,
 } from "@/lib/api/links";
 import { EditLink } from "@/lib/types";
-import { pipe } from "@/lib/utils";
+import { cutMillisOff, pipe } from "@/lib/utils";
 import { DuplicateKeyError, LinkNotFoundError } from "@/lib/error";
 import { withError, withSchema } from "@/lib/handlers";
 import { editLinkSchema } from "@/lib/schemas";
