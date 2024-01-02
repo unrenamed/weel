@@ -42,7 +42,7 @@ function ReferrerIcon({ referrer }: { referrer: string }) {
   return (
     <div className={cn({ "animate-pulse bg-skeleton": loading })}>
       {isError ? (
-        <Globe className="h-4 w-4 text-secondary" />
+        <Globe className="h-4 w-4 text-primary" />
       ) : (
         <Image
           alt={referrer}
