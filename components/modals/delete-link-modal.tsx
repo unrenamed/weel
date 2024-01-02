@@ -54,7 +54,7 @@ function DeleteLinkModalContent({ link, hideModal, onSubmit }: Props) {
           This action cannot be undone.
         </p>
       </div>
-      <div className="flex flex-col space-y-6 sm:px-12 px-4 sm:py-8 py-4 bg-bkg">
+      <div className="flex flex-col space-y-2 sm:px-12 px-4 sm:py-8 py-4 bg-bkg">
         <div className="flex flex-col space-y-2">
           <p className="text-sm">
             To verify, type <span className="font-bold">{domainKey}</span> below

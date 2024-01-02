@@ -1,36 +1,36 @@
 import { ThreeDots } from "@/components/icons";
 import {
-    useArchiveLinkModal,
-    useDeleteLinkModal,
-    useLinkQrModal,
-    useCreateEditLinkModal,
-    useChangeLinkPasswordModal,
+  useArchiveLinkModal,
+  useDeleteLinkModal,
+  useLinkQrModal,
+  useCreateEditLinkModal,
+  useManageLinkPasswordModal,
 } from "@/components/modals";
 import { LinkAvatar, Popover, Tooltip } from "@/components/shared";
 import { cn } from "@/components/utils";
 import {
-    dateTimeAgo,
-    capitalize,
-    pluralize,
-    pluralizeJSX,
-    dateTimeSoon,
-    nFormatter,
+  dateTimeAgo,
+  capitalize,
+  pluralize,
+  pluralizeJSX,
+  dateTimeSoon,
+  nFormatter,
 } from "@/lib/utils";
 import * as Separator from "@radix-ui/react-separator";
 import NextLink from "next/link";
 import {
-    Archive,
-    ArchiveIcon,
-    ArchiveRestore,
-    BarChart,
-    CalendarClock,
-    Check,
-    Copy,
-    Edit3,
-    KeyRound,
-    PlusSquare,
-    QrCode,
-    Trash2,
+  Archive,
+  ArchiveIcon,
+  ArchiveRestore,
+  BarChart,
+  CalendarClock,
+  Check,
+  Copy,
+  Edit3,
+  KeyRound,
+  PlusSquare,
+  QrCode,
+  Trash2,
 } from "lucide-react";
 import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -82,8 +82,8 @@ function LinkCard({
       link: { ...link, key: `${link.key}-copy` },
       onSubmit: onDuplicate,
     });
-  const { show: showChangeLinkPasswordModal, Modal: ChangeLinkPasswordModal } =
-    useChangeLinkPasswordModal({
+  const { show: showManagePasswordModal, Modal: ManagePasswordModal } =
+    useManageLinkPasswordModal({
       link,
     });
 
@@ -118,7 +118,7 @@ function LinkCard({
           showDeleteModal();
           break;
         case "p":
-          showChangeLinkPasswordModal();
+          showManagePasswordModal();
           break;
       }
     },
@@ -128,7 +128,7 @@ function LinkCard({
       showLinkQrModal,
       showEditModal,
       showDuplicateModal,
-      showChangeLinkPasswordModal,
+      showManagePasswordModal,
       isActionsMenuOpen,
       isCardSelected,
     ]
@@ -184,7 +184,7 @@ function LinkCard({
             <LinkQrModal />
             <EditModal />
             <DuplicateModal />
-            {link.hasPassword && <ChangeLinkPasswordModal />}
+            <ManagePasswordModal />
           </>
         )}
         <div className="flex gap-3 items-center">
@@ -292,17 +292,15 @@ function LinkCard({
                     showLinkQrModal();
                   }}
                 />
-                {link.hasPassword && (
-                  <PopoverItem
-                    text="Password"
-                    kbd="p"
-                    icon={<KeyRound strokeWidth={1.5} className="h-4 w-4" />}
-                    onClick={() => {
-                      closeActionsMenu();
-                      showChangeLinkPasswordModal();
-                    }}
-                  />
-                )}
+                <PopoverItem
+                  text="Password"
+                  kbd="p"
+                  icon={<KeyRound strokeWidth={1.5} className="h-4 w-4" />}
+                  onClick={() => {
+                    closeActionsMenu();
+                    showManagePasswordModal();
+                  }}
+                />
                 <Separator.Root className="bg-skeleton h-px w-full px-2 my-2" />
                 <PopoverItem
                   text={link.archived ? "Unarchive" : "Archive"}

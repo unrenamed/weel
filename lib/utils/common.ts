@@ -14,3 +14,13 @@ export function exclude<T>(obj: T, keys: (keyof T)[]): Partial<T> {
 
   return excludedObj;
 }
+
+export const generatePatchData = (props: Record<string, any>) => {
+  const updateData: Record<string, any> = {};
+  Object.entries(props).forEach(([key, value]) => {
+    if (value !== undefined) {
+      updateData[key] = value;
+    }
+  });
+  return updateData;
+};

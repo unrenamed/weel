@@ -11,7 +11,12 @@ import {
 import { redis } from "../upstash";
 import bcrypt from "bcrypt";
 import { prismaLocalClient } from "@/lib/prisma";
-import { exclude, getUnixTimeSeconds, nanoid } from "../utils";
+import {
+  exclude,
+  generatePatchData,
+  getUnixTimeSeconds,
+  nanoid,
+} from "../utils";
 import { isBefore } from "date-fns";
 import { InvalidExpirationTimeError, LinkNotFoundError } from "../error";
 import { Link } from "@prisma/client";
@@ -160,16 +165,22 @@ export const setArchiveStatus = async (
   ]);
 };
 
-export const setNewPassword = async (
+export const setPassword = async (
   { id, domain, key }: Link,
-  newPassword: string | null
+  password: string | null
 ) => {
-  const password = newPassword ?? undefined;
   const domainKey = { domain, key };
   const prev = await getRedisLink(domainKey);
   await Promise.all([
-    updateDbLink(id, { password }),
-    ...(prev ? [upsertRedisLink(domainKey, { ...prev, password })] : []),
+    updateDbLink(id, { password: password ?? null }),
+    ...(prev
+      ? [
+          upsertRedisLink(domainKey, {
+            ...prev,
+            password: password ?? undefined,
+          }),
+        ]
+      : []),
   ]);
 };
 
@@ -209,33 +220,36 @@ const addLinkToDb = async (data: LinkProps) => {
 
   return await prismaLocalClient.link.create({
     data: {
-      url,
       key,
-      ios,
       domain,
+      url,
+      geo,
+      ios,
       android,
-      archived,
       password,
+      archived,
       expiresAt,
-      ...(geo && { geo }),
     },
   });
 };
 
 const updateDbLink = async (id: string, data: Partial<LinkProps>) => {
-  const { url, ios, android, geo, expiresAt, domain, key } = data;
+  const { url, ios, android, archived, geo, password, expiresAt, domain, key } =
+    data;
 
   return await prismaLocalClient.link.update({
     where: { id },
-    data: {
-      ...(url && { url }),
-      ...(key && { key }),
-      ...(ios && { ios }),
-      ...(domain && { domain }),
-      ...(android && { android }),
-      ...(expiresAt && { expiresAt }),
-      ...(geo && { geo }),
-    },
+    data: generatePatchData({
+      key,
+      domain,
+      url,
+      geo,
+      ios,
+      android,
+      password,
+      archived,
+      expiresAt,
+    }),
   });
 };
 
@@ -261,15 +275,15 @@ const upsertRedisLink = async (
   const exat = getUnixTimeSeconds(expiresAt?.toISOString() ?? null);
 
   const redisKey = `${domain}:${key}`;
-  const redisValue = {
+  const redisValue = generatePatchData({
     url,
     archived,
-    ...(geo && { geo }),
-    ...(ios && { ios }),
-    ...(android && { android }),
-    ...(password && { password }),
-    ...(expiresAt && { expiresAt: new Date(expiresAt) }),
-  };
+    geo,
+    ios,
+    android,
+    password,
+    expiresAt,
+  }) as RedisLink;
   const redisOpts = {
     ...(exat && ({ exat } as any)), // expiration timestamp, in seconds
     ...opts,

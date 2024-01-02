@@ -1,16 +1,16 @@
 "use server";
 
-import { findLinkById, hashLinkPassword, setNewPassword, verifyLinkPassword } from "@/lib/api/links";
+import { findLinkById, hashLinkPassword, setPassword, verifyLinkPassword } from "@/lib/api/links";
 import { InvalidLinkPassword, LinkNotFoundError } from "@/lib/error";
 import { BaseError } from "@/lib/error/base-error";
 
 type Params = {
   id: string;
-  oldPassword: string;
-  newPassword: string;
+  oldPassword: string | null;
+  newPassword: string | null;
 };
 
-export const changePassword = async ({
+export const setLinkPassword = async ({
   id,
   oldPassword,
   newPassword,
@@ -22,13 +22,15 @@ export const changePassword = async ({
     }
 
     const domainKey = { domain: link.domain, key: link.key };
-    const isValid = await verifyLinkPassword(domainKey, oldPassword);
-    if (!isValid) {
-      throw new InvalidLinkPassword("Invalid password");
+    if (oldPassword) {
+      const isValid = await verifyLinkPassword(domainKey, oldPassword);
+      if (!isValid) {
+        throw new InvalidLinkPassword("Invalid password");
+      }
     }
 
     const password = newPassword ? await hashLinkPassword(newPassword) : null;
-    await setNewPassword(link, password);
+    await setPassword(link, password);
 
     return { error: null };
   } catch (err) {
