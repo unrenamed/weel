@@ -1,3 +1,5 @@
+import { GeoObject } from ".";
+
 export interface LinkProps {
   domain: string;
   key: string;
