@@ -223,12 +223,12 @@ const addLinkToDb = async (data: LinkProps) => {
       key,
       domain,
       url,
-      geo,
       ios,
       android,
       password,
       archived,
       expiresAt,
+      ...(geo && { geo }),
     },
   });
 };
