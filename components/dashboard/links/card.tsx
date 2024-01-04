@@ -24,6 +24,7 @@ import {
   ArchiveRestore,
   BarChart,
   CalendarClock,
+  CalendarOff,
   Check,
   Copy,
   Edit3,
@@ -33,10 +34,14 @@ import {
   Trash2,
 } from "lucide-react";
 import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
-import { toast } from "sonner";
 import { differenceInHours, isAfter } from "date-fns";
-import { useCopyToClipboard, useIntersectionObserver } from "@/hooks";
+import {
+  useCopyToClipboard,
+  useIntersectionObserver,
+  useMediaQuery,
+} from "@/hooks";
 import { TLink } from "@/lib/types";
+import { toast } from "sonner";
 
 type LinkCardProps = {
   link: TLink;
@@ -60,6 +65,9 @@ function LinkCard({
   const [isCardSelected, setIsCardSelected] = useState(false);
   const [isActionsMenuOpen, setIsActionsMenuOpen] = useState(false);
   const closeActionsMenu = () => setIsActionsMenuOpen(false);
+
+  const isMobile = useMediaQuery("only screen and (max-width : 640px)");
+  const [copied, copyToClipboard] = useCopyToClipboard();
 
   const { show: showLinkQrModal, Modal: LinkQrModal } = useLinkQrModal({
     link,
@@ -89,6 +97,14 @@ function LinkCard({
 
   const domainKey = `${link.domain}/${link.key}`;
   const href = `https://${domainKey}`;
+
+  const copyShortLinkToClipboard = () => {
+    toast.promise(copyToClipboard(domainKey), {
+      loading: "Copying link to clipboard...",
+      success: "Copied link to clipboard!",
+      error: "Failed to copy",
+    });
+  };
 
   const onKeyDown = useCallback(
     (event: Event) => {
@@ -188,13 +204,7 @@ function LinkCard({
           </>
         )}
         <div className="flex gap-3 items-center">
-          {link.archived ? (
-            <div className="h-8 w-8 rounded-full sm:h-10 sm:w-10 bg-border flex items-center justify-center">
-              <ArchiveIcon className="h-6 w-6 text-secondary" />
-            </div>
-          ) : (
-            <LinkAvatar url={link.url} />
-          )}
+          <CardAvatar link={link} />
           <div>
             <div className="flex items-center space-x-3 max-w-fit">
               <a
@@ -204,15 +214,17 @@ function LinkCard({
                 rel="noreferrer"
                 className={cn(
                   "w-full truncate font-semibold text-sm sm:text-base",
-                  "max-w-[140px] sm:max-w-[300px] md:max-w-[360px] xl:max-w-[400px]",
+                  "max-w-[150px] sm:max-w-[300px] md:max-w-[360px] xl:max-w-[400px]",
                   link.archived ? "text-secondary" : "text-link"
                 )}
               >
                 {domainKey}
               </a>
-              <CopyToClipboard value={domainKey} />
-              {!!link.expiresAt && (
-                <ExpirationWarning expiresAt={link.expiresAt} />
+              {!isMobile && (
+                <CopyToClipboard
+                  copied={copied}
+                  onCopy={copyShortLinkToClipboard}
+                />
               )}
             </div>
             <div className="flex items-center space-x-2 max-w-[140px] sm:max-w-[300px] md:max-w-[360px] xl:max-w-[400px]">
@@ -265,6 +277,17 @@ function LinkCard({
             onOpenChange={setIsActionsMenuOpen}
             content={
               <div className="flex flex-col items-center p-2 sm:w-48">
+                {isMobile && (
+                  <PopoverItem
+                    text="Copy"
+                    kbd=""
+                    icon={<Copy strokeWidth={1.5} className="h-4 w-4" />}
+                    onClick={() => {
+                      closeActionsMenu();
+                      copyShortLinkToClipboard();
+                    }}
+                  />
+                )}
                 <PopoverItem
                   text="Edit"
                   kbd="e"
@@ -340,6 +363,51 @@ function LinkCard({
   );
 }
 
+function CardAvatar({ link }: { link: TLink }) {
+  if (link.archived) {
+    return (
+      <div className="h-8 w-8 rounded-full sm:h-10 sm:w-10 bg-border flex items-center justify-center">
+        <ArchiveIcon className="h-6 w-6 text-secondary" />
+      </div>
+    );
+  }
+
+  const now = new Date();
+  const isExpired = link.expiresAt
+    ? isAfter(now, new Date(link.expiresAt))
+    : false;
+  const willExpireSoon = link.expiresAt
+    ? differenceInHours(new Date(link.expiresAt), now) <= 24
+    : false;
+
+  if (isExpired) {
+    return (
+      <div className="h-8 w-8 rounded-full sm:h-10 sm:w-10 bg-border flex items-center justify-center">
+        <Tooltip content="Link has expired! It cannot be accessed and will redirect to the home page">
+          <div>
+            <CalendarOff className="h-6 w-6 text-secondary" strokeWidth={2} />
+          </div>
+        </Tooltip>
+      </div>
+    );
+  }
+
+  if (willExpireSoon) {
+    const willExpireIn = dateTimeSoon(link.expiresAt!, true);
+    return (
+      <div className="h-8 w-8 rounded-full sm:h-10 sm:w-10 bg-border flex items-center justify-center">
+        <Tooltip content={`Link is going to expire ${willExpireIn}`}>
+          <div>
+            <CalendarClock className="h-6 w-6 text-secondary" strokeWidth={2} />
+          </div>
+        </Tooltip>
+      </div>
+    );
+  }
+
+  return <LinkAvatar url={link.url} />;
+}
+
 function PopoverItem({
   text,
   icon,
@@ -391,8 +459,13 @@ function PopoverItem({
   );
 }
 
-function CopyToClipboard({ value }: { value: string }) {
-  const [copied, copyToClipboard] = useCopyToClipboard();
+function CopyToClipboard({
+  copied,
+  onCopy,
+}: {
+  copied: boolean;
+  onCopy: () => void;
+}) {
   return (
     <button
       className={cn(
@@ -403,11 +476,7 @@ function CopyToClipboard({ value }: { value: string }) {
       )}
       onClick={(event) => {
         event.stopPropagation();
-        toast.promise(copyToClipboard(value), {
-          loading: "Copying link to clipboard...",
-          success: "Copied link to clipboard!",
-          error: "Failed to copy",
-        });
+        onCopy();
       }}
     >
       {copied ? (
@@ -417,41 +486,6 @@ function CopyToClipboard({ value }: { value: string }) {
       )}
     </button>
   );
-}
-
-function ExpirationWarning({ expiresAt }: { expiresAt: Date | string }) {
-  const now = new Date();
-
-  if (isAfter(now, new Date(expiresAt))) {
-    const message =
-      "Link has expired! It cannot be accessed and will redirect to the home page";
-    return (
-      <Tooltip content={message}>
-        <div>
-          <CalendarClock className="h-4 w-4 text-red-400" strokeWidth={2} />
-        </div>
-      </Tooltip>
-    );
-  }
-
-  if (differenceInHours(new Date(expiresAt), new Date()) <= 24) {
-    const message = `Link is going to expire ${dateTimeSoon(
-      new Date(expiresAt),
-      true
-    )}`;
-    return (
-      <Tooltip content={message}>
-        <div>
-          <CalendarClock
-            className="h-4 w-4 animate-wiggle text-orange-400"
-            strokeWidth={2}
-          />
-        </div>
-      </Tooltip>
-    );
-  }
-
-  return null;
 }
 
 function LinkTotalClicks({
