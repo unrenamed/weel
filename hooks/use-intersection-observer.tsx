@@ -19,6 +19,7 @@ export function useIntersectionObserver<E extends Element>(
       if (node?.nodeType === Node.ELEMENT_NODE) {
         const observerParams = { threshold, root, rootMargin };
         const observer = new IntersectionObserver(([entry]) => {
+          console.log(entry);
           setEntry(entry);
         }, observerParams);
 
