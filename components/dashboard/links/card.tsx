@@ -35,11 +35,7 @@ import {
 } from "lucide-react";
 import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { differenceInHours, isAfter } from "date-fns";
-import {
-  useCopyToClipboard,
-  useIntersectionObserver,
-  useMediaQuery,
-} from "@/hooks";
+import { useCopyToClipboard, useIntersectionObserver } from "@/hooks";
 import { TLink } from "@/lib/types";
 import { toast } from "sonner";
 
@@ -66,7 +62,6 @@ function LinkCard({
   const [isActionsMenuOpen, setIsActionsMenuOpen] = useState(false);
   const closeActionsMenu = () => setIsActionsMenuOpen(false);
 
-  const isMobile = useMediaQuery("only screen and (max-width : 640px)");
   const [copied, copyToClipboard] = useCopyToClipboard();
 
   const { show: showLinkQrModal, Modal: LinkQrModal } = useLinkQrModal({
@@ -220,12 +215,10 @@ function LinkCard({
               >
                 {domainKey}
               </a>
-              {!isMobile && (
-                <CopyToClipboard
-                  copied={copied}
-                  onCopy={copyShortLinkToClipboard}
-                />
-              )}
+              <CopyToClipboard
+                copied={copied}
+                onCopy={copyShortLinkToClipboard}
+              />
             </div>
             <div className="flex items-center space-x-2 max-w-[140px] sm:max-w-[300px] md:max-w-[360px] xl:max-w-[400px]">
               <p className="text-sm text-secondary whitespace-nowrap">
@@ -277,17 +270,16 @@ function LinkCard({
             onOpenChange={setIsActionsMenuOpen}
             content={
               <div className="flex flex-col items-center p-2 sm:w-48">
-                {isMobile && (
-                  <PopoverItem
-                    text="Copy"
-                    kbd=""
-                    icon={<Copy strokeWidth={1.5} className="h-4 w-4" />}
-                    onClick={() => {
-                      closeActionsMenu();
-                      copyShortLinkToClipboard();
-                    }}
-                  />
-                )}
+                <PopoverItem
+                  text="Copy"
+                  kbd=""
+                  icon={<Copy strokeWidth={1.5} className="h-4 w-4" />}
+                  onClick={() => {
+                    closeActionsMenu();
+                    copyShortLinkToClipboard();
+                  }}
+                  className="sm:hidden"
+                />
                 <PopoverItem
                   text="Edit"
                   kbd="e"
@@ -414,12 +406,14 @@ function PopoverItem({
   kbd,
   variant = "normal",
   onClick,
+  className,
 }: {
   text: string;
   icon: ReactNode;
   kbd: string;
   onClick: () => void;
   variant?: "danger" | "normal";
+  className?: string;
 }) {
   const variantColors = {
     normal: {
@@ -439,7 +433,8 @@ function PopoverItem({
     <button
       className={cn(
         "group w-full flex justify-between items-center p-2 rounded-md transition-all duration-75",
-        variantColors[variant].button
+        variantColors[variant].button,
+        className
       )}
       onClick={onClick}
     >
@@ -472,7 +467,8 @@ function CopyToClipboard({
         "p-1.5 rounded-full transition-all duration-75",
         "hover:scale-110 active:scale-90",
         "bg-skeleton/75 text-primary/75",
-        "hover:bg-skeleton hover:text-primary"
+        "hover:bg-skeleton hover:text-primary",
+        "hidden sm:block"
       )}
       onClick={(event) => {
         event.stopPropagation();
