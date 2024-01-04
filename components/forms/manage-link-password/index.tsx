@@ -41,13 +41,13 @@ export function ManagePasswordForm({
         aria-label="Change or remove password"
       >
         <Tabs.Trigger
-          className="py-2 flex-1 flex items-center justify-center text-sm leading-none select-none outline-none rounded-l-md text-primary/70 transition duration-75 font-medium bg-bar-list-tab hover:bg-selected-bar-list-tab data-[state=active]:bg-selected-bar-list-tab"
+          className="py-2 flex-1 flex items-center justify-center text-sm leading-none select-none outline-none rounded-l-md text-primary/90 transition duration-75 font-medium bg-manage-password-form-tab hover:bg-manage-password-form-selected-tab/70 data-[state=active]:bg-manage-password-form-selected-tab"
           value="change-password-tab"
         >
           Change
         </Tabs.Trigger>
         <Tabs.Trigger
-          className="py-2 flex-1 flex items-center justify-center text-sm leading-none select-none outline-none rounded-r-md text-primary/70 transition duration-75 font-medium bg-bar-list-tab hover:bg-selected-bar-list-tab data-[state=active]:bg-selected-bar-list-tab"
+          className="py-2 flex-1 flex items-center justify-center text-sm leading-none select-none outline-none rounded-r-md text-primary/90 transition duration-75 font-medium bg-manage-password-form-tab hover:bg-manage-password-form-selected-tab/70 data-[state=active]:bg-manage-password-form-selected-tab"
           value="remove-password-tab"
         >
           Remove

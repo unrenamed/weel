@@ -18,9 +18,11 @@
     --color-selected-bar-list-tab: 220deg 13% 91%;
     --color-link-card-backlight-from: 44deg 100% 52%;
     --color-link-card-backlight-to: 10deg 98% 48%;
+    --color-manage-password-form-tab: 0deg 0% 95%;
+    --color-manage-password-form-selected-tab: 0deg 0% 80%;
     /* inputs */
     --color-input: 220deg 13% 91%;
-    --color-input-border: 220deg 9% 46%;
+    --color-input-border: 220deg 9% 70%;
     --color-input-placeholder: 220deg 9% 46%;
     /* primary button */
     --color-primary-btn: 0deg 0% 0%;
@@ -86,6 +88,8 @@
     --color-selected-bar-list-tab: 0deg 0% 45%;
     --color-link-card-backlight-from: 280deg 99% 56%;
     --color-link-card-backlight-to: 217deg 91% 60%;
+    --color-manage-password-form-tab: 0deg 0% 20%;
+    --color-manage-password-form-selected-tab: 0deg 0% 50%;
     /* inputs */
     --color-input: 0deg 0% 25%;
     --color-input-border: 0deg 0% 32%;

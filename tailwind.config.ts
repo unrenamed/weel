@@ -233,6 +233,10 @@ module.exports = {
           "hsl(var(--color-link-card-backlight-to) / <alpha-value>)",
         "tooltip-secondary":
           "hsl(var(--color-tooltip-secondary) / <alpha-value>)",
+        "manage-password-form-tab":
+          "hsl(var(--color-manage-password-form-tab) / <alpha-value>)",
+        "manage-password-form-selected-tab":
+          "hsl(var(--color-manage-password-form-selected-tab) / <alpha-value>)",
       },
     },
   },
