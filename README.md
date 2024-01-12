@@ -6,7 +6,7 @@
 
 ## Introduction
 
-This is an <b>experimental</b> link management tool based on [Dub.co code](https://github.com/dubinc/dub). Used for learning purposes only.
+This is an <b>experimental</b> URL shortener based on [Dub.co](https://github.com/dubinc/dub) idea and architecture.
 
 <b>IMPORTANT NOTICE:</b> I do not intend to utilize this for monetary gain, nor do I plan to support the production instance. In fact, the deployed app solely serves as a staging server dedicated to my acceptance testing.
 
@@ -28,23 +28,33 @@ Weel (or <b>'wee link'</b>) serves as a link management tool designed for market
 - Dark theme for enhanced visual comfort
 - Streamlined links view with intuitive infinite scroll
 - Link management capabilities: create, edit, duplicate, archive, and delete
-- Robust rate limiter for protection against potential DoS attacks
+- Rate limiter for protection against potential DoS attacks
 - Analytics page offering a time-series data view for in-depth analysis
-- Detailed click insights encompassing geo-location, device, browser, and referrer information
+- Click insights encompassing geo-location, device, browser, and referrer information
 
 ## Tech Stack
 
 - [Next.js](https://nextjs.org/) – framework
 - [TypeScript](https://www.typescriptlang.org/) – language
 - [Tailwind](https://tailwindcss.com/) – CSS
-- [Upstash](https://upstash.com/) – redis
-- [Tinybird](https://tinybird.com/) – analytics
-- [PlanetScale](https://planetscale.com/) – database
-- [Vercel](https://vercel.com/) – deployments
+- [Upstash](https://upstash.com/) – Redis
+- [Tinybird](https://tinybird.com/) – real-time analytics
+- [PlanetScale](https://planetscale.com/) – MySQL database
+- [Vercel](https://vercel.com/) – deployments to Node.js and Edge runtimes
 - [Prisma](https://www.prisma.io/) – ORM
 - [Prisma Accelerate](https://console.prisma.io/login) - global database cache with scalable connection pooling. Used for connecting to the database from the Edge Runtime
 
-## Getting Started
+## Architecture
+
+We believe that the key principal of any URL shortener is a fast redirection mechanism. End users should feel minimal latency when addressing their short links.
+
+Weel prioritizes swift redirection to minimize user latency. Deployed on [Vercel](https://vercel.com/) as a serverless application, it leverages [Vercel Edge](https://vercel.com/docs/functions/edge-functions) computing for geographical proximity to end users, ensuring faster communication and responses.
+
+In this architecture, Redis serves as a crucial data store for short links, delivering fast access, persistence, and high availability. Tinybird enhances the system with real-time data analytics, offering rapid writes and reads with millisecond latency.
+
+<img src="assets/weel-architecture.png?raw=true">
+
+## Development
 
 First, copy `.env.example` content to `.env.local` and provide the corresponding values.
 
