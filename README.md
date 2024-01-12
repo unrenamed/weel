@@ -48,9 +48,9 @@ Weel (or <b>'wee link'</b>) serves as a link management tool designed for market
 
 We believe that the key principal of any URL shortener is a fast redirection mechanism. End users should feel minimal latency when addressing their short links.
 
-Weel prioritizes swift redirection to minimize user latency. Deployed on [Vercel](https://vercel.com/) as a serverless application, it leverages [Vercel Edge](https://vercel.com/docs/functions/edge-functions) computing for geographical proximity to end users, ensuring faster communication and responses.
+<b>Weel</b> prioritizes swift redirection to minimize user latency. Deployed on [Vercel](https://vercel.com/) as a serverless application, it leverages [Vercel Edge](https://vercel.com/docs/functions/edge-functions) computing for geographical proximity to end users, ensuring faster communication and responses.
 
-In this architecture, Redis serves as a crucial data store for short links, delivering fast access, persistence, and high availability. Tinybird enhances the system with real-time data analytics, offering rapid writes and reads with millisecond latency.
+In this architecture, [Redis](https://redis.io/) serves as a crucial data store for short links, delivering fast access, persistence, and high availability. [Tinybird](https://www.tinybird.co/) enhances the system with real-time data analytics, offering rapid writes and reads with millisecond latency.
 
 <img src="assets/weel-architecture.png?raw=true">
 
