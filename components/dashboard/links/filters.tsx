@@ -62,9 +62,7 @@ const IncludeArchivedSwitch = () => {
 
   return (
     <div className="flex items-center justify-between pt-2">
-      <span className="text-sm leading-none font-medium">
-        Include archived
-      </span>
+      <span className="text-sm leading-none font-medium">Include archived</span>
       <Switch
         onCheckedChange={setQueryParams}
         defaultChecked={searchParams.get("show_archived") === "true"}

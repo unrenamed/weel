@@ -9,8 +9,10 @@ export const useCopyToClipboard = (
   const setTimer = (callback: () => void, timeout: number) => {
     timer.current = setTimeout(() => {
       callback();
-      timer.current && clearTimeout(timer.current);
-      timer.current = null;
+      if (timer.current) {
+        clearTimeout(timer.current);
+        timer.current = null;
+      }
     }, timeout);
   };
 
